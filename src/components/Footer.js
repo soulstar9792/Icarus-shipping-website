@@ -1,28 +1,25 @@
 import React from "react";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaDiscord } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Quick Links Section */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-          <ul>
-            <li><a href="#landing" className="hover:underline">Home</a></li>
-            <li><a href="#howitworks" className="hover:underline">How It Works</a></li>
-            <li><a href="#whychooseus" className="hover:underline">Why Choose Us</a></li>
-            <li><a href="#price" className="hover:underline">Pricing</a></li>
-            <li><a href="#faq" className="hover:underline">FAQs</a></li>
-            <li><a href="#feedback" className="hover:underline">Customer Feedback</a></li>
-            <li><a href="#readytoshop" className="hover:underline">Ready to Ship</a></li>
-          </ul>
+    <footer className="bg-gray-900 text-white border-t border-gray-700 py-6 md:py-4">
+      <div className="max-w-7xl mx-auto flex flex-col items-center px-4">
+        <div className="flex items-center space-x-4 mb-3">
+          <a
+            href="https://discord.gg/YOUR_DISCORD_LINK"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white"
+          >
+            <FaDiscord className="text-2xl" />
+          </a>
         </div>
 
-        {/* Contact Information and Social Media section... */}
+        <div className="text-center text-sm text-gray-400">
+          <p>&copy; {new Date().getFullYear()} Icarus Ships. All rights reserved.</p>
+        </div>
       </div>
-
-      {/* Newsletter Subscription and Copyright info */}
     </footer>
   );
 };

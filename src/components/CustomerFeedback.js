@@ -10,36 +10,36 @@ const feedbackData = [
     name: "Maya Horton",
     designation: "Customer",
     feedback: "I run a small business that requires me to ship my products out daily, and even with variable sizes and weights of my parcel, a 120lb label costs the same as a 20lb label, which is nice. It has literally saved me so much money.",
-    image: customer_man1, // Replace with the actual image path
+    image: customer_man1,
     rating: 4.5,
   },
   {
     name: "Nathan Melon",
     designation: "Customer",
     feedback: "I can't believe how quick the service is. It is fully automated, and when I have important items that need to be shipped quickly, I always use the overnight labels that can get them shipped ASAP.",
-    image: customer_woman1, // Replace with the actual image path
+    image: customer_woman1,
     rating: 5,
   },
   {
     name: "Jackson Martin",
     designation: "Customer",
-    feedback: "The user interface is so user-friendly! I was able to set up my ships preferences in minutes. Plus, the customer service is outstanding!",
-    image: customer_man2, // Replace with the actual image path
+    feedback: "The user interface is so user-friendly! I was able to set up my shipping preferences in minutes. Plus, the customer service is outstanding!",
+    image: customer_man2,
     rating: 4,
   },
 ];
 
 const CustomerFeedback = () => {
   return (
-    <section className="py-20 bg-gray-100 text-black">
-      <h2 className="text-5xl text-center mb-12 font-bold">What Our Customers Say</h2>
+    <section className="py-10 md:py-20 px-4 bg-gradient-to-r from-green-600 to-teal-500 text-white">
+      <h2 className="text-2xl md:text-4xl lg:text-5xl text-center mb-4 md:mb-8 font-bold">What Our Customers Say</h2>
 
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {feedbackData.map((feedback, index) => (
             <div 
               key={index} 
-              className="bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:scale-105"
+              className="bg-white shadow-lg rounded-lg p-4 md:p-6 transition duration-300 hover:scale-105"
             >
               <div className="flex items-center mb-4">
                 <img 
@@ -48,8 +48,8 @@ const CustomerFeedback = () => {
                   className="w-16 h-16 rounded-full mr-4 object-cover" 
                 />
                 <div>
-                  <h3 className="text-xl font-semibold">{feedback.name}</h3>
-                  <h4 className="text-md text-gray-600">{feedback.designation}</h4>
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-800">{feedback.name}</h3>
+                  <h4 className="text-sm md:text-md text-gray-600">{feedback.designation}</h4>
                 </div>
               </div>
               <div className="flex mb-2">
@@ -57,7 +57,7 @@ const CustomerFeedback = () => {
                   <FaStar key={starIndex} className={starIndex < feedback.rating ? "text-yellow-500" : "text-gray-300"} />
                 ))}
               </div>
-              <p className="text-gray-800">{feedback.feedback}</p>
+              <p className="text-sm md:text-base text-gray-800">{feedback.feedback}</p>
             </div>
           ))}
         </div>

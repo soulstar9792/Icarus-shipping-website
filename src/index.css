@@ -17,12 +17,14 @@ code {
 @tailwind components;
 @tailwind utilities;
 
-.animate__delay-0.5s {
+.animate__delay-0-5s {
     animation-delay: 0.5s;
+    --animate-delay: 0.5s;
 }
 
-.animate__delay-1.5s {
+.animate__delay-1-5s {
     animation-delay: 1.5s;
+    --animate-delay: 1.5s;
 }
 html {
   scroll-behavior: smooth;

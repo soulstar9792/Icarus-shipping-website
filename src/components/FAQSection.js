@@ -1,83 +1,79 @@
-import React, { useState } from "react";
-import { FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
+import React, { useState, useRef, useEffect } from "react";
 
-// Sample FAQ Data
-const faqData = [
-  {
-    question: "How fast do the labels get delivered?",
-    answer: "Our service is instant."
-  },
-  {
-    question: "Are there bulk/reseller discounts?",
-    answer: "Contact our support at @IcarusShipHelp on Telegram."
-  },
-  {
-    question: "How can I deposit?",
-    answer: "You can deposit directly with crypto via our website, or you can contact our support @IcarusShipHelp on Telegram for manual payments."
-  }
-];
+const FAQs = () => {
+  const [faqs] = useState([
+    {
+      question: "What services do you offer?",
+      answer: "We offer a variety of services including shipping, logistics management, and custom solutions to meet your needs.",
+    },
+    {
+      question: "How can I contact customer support?",
+      answer: "You can reach our customer support through our contact page, or by calling our support number available 24/7.",
+    },
+    {
+      question: "Is there a money-back guarantee?",
+      answer: "Yes! We offer a 30-day money-back guarantee on all of our services if you're not satisfied.",
+    },
+    {
+      question: "Do you offer international shipping?",
+      answer: "Absolutely! We provide international shipping options to many countries worldwide.",
+    },
+  ]);
 
-const FAQSection = () => {
-  const [expandedIndex, setExpandedIndex] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeIndex, setActiveIndex] = useState(null);
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
 
-  const toggleFAQ = index => {
-    setExpandedIndex(expandedIndex === index ? null : index);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [ref]);
+
+  const toggleFAQ = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
   };
 
-  const filteredFAQs = faqData.filter(faq =>
-    faq.question.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <section className="py-20 bg-white text-gray-800">
-      <h2 className="text-5xl text-center mb-12 font-bold">Frequently Asked Questions</h2>
-      
-      <div className="max-w-2xl mx-auto mb-8">
-        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow">
-          <input
-            type="text"
-            className="flex-grow px-4 py-2 focus:outline-none"
-            placeholder="Search FAQs..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <button className="p-2 bg-gray-200 hover:bg-gray-300 transition duration-150">
-            <FaSearch />
-          </button>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4">
-        <div className="max-w-2xl mx-auto">
-          {filteredFAQs.length > 0 ? (
-            filteredFAQs.map((item, index) => (
-              <div key={index} className="border-b border-gray-300 mb-4">
-                <div 
-                  className="flex justify-between items-center py-4 cursor-pointer hover:bg-gray-100 transition duration-150" 
-                  onClick={() => toggleFAQ(index)}
-                >
-                  <h3 className="text-xl font-semibold text-black">{item.question}</h3>
-                  {
-                    expandedIndex === index ? (
-                      <FaChevronUp className="text-xl text-gray-600" />
-                    ) : (
-                      <FaChevronDown className="text-xl text-gray-600" />
-                    )
-                  }
-                </div>
-                {expandedIndex === index && (
-                  <p className="text-lg text-gray-700 mb-4">{item.answer}</p>
-                )}
+    <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-gradient-to-r from-green-600 to-teal-500">
+      <h2 className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-white ${isVisible ? 'animate__animated animate__fadeInDown' : ''}`}>
+        Frequently Asked Questions
+      </h2>
+      <div className="max-w-3xl mx-auto">
+        {faqs.map((faq, index) => (
+          <div key={index} className={`mb-4 rounded-lg shadow-lg transition-shadow duration-300 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
+            <button
+              className="w-full text-left bg-white border-2 border-gray-300 rounded-lg p-4 md:p-6 hover:bg-gray-100 focus:outline-none"
+              onClick={() => toggleFAQ(index)}
+            >
+              <h3 className="text-lg md:text-xl font-semibold text-gray-800">{faq.question}</h3>
+            </button>
+            {activeIndex === index && (
+              <div className="p-4 md:p-6 bg-gray-100 border-t-2 border-gray-300 rounded-b-lg">
+                <p className="text-gray-700 text-sm md:text-base">{faq.answer}</p>
               </div>
-            ))
-          ) : (
-            <p className="text-lg text-gray-700 mb-4">No results found.</p>
-          )}
-        </div>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );
 };
 
-export default FAQSection;
+export default FAQs;

@@ -1,8 +1,10 @@
+// src/pages/Home.js
 import React from 'react';
+import { useSectionContext } from '../context/SectionContext'; // Import the context
 import LandingView from '../components/LandingView'; 
 import HowItWorks from '../components/HowItWorks';
 import WhyChooseUs from "../components/WhyChooseUs";
-import PriceSection from '../components/PriceSection'; 
+import ClearPricing from '../components/ClearPricing'; 
 import FAQSection from '../components/FAQSection';
 import CustomerFeedback from '../components/CustomerFeedback';
 import ReadyToShip from '../components/ReadyToShip';
@@ -11,30 +13,48 @@ import Footer from '../components/Footer';
 import 'animate.css';
 
 const Home = () => {
+  const {
+    refs: {
+      landingViewRef,
+      howItWorksRef,
+      whyChooseUsRef,
+      clearPricingRef,
+      faqRef,
+      customerFeedbackRef,
+      readyToShipRef,
+    }
+  } = useSectionContext(); // Get the refs from context
+
   return (
     <div className="bg-dark-bg text-white">
-      {/* Landing View Section */}
-      <div id="landing"><LandingView /></div>
+      <div ref={landingViewRef}>
+        <LandingView />
+      </div>
 
-      {/* How To Section */}
-      <div id="howitworks"><HowItWorks /></div> 
+      <div ref={howItWorksRef}>
+        <HowItWorks />
+      </div>
 
-      {/* Why Choose Us Section */}
-      <div id="whychooseus"><WhyChooseUs /></div>
+      <div ref={whyChooseUsRef}>
+        <WhyChooseUs />
+      </div>
 
-      {/* Price Section */}
-      <div id="price"><PriceSection /></div>
+      <div ref={clearPricingRef}>
+        <ClearPricing />
+      </div>
 
-      {/* FAQ Section */}
-      <div id="faq"><FAQSection /></div>
+      <div ref={faqRef}>
+        <FAQSection />
+      </div>
 
-      {/* Customer Feedback Section */}
-      <div id="feedback"><CustomerFeedback /></div>
+      <div ref={customerFeedbackRef}>
+        <CustomerFeedback />
+      </div>
 
-      {/* Get Started Section */}
-      <div id="readytoshop"><ReadyToShip /></div>
+      <div ref={readyToShipRef}>
+        <ReadyToShip />
+      </div>
 
-      {/* Footer Section */}
       <Footer />
     </div>
   );
