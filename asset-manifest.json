@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/icarus-ships/static/css/main.0609980b.css",
+    "main.js": "/icarus-ships/static/js/main.3fc4edcf.js",
+    "static/js/488.1057e47a.chunk.js": "/icarus-ships/static/js/488.1057e47a.chunk.js",
+    "static/media/landing-background.png": "/icarus-ships/static/media/landing-background.71c69ecefdffe67ecb43.png",
+    "static/media/logo.png": "/icarus-ships/static/media/logo.3f1aef84ce2cea5c2c67.png",
+    "static/media/ship.jpg": "/icarus-ships/static/media/ship.b32f18ea3d04586f4982.jpg",
+    "static/media/customer_woman1.jpg": "/icarus-ships/static/media/customer_woman1.2ed303fbd407ca9ca8cc.jpg",
+    "static/media/customer_man2.jpg": "/icarus-ships/static/media/customer_man2.8077210a7c6a8179f4cd.jpg",
+    "static/media/customer_man1.jpg": "/icarus-ships/static/media/customer_man1.d4f4ddbf05896f29d17f.jpg",
+    "index.html": "/icarus-ships/index.html",
+    "main.0609980b.css.map": "/icarus-ships/static/css/main.0609980b.css.map",
+    "main.3fc4edcf.js.map": "/icarus-ships/static/js/main.3fc4edcf.js.map",
+    "488.1057e47a.chunk.js.map": "/icarus-ships/static/js/488.1057e47a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0609980b.css",
+    "static/js/main.3fc4edcf.js"
+  ]
+}
