@@ -27,7 +27,7 @@ const Home = () => {
 
   return (
     <div className="bg-dark-bg text-white">
-      <div ref={landingViewRef}>
+      <div ref={landingViewRef} id='landing-view'>
         <LandingView />
       </div>
 
