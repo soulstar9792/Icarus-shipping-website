@@ -43,14 +43,16 @@ const LandingView = () => {
         <p className="text-lg md:text-2xl lg:text-3xl mb-8 text-secondary animate__animated animate__fadeInUp animate__delay-1.5s">
           Your gateway to swift and reliable ship solutions.
         </p>
-        {/* Animated button with different effects */}
-        <button className="bg-primary text-white text-lg md:text-xl px-6 py-2 rounded transition-all duration-300 bg-dark-orange focus:outline-none focus:ring-2 focus:ring-dark-orange" 
+        {/* Animated button with initial border color */}
+        <button
+          className="bg-primary text-white text-lg md:text-xl px-6 py-2 rounded border-2 border-dark-orange transition-all duration-300 " 
           onMouseDown={(e) => {
             e.currentTarget.classList.add('animate__animated', 'animate__wobble');
           }} 
           onAnimationEnd={(e) => {
             e.currentTarget.classList.remove('animate__animated', 'animate__wobble');
-          }}>
+          }}
+        >
           Get Started
         </button>
       </div>

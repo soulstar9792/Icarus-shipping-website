@@ -31,15 +31,17 @@ const feedbackData = [
 
 const CustomerFeedback = () => {
   return (
-    <section className="py-10 md:py-20 px-4 bg-gradient-to-r from-green-600 to-teal-500 text-white">
-      <h2 className="text-2xl md:text-4xl lg:text-5xl text-center mb-4 md:mb-8 font-bold">What Our Customers Say</h2>
+    <section className="py-10 md:py-20 px-4 bg-custom-background text-text-emphasizing">
+      <h2 className="text-2xl md:text-4xl lg:text-5xl text-center mb-4 md:mb-8 font-bold hover:text-shadow">
+        What Our Customers Say
+      </h2>
 
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {feedbackData.map((feedback, index) => (
             <div 
               key={index} 
-              className="bg-white shadow-lg rounded-lg p-4 md:p-6 transition duration-300 hover:scale-105"
+              className="bg-card-background border-thin border-custom-border rounded-small p-4 md:p-6 transition duration-300 shadow-lg group hover:shadow-bright hover:border-hover-border"
             >
               <div className="flex items-center mb-4">
                 <img 
@@ -48,8 +50,10 @@ const CustomerFeedback = () => {
                   className="w-16 h-16 rounded-full mr-4 object-cover" 
                 />
                 <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-gray-800">{feedback.name}</h3>
-                  <h4 className="text-sm md:text-md text-gray-600">{feedback.designation}</h4>
+                  <h3 className="text-lg md:text-xl font-semibold text-text-normal group-hover:text-hover-text group-hover:text-shadow">
+                    {feedback.name}
+                  </h3>
+                  <h4 className="text-sm md:text-md text-text-normal group-hover:text-hover-text">{feedback.designation}</h4>
                 </div>
               </div>
               <div className="flex mb-2">
@@ -57,7 +61,7 @@ const CustomerFeedback = () => {
                   <FaStar key={starIndex} className={starIndex < feedback.rating ? "text-yellow-500" : "text-gray-300"} />
                 ))}
               </div>
-              <p className="text-sm md:text-base text-gray-800">{feedback.feedback}</p>
+              <p className="text-sm md:text-base text-text-normal group-hover:text-hover-text">{feedback.feedback}</p>
             </div>
           ))}
         </div>

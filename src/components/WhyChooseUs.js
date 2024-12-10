@@ -28,21 +28,20 @@ const WhyChooseUs = () => {
   }, [ref]);
 
   return (
-    <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-gradient-to-r from-purple-600 to-blue-600 relative overflow-hidden">
-      <h2 className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-white ${isVisible ? 'animate__animated animate__fadeInDown' : ''}`} 
-          style={{ 
-            textShadow: '1px 1px 3px rgba(0,0,0,0.5)', 
-            letterSpacing: '1px',
-          }}>
+    <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-custom-background relative overflow-hidden">
+      <h2 className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-text-emphasizing cursor-pointer transition-all duration-300 
+                      ${isVisible ? 'animate__animated animate__fadeInDown' : ''} 
+                      hover:text-shadow`}>
         Why Choose Us
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 relative z-10">
+        
         {/* Feature 1: Quality Service */}
-        <div className={`flex flex-col items-center bg-gradient-to-b from-yellow-300 to-yellow-500 rounded-lg p-6 md:p-8 shadow-xl transition-transform duration-300 transform hover:scale-105 hover:shadow-2xl hover:rotate-3 hover:translate-x-1 hover:-translate-y-2 ${isVisible ? 'animate__animated animate__fadeInUp ' : ''}`} 
-             style={{ perspective: '1000px' }}>
-          <FaStar className="text-5xl md:text-6xl text-yellow-800 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:scale-110" />
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-gray-900 z-10">Unmatched Quality Service</h3>
-          <p className="text-center text-gray-800 z-10 mb-2 text-sm md:text-base">Experience exceptional service that prioritizes your needs.</p>
+        <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
+                        hover:shadow-bright hover:border-hover-border text-gray-800 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
+          <FaStar className="text-5xl md:text-6xl text-yellow-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-yellow-400 hover:scale-110" />
+          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">Unmatched Quality Service</h3>
+          <p className="text-center mb-2 text-sm md:text-base z-10">Experience exceptional service that prioritizes your needs.</p>
           <ul className="text-gray-800 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">
               <span className="text-yellow-600 mr-2">✔️</span> 
@@ -61,11 +60,11 @@ const WhyChooseUs = () => {
         </div>
 
         {/* Feature 2: Affordable Rates */}
-        <div className={`flex flex-col items-center bg-gradient-to-b from-green-300 to-green-500 rounded-lg p-6 md:p-8 shadow-xl transition-transform duration-300 transform hover:scale-105 hover:shadow-2xl hover:rotate-3 hover:translate-x-1 hover:-translate-y-2 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-0-5s ' : ''}`} 
-             style={{ perspective: '1000px' }}>
-          <FaDollarSign className="text-5xl md:text-6xl text-green-800 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:scale-110" />
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-gray-900 z-10">Transparent and Affordable Rates</h3>
-          <p className="text-center text-gray-800 z-10 mb-2 text-sm md:text-base">Discover competitive pricing without hidden fees.</p>
+        <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
+                        hover:shadow-bright hover:border-hover-border text-gray-800 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-0-5s' : ''}`}>
+          <FaDollarSign className="text-5xl md:text-6xl text-green-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-green-400 hover:scale-110" />
+          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">Transparent and Affordable Rates</h3>
+          <p className="text-center mb-2 text-sm md:text-base z-10">Discover competitive pricing without hidden fees.</p>
           <ul className="text-gray-800 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">
               <span className="text-green-600 mr-2">✔️</span> 
@@ -84,11 +83,11 @@ const WhyChooseUs = () => {
         </div>
 
         {/* Feature 3: 24/7 Support */}
-        <div className={`flex flex-col items-center bg-gradient-to-b from-blue-300 to-blue-500 rounded-lg p-6 md:p-8 shadow-xl transition-transform duration-300 transform hover:scale-105 hover:shadow-2xl hover:rotate-3 hover:translate-x-1 hover:-translate-y-2 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-1s ' : ''}`} 
-             style={{ perspective: '1000px' }}>
-          <FaPhone className="text-5xl md:text-6xl text-blue-800 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:scale-110" />
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-gray-900 z-10">24/7 Support at Your Fingertips</h3>
-          <p className="text-center text-gray-800 z-10 mb-2 text-sm md:text-base">Our dedicated team is here to help whenever you need us.</p>
+        <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
+                        hover:shadow-bright hover:border-hover-border text-gray-800 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-1s' : ''}`}>
+          <FaPhone className="text-5xl md:text-6xl text-blue-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-blue-400 hover:scale-110" />
+          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">24/7 Support at Your Fingertips</h3>
+          <p className="text-center mb-2 text-sm md:text-base z-10">Our dedicated team is here to help whenever you need us.</p>
           <ul className="text-gray-800 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">
               <span className="text-blue-600 mr-2">✔️</span> 

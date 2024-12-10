@@ -51,22 +51,34 @@ const FAQs = () => {
   };
 
   return (
-    <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-gradient-to-r from-green-600 to-teal-500">
-      <h2 className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-white ${isVisible ? 'animate__animated animate__fadeInDown' : ''}`}>
+    <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-custom-background relative overflow-hidden">
+      <h2
+        className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-text-emphasizing cursor-pointer transition-all duration-300 ${
+          isVisible ? 'animate__animated animate__fadeInDown' : ''
+        } hover:text-shadow`}
+      >
         Frequently Asked Questions
       </h2>
       <div className="max-w-3xl mx-auto">
         {faqs.map((faq, index) => (
-          <div key={index} className={`mb-4 rounded-lg shadow-lg transition-shadow duration-300 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
+          <div key={index} className={`mb-4 transition-shadow duration-300 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
             <button
-              className="w-full text-left bg-white border-2 border-gray-300 rounded-lg p-4 md:p-6 hover:bg-gray-100 focus:outline-none"
+              className={`w-full text-left bg-transparent border border-custom-border rounded-sm p-4 md:p-6 focus:outline-none transition-all duration-300 shadow-lg 
+                ${activeIndex === index ? 'bg-gray-100 border-hover-border shadow-bright' : ''} 
+                hover:bg-transparent hover:border-hover-border hover:shadow-bright`}
               onClick={() => toggleFAQ(index)}
             >
-              <h3 className="text-lg md:text-xl font-semibold text-gray-800">{faq.question}</h3>
+              <h3 className={`text-lg md:text-xl font-semibold text-text-normal`}>
+                {faq.question}
+              </h3>
+              <span className={`text-gray-500 ${activeIndex === index ? 'hidden' : 'block'}`}>+</span>
+              <span className={`text-gray-500 ${activeIndex === index ? 'block' : 'hidden'}`}>–</span>
             </button>
             {activeIndex === index && (
-              <div className="p-4 md:p-6 bg-gray-100 border-t-2 border-gray-300 rounded-b-lg">
-                <p className="text-gray-700 text-sm md:text-base">{faq.answer}</p>
+              <div className="p-4 md:p-6 bg-transparent border border-hover-border shadow-bright rounded-sm mt-2">
+                <p className="text-hover-text text-sm md:text-base text-left">
+                  {faq.answer}
+                </p>
               </div>
             )}
           </div>
