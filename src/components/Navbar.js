@@ -9,16 +9,6 @@ const Navbar = () => {
   const { refs } = useSectionContext();
   const location = useLocation();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 100);
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -33,10 +23,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`flex justify-between items-center p-4 fixed w-full z-20 animate__animated animate__fadeInDown ${isScrolled ? 'bg-custom-background shadow-lg border-thin border-gray-600' : 'bg-transparent'}`}>
+    <nav className={`flex justify-between items-center p-4 fixed w-full z-20 animate__animated animate__fadeInDown bg-custom-background shadow-lg border-thin border-gray-600`}>
       <Link to="/" className="flex items-center" onClick={scrollToTop}>
         <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
-        <h1 className={`text-xl transition-colors duration-300 ${isScrolled ? 'text-white' : 'text-white'}`}>Icarus Ships</h1>
+        <h1 className={`text-xl transition-colors duration-300 text-white`}>Icarus Ships</h1> 
       </Link>
 
       <div className="md:hidden cursor-pointer text-white" onClick={toggleMobileMenu}>

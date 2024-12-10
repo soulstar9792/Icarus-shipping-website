@@ -40,21 +40,21 @@ const ClearPricing = () => {
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border border-custom-border shadow-lg transition-all duration-300 hover:shadow-bright hover:border-hover-border ${isVisible ? 'animate__animated animate__zoomIn' : ''}`}>
           <FaDollarSign className="text-4xl md:text-5xl text-blue-600 mb-2 md:mb-4 z-10 transition-all duration-300 hover:text-blue-400" />
           <h3 className="text-xl md:text-2xl font-semibold text-text-normal mb-2 z-10 transition-all duration-300 hover:text-hover-text hover:text-shadow">Transparent Pricing</h3>
-          <p className="text-sm md:text-base text-text-normal mb-2 md:mb-4 z-10">No complex pricing structures—just clear and simple pricing that you can understand.</p>
+          <p className="text-sm md:text-base text-text-normal mb-2 md:mb-4 z-10">Enjoy straightforward pricing options designed to fit your budget.</p>
         </div>
 
         {/* Pricing Card 2 */}
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border border-custom-border shadow-lg transition-all duration-300 hover:shadow-bright hover:border-hover-border ${isVisible ? 'animate__animated animate__zoomIn' : ''}`}>
           <FaCheckCircle className="text-4xl md:text-5xl text-green-600 mb-2 md:mb-4 z-10 transition-all duration-300 hover:text-green-400" />
           <h3 className="text-xl md:text-2xl font-semibold text-text-normal mb-2 z-10 transition-all duration-300 hover:text-hover-text hover:text-shadow">No Hidden Fees</h3>
-          <p className="text-sm md:text-base text-text-normal mb-2 md:mb-4 z-10">The price you see is the price you pay. No surprise fees at checkout!</p>
+          <p className="text-sm md:text-base text-text-normal mb-2 md:mb-4 z-10">Rest assured, the price you see is the price you get, with no surprises.</p>
         </div>
 
         {/* Pricing Card 3 */}
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border border-custom-border shadow-lg transition-all duration-300 hover:shadow-bright hover:border-hover-border ${isVisible ? 'animate__animated animate__zoomIn' : ''}`}>
           <FaExclamationCircle className="text-4xl md:text-5xl text-yellow-600 mb-2 md:mb-4 z-10 transition-all duration-300 hover:text-yellow-400" />
           <h3 className="text-xl md:text-2xl font-semibold text-text-normal mb-2 z-10 transition-all duration-300 hover:text-hover-text hover:text-shadow">Complete Clarity</h3>
-          <p className="text-sm md:text-base text-text-normal mb-2 md:mb-4 z-10">Enjoy complete transparency in all our services and offerings.</p>
+          <p className="text-sm md:text-base text-text-normal mb-2 md:mb-4 z-10">Our services are competitively priced with complete transparency.</p>
         </div>
       </div>
 
@@ -70,9 +70,9 @@ const ClearPricing = () => {
             <div className={`rounded-small p-6 border border-custom-border bg-card-background transition-all duration-300 hover:shadow-bright hover:border-hover-border ${isVisible ? 'animate__animated animate__slideInLeft animate__delay-1s' : ''}`}>
               <h4 className="text-2xl font-semibold text-text-emphasizing mb-2">USPS</h4>
               <ul className="list-disc pl-5 text-text-normal text-sm md:text-base">
-                <li>Express: <strong>$3</strong> onwards</li>
-                <li>Priority: <strong>$3</strong> onwards</li>
-                <li>Ground Advantage: <strong>$3</strong> onwards</li>
+                <li>Express: <strong>Starting from affordable rates</strong></li>
+                <li>Priority: <strong>Get competitive pricing options</strong></li>
+                <li>Ground Advantage: <strong>Options that fit your needs</strong></li>
               </ul>
             </div>
 
@@ -80,11 +80,9 @@ const ClearPricing = () => {
             <div className={`rounded-small p-6 border border-custom-border bg-card-background transition-all duration-300 hover:shadow-bright hover:border-hover-border ${isVisible ? 'animate__animated animate__slideInLeft animate__delay-1s' : ''}`}>
               <h4 className="text-2xl font-semibold text-text-emphasizing mb-2">UPS International</h4>
               <ul className="list-disc pl-5 text-text-normal text-sm md:text-base">
-                <li>Express Early: <strong>$9</strong> onwards</li>
-                <li>Express: <strong>$8</strong> onwards</li>
-                <li>Express Saver: <strong>$7</strong> onwards</li>
-                <li>Expedited: <strong>$6</strong> onwards</li>
-                <li>Standard: <strong>$5</strong> onwards</li>
+                <li>Options available for various needs</li>
+                <li>Competitive pricing based on service type</li>
+                <li>Choose from expedited to standard delivery</li>
               </ul>
             </div>
           </div>
@@ -94,21 +92,18 @@ const ClearPricing = () => {
             <h4 className="text-2xl font-semibold text-text-emphasizing mb-2">UPS USA</h4>
             <h5 className="font-bold text-text-emphasizing">Next Day Services:</h5>
             <ul className="list-disc pl-5 mb-2 text-text-normal text-sm md:text-base">
-              <li>Next Day Air Early v2: <strong>$8</strong> onwards</li>
-              <li>Next Day Air v2: <strong>$7</strong> onwards</li>
+              <li>Options available, starting from competitive rates</li>
+              <li>Check our flexible pricing options</li>
             </ul>
             <h5 className="font-bold text-text-emphasizing">2nd Day Services:</h5>
             <ul className="list-disc pl-5 mb-2 text-text-normal text-sm md:text-base">
-              <li>2nd Day Air v2: <strong>$7</strong> onwards</li>
-              <li>3 Day Select v2: <strong>$5</strong> onwards</li>
-              <li>Ground v2: <strong>$4</strong> onwards</li>
+              <li>Variety of services tailored to your needs</li>
+              <li>Transparent pricing structure</li>
             </ul>
             <h5 className="font-bold text-text-emphasizing">Manifested Services:</h5>
             <ul className="list-disc pl-5 text-text-normal text-sm md:text-base">
-              <li>Next Day Air Manifested: <strong>$12</strong> onwards</li>
-              <li>2nd Day Air Manifested: <strong>$7</strong> onwards</li>
-              <li>3 Day Select Manifested: <strong>$5</strong> onwards</li>
-              <li>Ground Manifested: <strong>$4</strong> onwards</li>
+              <li>Packages designed to offer flexibility</li>
+              <li>Customize your shipping based on your requirements</li>
             </ul>
           </div>
         </div>

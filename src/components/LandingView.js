@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import landingBackground from '../assets/landing-background.png';
+import landingBackground from '../assets/landing.webp';
 import './LandingView.css'; // Ensure you've created this file
 
 const LandingView = () => {
@@ -31,16 +31,16 @@ const LandingView = () => {
     <section ref={ref} className="landing-view flex flex-col items-center justify-center h-screen text-center relative" style={{
       backgroundImage: `url(${landingBackground})`,
       backgroundSize: 'cover',
-      backgroundPosition: 'center',
+      backgroundPosition: 'top',
     }}>
       <div className="overlay absolute inset-0 bg-black opacity-50"></div> {/* Added overlay for improved visibility */}
       <div className="relative z-10 p-4 md:p-8 lg:p-12"> {/* Adjusted padding for responsiveness */}
         {/* Animated heading */}
-        <h1 className="text-4xl md:text-6xl lg:text-8xl font-extrabold mb-4 text-primary animate__animated animate__zoomIn animate__delay-1s">
-          Welcome to Icarus Ships
+        <h1 className="text-4xl md:text-3xl font-bold lg:text-6xl mb-4 text-primary animate__animated animate__zoomIn animate__delay-1s">
+          Welcome to Icarus Ships!
         </h1>
         {/* Animated paragraph */}
-        <p className="text-lg md:text-2xl lg:text-3xl mb-8 text-secondary animate__animated animate__fadeInUp animate__delay-1.5s">
+        <p className="text-md md:text-xl lg:text-2xl mb-8 text-secondary animate__animated animate__fadeInUp animate__delay-1.5s">
           Your gateway to swift and reliable ship solutions.
         </p>
         {/* Animated button with initial border color */}
