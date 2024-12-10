@@ -7,6 +7,7 @@
   
   body {
     font-family: 'Arial', sans-serif;
+    background: rgba(0, 0, 0, 0.5);
   }
   
   /* Landing Section */
@@ -25,16 +26,6 @@
     background: rgba(0, 0, 0, 0.5); /* Adjust overlay for better text readability */
   }
   
-  /* Text Styles */
-  h1 {
-    color: #FFDE59; /* Bright yellow color for prominence */
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-  }
-  
-  p {
-    color: #FFA07A; /* Light salmon color to differentiate from the heading */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-  }
   
   /* Button Styles */
   .btn-start {

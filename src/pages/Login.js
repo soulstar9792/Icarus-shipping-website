@@ -21,42 +21,43 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 to-purple-500">
-      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">Welcome Back!</h2>
+    <div className="flex items-center justify-center min-h-screen bg-custom-background"> 
+      <div className="flex flex-col items-center bg-card-background rounded-lg p-10 md:p-12 border border-custom-border shadow-xl transition-all duration-300 
+                      hover:shadow-bright w-full max-w-md"> 
+        <h2 className="text-3xl sm:text-4xl font-bold text-center text-text-emphasizing mb-4">Welcome Back!</h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="email">Email</label>
+        <form className='w-full' onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label className="block text-text-normal font-semibold mb-2" htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-4 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="password">Password</label>
+            <label className="block text-text-normal font-semibold mb-2" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-4 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          <button type="submit" className="w-full p-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+          <button type="submit" className="w-full p-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
             Login
           </button>
         </form>
         <div className="text-center mt-6">
-          <p className="text-gray-600">Don't have an account? <Link to="/register" className="text-indigo-600 font-semibold">Register</Link></p>
+          <p className="text-text-normal text-sm md:text-base">Don't have an account? <Link to="/register" className="text-purple-600 font-semibold hover:text-purple-700">Register</Link></p>
         </div>
         <div className="text-center mt-4">
-          <Link to="/forgot-password" className="text-indigo-600 hover:underline">Forgot Password?</Link>
+          <Link to="/forgot-password" className="text-purple-600 hover:underline hover:text-purple-700 text-sm md:text-base">Forgot Password?</Link>
         </div>
       </div>
     </div>

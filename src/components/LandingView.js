@@ -45,7 +45,7 @@ const LandingView = () => {
         </p>
         {/* Animated button with initial border color */}
         <button
-          className="bg-primary text-white text-lg md:text-xl px-6 py-2 rounded border-2 border-dark-orange transition-all duration-300 " 
+          className="btn-start text-white text-lg md:text-xl px-6 py-2 rounded border-2 border-dark-orange transition-all duration-300 " 
           onMouseDown={(e) => {
             e.currentTarget.classList.add('animate__animated', 'animate__wobble');
           }} 

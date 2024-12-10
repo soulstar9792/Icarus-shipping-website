@@ -38,11 +38,11 @@ const WhyChooseUs = () => {
         
         {/* Feature 1: Quality Service */}
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
-                        hover:shadow-bright hover:border-hover-border text-gray-800 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
+                        hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
           <FaStar className="text-5xl md:text-6xl text-yellow-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-yellow-400 hover:scale-110" />
           <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">Unmatched Quality Service</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Experience exceptional service that prioritizes your needs.</p>
-          <ul className="text-gray-800 text-xs md:text-sm mt-4 z-10">
+          <ul className="text-gray-500 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">
               <span className="text-yellow-600 mr-2">✔️</span> 
               <span>24/7 availability to meet your needs.</span>
@@ -56,16 +56,16 @@ const WhyChooseUs = () => {
               <span>98% satisfaction guarantee for your peace of mind.</span>
             </li>
           </ul>
-          <blockquote className="mt-4 italic text-gray-700 z-10 p-2 rounded-md bg-transparent border-l-4 border-yellow-600">“Their service exceeded my expectations!” - Happy Customer</blockquote>
+          <blockquote className="mt-4 italic text-gray-400 z-10 p-2 rounded-md bg-transparent border-l-4 border-yellow-600">“Their service exceeded my expectations!” - Happy Customer</blockquote>
         </div>
 
         {/* Feature 2: Affordable Rates */}
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
-                        hover:shadow-bright hover:border-hover-border text-gray-800 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-0-5s' : ''}`}>
+                        hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-0-5s' : ''}`}>
           <FaDollarSign className="text-5xl md:text-6xl text-green-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-green-400 hover:scale-110" />
           <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">Transparent and Affordable Rates</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Discover competitive pricing without hidden fees.</p>
-          <ul className="text-gray-800 text-xs md:text-sm mt-4 z-10">
+          <ul className="text-gray-500 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">
               <span className="text-green-600 mr-2">✔️</span> 
               <span>Clear, hassle-free pricing with no hidden charges.</span>
@@ -79,16 +79,16 @@ const WhyChooseUs = () => {
               <span>Exceptional value that fits your budget.</span>
             </li>
           </ul>
-          <blockquote className="mt-4 italic text-gray-700 z-10 p-2 rounded-md bg-transparent border-l-4 border-green-600">“Incredible value for the price!” - Satisfied User</blockquote>
+          <blockquote className="mt-4 italic text-gray-400 z-10 p-2 rounded-md bg-transparent border-l-4 border-green-600">“Incredible value for the price!” - Satisfied User</blockquote>
         </div>
 
         {/* Feature 3: 24/7 Support */}
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
-                        hover:shadow-bright hover:border-hover-border text-gray-800 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-1s' : ''}`}>
+                        hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-1s' : ''}`}>
           <FaPhone className="text-5xl md:text-6xl text-blue-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-blue-400 hover:scale-110" />
           <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">24/7 Support at Your Fingertips</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Our dedicated team is here to help whenever you need us.</p>
-          <ul className="text-gray-800 text-xs md:text-sm mt-4 z-10">
+          <ul className="text-gray-500 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">
               <span className="text-blue-600 mr-2">✔️</span> 
               <span>Multilingual support to cater to all customers.</span>
@@ -102,7 +102,7 @@ const WhyChooseUs = () => {
               <span>Experts on standby ready to assist you.</span>
             </li>
           </ul>
-          <blockquote className="mt-4 italic text-gray-700 z-10 p-2 rounded-md bg-transparent border-l-4 border-blue-600">“They provide unmatched customer service!” - Loyal Client</blockquote>
+          <blockquote className="mt-4 italic text-gray-400 z-10 p-2 rounded-md bg-transparent border-l-4 border-blue-600">“They provide unmatched customer service!” - Loyal Client</blockquote>
         </div>
       </div>
     </section>
