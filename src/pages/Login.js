@@ -1,22 +1,30 @@
-// src/components/Login.js
+// src/pages/Login.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Import AuthContext
 
-const Login = () => {
+const mockCredentials = {
+  email: 'test@example.com',
+  password: 'password123',
+};
+
+const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth(); // Get the login function from context
+  console.log("---Login---", props);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     
-    if (email && password) {
-      // Replace this with your actual login logic
+    if (email === mockCredentials.email && password === mockCredentials.password) {
       console.log('Login successful');
-      navigate('/'); // Redirect to homepage on success
+      login({ email, token: "1234" }); // Simulate setting user state
+      navigate('/main/dashboard'); // Redirect to Dashboard on success
     } else {
-      setError('Please enter valid email and password');
+      setError('Invalid email or password');
     }
   };
 

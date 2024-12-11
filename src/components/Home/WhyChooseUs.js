@@ -6,6 +6,7 @@ const WhyChooseUs = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    console.log("---WhyChooseUs---")
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -29,9 +30,12 @@ const WhyChooseUs = () => {
 
   return (
     <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-custom-background relative overflow-hidden">
-      <h2 className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-text-emphasizing cursor-pointer transition-all duration-300 
-                      ${isVisible ? 'animate__animated animate__fadeInDown' : ''} 
-                      hover:text-shadow`}>
+      <h2 
+        className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-text-emphasizing cursor-pointer transition-all duration-300 
+                    ${isVisible ? 'animate__animated animate__fadeInDown' : ''} 
+                    hover:text-shadow`}
+        aria-label="Why Choose Us"
+      >
         Why Choose Us
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 relative z-10">
@@ -40,7 +44,7 @@ const WhyChooseUs = () => {
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
                         hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
           <FaStar className="text-5xl md:text-6xl text-yellow-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-yellow-400 hover:scale-110" />
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">Unmatched Quality Service</h3>
+          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text" aria-label="Unmatched Quality Service">Unmatched Quality Service</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Experience exceptional service that prioritizes your needs.</p>
           <ul className="text-gray-500 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">
@@ -63,7 +67,7 @@ const WhyChooseUs = () => {
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
                         hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-0-5s' : ''}`}>
           <FaDollarSign className="text-5xl md:text-6xl text-green-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-green-400 hover:scale-110" />
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">Transparent and Affordable Rates</h3>
+          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text" aria-label="Transparent and Affordable Rates">Transparent and Affordable Rates</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Discover competitive pricing without hidden fees.</p>
           <ul className="text-gray-500 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">
@@ -86,7 +90,7 @@ const WhyChooseUs = () => {
         <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
                         hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-1s' : ''}`}>
           <FaPhone className="text-5xl md:text-6xl text-blue-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-blue-400 hover:scale-110" />
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text">24/7 Support at Your Fingertips</h3>
+          <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text" aria-label="24/7 Support at Your Fingertips">24/7 Support at Your Fingertips</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Our dedicated team is here to help whenever you need us.</p>
           <ul className="text-gray-500 text-xs md:text-sm mt-4 z-10">
             <li className="my-2 flex items-center">

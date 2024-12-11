@@ -3,26 +3,24 @@ import { FaShippingFast, FaBox } from "react-icons/fa";
 import 'animate.css';
 
 const ReadyToShip = () => {
-  const [isVisible, setIsVisible] = useState(false); // State to manage visibility
-  const sectionRef = useRef(null); // Reference to the section
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
 
-  // Intersection Observer to detect when the section is in view
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect(); // Stop observing once it's visible
+          observer.disconnect();
         }
       },
-      { threshold: 0.1 } // Trigger when 10% of the section is in view
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
 
-    // Cleanup observer on component unmount
     return () => {
       observer.disconnect();
     };
@@ -37,7 +35,6 @@ const ReadyToShip = () => {
         <h2 className="text-5xl font-bold mb-4 text-text-emphasizing hover:text-shadow">Ready to Ship Your Goods?</h2>
         <p className="text-xl mb-8 text-text-normal">Experience fast, reliable shipping at unbeatable prices. It's time to get your products moving!</p>
         <div className="flex justify-center mb-10">
-          {/* Card Items for Shipping Features */}
           {[
             { icon: <FaShippingFast />, text: "Fast Delivery" },
             { icon: <FaBox />, text: "Multiple Options" }
@@ -50,7 +47,11 @@ const ReadyToShip = () => {
             </div>
           ))}
         </div>
-        <a href="#" className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded shadow-lg transition ease-in-out duration-200">
+        <a 
+          href="#" 
+          className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded shadow-lg transition ease-in-out duration-200"
+          aria-label="Start Shipping Today"
+        >
           Start Shipping Today
         </a>
       </div>

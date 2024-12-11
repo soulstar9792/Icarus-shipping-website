@@ -1,4 +1,3 @@
-// src/components/Register.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -10,7 +9,7 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
@@ -19,9 +18,23 @@ const Register = () => {
     }
 
     if (name && email && password) {
-      // Here you would usually call your registration service
-      console.log('Registration successful');
-      navigate('/'); // Redirect to homepage on success
+      try {
+        const response = await fetch('YOUR_API_ENDPOINT/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password }),
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log('Registration successful'); // Handle success
+          navigate('/login'); // Redirect to login on success
+        } else {
+          setError(data.message || 'Registration failed');
+        }
+      } catch (err) {
+        setError('An error occurred. Please try again.');
+      }
     } else {
       setError('Please fill in all fields');
     }
