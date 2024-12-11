@@ -1,8 +1,8 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
-import customer_man1 from '../assets/customer_man1.jpg';
-import customer_man2 from '../assets/customer_man2.jpg';
-import customer_woman1 from '../assets/customer_woman1.jpg';
+import customer_man1 from '../../assets/customer_man1.jpg';
+import customer_man2 from '../../assets/customer_man2.jpg';
+import customer_woman1 from '../../assets/customer_woman1.jpg';
 
 // Sample Customer Feedback Data with images and ratings
 const feedbackData = [

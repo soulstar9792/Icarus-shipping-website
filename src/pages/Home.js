@@ -1,14 +1,14 @@
 // src/pages/Home.js
 import React from 'react';
 import { useSectionContext } from '../context/SectionContext'; // Import the context
-import LandingView from '../components/LandingView'; 
-import HowItWorks from '../components/HowItWorks';
-import WhyChooseUs from "../components/WhyChooseUs";
-import ClearPricing from '../components/ClearPricing'; 
-import FAQSection from '../components/FAQSection';
-import CustomerFeedback from '../components/CustomerFeedback';
-import ReadyToShip from '../components/ReadyToShip';
-import Footer from '../components/Footer';
+import LandingView from '../components/Home/LandingView'; 
+import HowItWorks from '../components/Home/HowItWorks';
+import WhyChooseUs from "../components/Home/WhyChooseUs";
+import ClearPricing from '../components/Home/ClearPricing'; 
+import FAQSection from '../components/Home/FAQSection';
+import CustomerFeedback from '../components/Home/CustomerFeedback';
+import ReadyToShip from '../components/Home/ReadyToShip';
+import Footer from '../components/Home/Footer';
 
 import 'animate.css';
 

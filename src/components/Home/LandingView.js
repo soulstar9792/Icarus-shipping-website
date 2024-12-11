@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import landingBackground from '../assets/landing.webp';
+import landingBackground from '../../assets/landing.webp';
 import './LandingView.css'; // Ensure you've created this file
 
 const LandingView = () => {
