@@ -63,19 +63,20 @@ const FAQs = () => {
       </h2>
       <div className="max-w-3xl mx-auto">
         {faqs.map((faq, index) => (
-          <div key={index} className={`mb-4 transition duration-300 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
-            <Card>
-              <div
-                className="w-full text-left transition-all duration-300"
-                onClick={() => toggleFAQ(index)}
-              >
-                <h3 className={`text-lg md:text-xl font-semibold text-text-normal group-hover:text-hover-text`}>
-                  {faq.question}
-                </h3>
-                <span className={`text-gray-500 ${activeIndex === index ? 'hidden' : 'block'}`}>+</span>
-                <span className={`text-gray-500 ${activeIndex === index ? 'block' : 'hidden'}`}>–</span>
-              </div>
-            </Card>
+          <div key={index} className={`mb-4 transition cursor-pointer duration-300 ${activeIndex === index ? 'text-hover-text' : ''}`}>
+            <div  onClick={() => toggleFAQ(index)}>
+              <Card>
+                <div
+                  className="w-full text-left transition-all duration-300"
+                >
+                  <h3 className={`text-lg md:text-xl font-semibold text-text-normal group-hover:text-hover-text`}>
+                    {faq.question}
+                  </h3>
+                  <span className={`text-gray-500 ${activeIndex === index ? 'hidden' : 'block'}`}>+</span>
+                  <span className={`text-gray-500 ${activeIndex === index ? 'block' : 'hidden'}`}>–</span>
+                </div>
+              </Card>
+            </div>
             {activeIndex === index && (
               <Card className="border border-hover-border shadow-bright mt-2">
                 <p className="text-hover-text text-sm md:text-base text-left">
