@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaShippingFast, FaBox } from "react-icons/fa";
 import 'animate.css';
 import Card from '../Utils/Card'; // Make sure the path to Card is correct
+import $GS from '../../styles/constants';
 
 const ReadyToShip = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -34,8 +35,8 @@ const ReadyToShip = () => {
       className="py-20 px-4 md:px-10 bg-custom-background relative overflow-hidden"
     >
       <div className={`container mx-auto text-center animate__delay-1s ${isVisible ? 'animate__animated animate__fadeInUp' : 'opacity-0'}`}>
-        <h2 className="text-5xl font-bold mb-4 text-text-emphasizing hover:text-shadow">Ready to Ship Your Goods?</h2>
-        <p className="text-xl mb-8 text-text-normal">Experience fast, reliable shipping at unbeatable prices. It's time to get your products moving!</p>
+        <h2 className={`${$GS.textHeading_1} mb-4`}>Ready to Ship Your Goods?</h2>
+        <p className={`${$GS.textHeading_3} mb-8 text-text-normal`}>Experience fast, reliable shipping at unbeatable prices. It's time to get your products moving!</p>
         <div className="flex justify-center mb-10">
           {[
             { icon: <FaShippingFast />, text: "Fast Delivery" },

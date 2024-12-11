@@ -4,6 +4,7 @@ import customer_man1 from '../../assets/customer_man1.jpg';
 import customer_man2 from '../../assets/customer_man2.jpg';
 import customer_woman1 from '../../assets/customer_woman1.jpg';
 import Card from '../Utils/Card'; // Ensure this path matches your directory structure
+import $GS from '../../styles/constants';
 
 // Sample Customer Feedback Data with images and ratings
 const feedbackData = [
@@ -33,7 +34,7 @@ const feedbackData = [
 const CustomerFeedback = () => {
   return (
     <section className="py-10 md:py-20 px-4 bg-custom-background text-text-emphasizing">
-      <h2 className="text-2xl md:text-4xl lg:text-5xl text-center mb-4 md:mb-8 font-bold hover:text-shadow">
+      <h2 className={`${$GS.textHeading_1} mb-4 md:mb-8`}>
         What Our Customers Say
       </h2>
 
@@ -48,7 +49,7 @@ const CustomerFeedback = () => {
                   className="w-16 h-16 rounded-full mr-4 object-cover" 
                 />
                 <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-text-normal group-hover:text-hover-text group-hover:text-shadow">
+                  <h3 className={`text-lg md:text-xl font-semibold text-text-normal group-hover:text-hover-text`}>
                     {feedback.name}
                   </h3>
                   <h4 className="text-sm md:text-md text-text-normal group-hover:text-hover-text">{feedback.designation}</h4>

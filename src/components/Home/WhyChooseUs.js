@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaStar, FaDollarSign, FaPhone } from "react-icons/fa";
 import Card from '../Utils/Card'; // Adjust the import path as needed
+import $GS from '../../styles/constants';
 
 const WhyChooseUs = () => {
   const ref = useRef(null);
@@ -32,9 +33,8 @@ const WhyChooseUs = () => {
   return (
     <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-custom-background relative overflow-hidden">
       <h2 
-        className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-text-emphasizing cursor-pointer transition-all duration-300 
-                    ${isVisible ? 'animate__animated animate__fadeInDown' : ''} 
-                    hover:text-shadow`}
+        className={`${$GS.textHeading_1}
+          ${isVisible ? 'animate__animated animate__fadeInDown' : ''}`}
         aria-label="Why Choose Us"
       >
         Why Choose Us

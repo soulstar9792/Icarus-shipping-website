@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Card from '../Utils/Card'; // Adjust the import path as per your folder structure
+import $GS from '../../styles/constants';
 
 const FAQs = () => {
   const [faqs] = useState([
@@ -54,9 +55,9 @@ const FAQs = () => {
   return (
     <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-custom-background relative overflow-hidden">
       <h2
-        className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-text-emphasizing cursor-pointer transition-all duration-300 ${
+        className={`${$GS.textHeading_1} ${
           isVisible ? 'animate__animated animate__fadeInDown' : ''
-        } hover:text-shadow`}
+        }`}
       >
         Frequently Asked Questions
       </h2>
@@ -68,7 +69,7 @@ const FAQs = () => {
                 className="w-full text-left transition-all duration-300"
                 onClick={() => toggleFAQ(index)}
               >
-                <h3 className={`text-lg md:text-xl font-semibold text-text-normal`}>
+                <h3 className={`text-lg md:text-xl font-semibold text-text-normal group-hover:text-hover-text`}>
                   {faq.question}
                 </h3>
                 <span className={`text-gray-500 ${activeIndex === index ? 'hidden' : 'block'}`}>+</span>

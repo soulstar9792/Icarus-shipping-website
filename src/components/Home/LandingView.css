@@ -1,5 +1,6 @@
-/* Basic Styles Reset */
-* {
+
+  /* Basic Styles Reset */
+  * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -60,7 +61,3 @@
     }
   }
   /* styles.css or a similar file */
-
-.hover\:text-shadow:hover {
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.1);
-}

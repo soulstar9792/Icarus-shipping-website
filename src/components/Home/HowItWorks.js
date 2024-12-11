@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaCheckCircle, FaRegHandshake, FaEye, FaThumbsUp } from "react-icons/fa";
 import Card from '../Utils/Card';
-
+import $GS from '../styles/globals.module.css'
 const HowItWorks = () => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
