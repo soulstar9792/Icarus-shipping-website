@@ -2,7 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaCheckCircle, FaRegHandshake, FaEye, FaThumbsUp } from "react-icons/fa";
 import Card from '../Utils/Card';
-import $GS from '../../styles/constants'
+import $GS from '../../styles/constants';
+
 const HowItWorks = () => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -31,9 +32,8 @@ const HowItWorks = () => {
 
   return (
     <section ref={ref} className="py-10 md:py-20 px-4 md:px-10 bg-custom-background relative overflow-hidden">
-      <h2 className={`text-3xl md:text-5xl font-bold text-center mb-8 md:mb-12 text-text-emphasizing relative cursor-pointer transition-all duration-300 
-                      ${isVisible ? 'animate__animated animate__zoomIn' : ''} 
-                      group hover:text-shadow`}
+      <h2 className={`${$GS.textHeading_1} relative cursor-pointer transition-all duration-300 
+                      ${isVisible ? 'animate__animated animate__zoomIn' : ''} group hover:text-shadow`}
       >
         How It Works
       </h2>
@@ -47,11 +47,17 @@ const HowItWorks = () => {
           { icon: <FaThumbsUp />, title: "Enjoy Your Service", description: "Experience our top-notch service and enjoy the benefits it brings!" }
         ].map((item, index) => (
           <Card key={index}>
-            <div className="flex items-center mb-3 md:mb-4">
-              <span className={`text-4xl md:text-5xl text-custom-border mr-2 md:mr-4 group-hover:text-hover-text`}>{item.icon}</span>
-              <h3 className={`text-xl md:text-2xl font-semibold text-text-normal group-hover:text-hover-text`}>{item.title}</h3>
+            <div className="flex items-center">
+              <span className={`${$GS.iconSize} text-custom-border mr-2 md:mr-4 group-hover:text-hover-text`}>
+                {item.icon}
+              </span>
+              <h3 className={`${$GS.textHeading_3} group-hover:text-hover-text`}>
+                {item.title}
+              </h3>
             </div>
-            <p className={`text-sm md:text-base text-text-normal mb-2 md:mb-4 group-hover:text-hover-text`}>{item.description}</p>
+            <p className={`${$GS.textNormal_1} mb-2 md:mb-4 group-hover:text-hover-text`}>
+              {item.description}
+            </p>
           </Card>
         ))}
 
