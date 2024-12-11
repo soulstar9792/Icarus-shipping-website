@@ -40,7 +40,7 @@ const CustomerFeedback = () => {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {feedbackData.map((feedback, index) => (
-            <Card key={index} className="p-4 md:p-6 transition duration-300 group hover:shadow-bright hover:border-hover-border">
+            <Card key={index}>
               <div className="flex items-center mb-4">
                 <img 
                   src={feedback.image} 

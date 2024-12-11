@@ -62,10 +62,8 @@ const FAQs = () => {
       </h2>
       <div className="max-w-3xl mx-auto">
         {faqs.map((faq, index) => (
-          <div key={index} className={`mb-4 transition-shadow duration-300 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
-            <Card className={`p-4 md:p-6 bg-transparent border border-custom-border rounded-sm shadow-lg 
-              ${activeIndex === index ? 'bg-gray-100 border-hover-border shadow-bright' : ''} 
-              hover:bg-transparent hover:border-hover-border hover:shadow-bright`}>
+          <div key={index} className={`mb-4 transition duration-300 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
+            <Card>
               <div
                 className="w-full text-left transition-all duration-300"
                 onClick={() => toggleFAQ(index)}
@@ -78,7 +76,7 @@ const FAQs = () => {
               </div>
             </Card>
             {activeIndex === index && (
-              <Card className="p-4 md:p-6 bg-transparent border border-hover-border shadow-bright rounded-sm mt-2">
+              <Card className="border border-hover-border shadow-bright mt-2">
                 <p className="text-hover-text text-sm md:text-base text-left">
                   {faq.answer}
                 </p>
