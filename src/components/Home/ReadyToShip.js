@@ -1,6 +1,8 @@
+// src/components/ReadyToShip.js
 import React, { useEffect, useRef, useState } from "react";
 import { FaShippingFast, FaBox } from "react-icons/fa";
 import 'animate.css';
+import Card from '../Utils/Card'; // Make sure the path to Card is correct
 
 const ReadyToShip = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -39,12 +41,12 @@ const ReadyToShip = () => {
             { icon: <FaShippingFast />, text: "Fast Delivery" },
             { icon: <FaBox />, text: "Multiple Options" }
           ].map((item, index) => (
-            <div key={index} className="border-thin border-custom-border rounded-small p-6 bg-card-background transition-all duration-300 shadow-lg group hover:border-hover-border hover:shadow-bright mx-4">
+            <Card key={index} className="mx-4"> {/* Pass in the additional style*/}
               <div className="flex flex-col items-center">
                 <span className={`text-6xl text-custom-border mb-2 group-hover:text-hover-text`}>{item.icon}</span>
                 <p className={`text-lg text-text-normal group-hover:text-hover-text`}>{item.text}</p>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
         <a 

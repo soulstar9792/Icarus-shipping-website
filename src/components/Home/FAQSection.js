@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import Card from '../Utils/Card'; // Adjust the import path as per your folder structure
 
 const FAQs = () => {
   const [faqs] = useState([
@@ -62,24 +63,26 @@ const FAQs = () => {
       <div className="max-w-3xl mx-auto">
         {faqs.map((faq, index) => (
           <div key={index} className={`mb-4 transition-shadow duration-300 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
-            <button
-              className={`w-full text-left bg-transparent border border-custom-border rounded-sm p-4 md:p-6 focus:outline-none transition-all duration-300 shadow-lg 
-                ${activeIndex === index ? 'bg-gray-100 border-hover-border shadow-bright' : ''} 
-                hover:bg-transparent hover:border-hover-border hover:shadow-bright`}
-              onClick={() => toggleFAQ(index)}
-            >
-              <h3 className={`text-lg md:text-xl font-semibold text-text-normal`}>
-                {faq.question}
-              </h3>
-              <span className={`text-gray-500 ${activeIndex === index ? 'hidden' : 'block'}`}>+</span>
-              <span className={`text-gray-500 ${activeIndex === index ? 'block' : 'hidden'}`}>–</span>
-            </button>
+            <Card className={`p-4 md:p-6 bg-transparent border border-custom-border rounded-sm shadow-lg 
+              ${activeIndex === index ? 'bg-gray-100 border-hover-border shadow-bright' : ''} 
+              hover:bg-transparent hover:border-hover-border hover:shadow-bright`}>
+              <div
+                className="w-full text-left transition-all duration-300"
+                onClick={() => toggleFAQ(index)}
+              >
+                <h3 className={`text-lg md:text-xl font-semibold text-text-normal`}>
+                  {faq.question}
+                </h3>
+                <span className={`text-gray-500 ${activeIndex === index ? 'hidden' : 'block'}`}>+</span>
+                <span className={`text-gray-500 ${activeIndex === index ? 'block' : 'hidden'}`}>–</span>
+              </div>
+            </Card>
             {activeIndex === index && (
-              <div className="p-4 md:p-6 bg-transparent border border-hover-border shadow-bright rounded-sm mt-2">
+              <Card className="p-4 md:p-6 bg-transparent border border-hover-border shadow-bright rounded-sm mt-2">
                 <p className="text-hover-text text-sm md:text-base text-left">
                   {faq.answer}
                 </p>
-              </div>
+              </Card>
             )}
           </div>
         ))}

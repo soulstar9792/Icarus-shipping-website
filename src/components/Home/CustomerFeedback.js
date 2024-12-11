@@ -3,6 +3,7 @@ import { FaStar } from "react-icons/fa";
 import customer_man1 from '../../assets/customer_man1.jpg';
 import customer_man2 from '../../assets/customer_man2.jpg';
 import customer_woman1 from '../../assets/customer_woman1.jpg';
+import Card from '../Utils/Card'; // Ensure this path matches your directory structure
 
 // Sample Customer Feedback Data with images and ratings
 const feedbackData = [
@@ -39,10 +40,7 @@ const CustomerFeedback = () => {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {feedbackData.map((feedback, index) => (
-            <div 
-              key={index} 
-              className="bg-card-background border-thin border-custom-border rounded-small p-4 md:p-6 transition duration-300 shadow-lg group hover:shadow-bright hover:border-hover-border"
-            >
+            <Card key={index} className="p-4 md:p-6 transition duration-300 group hover:shadow-bright hover:border-hover-border">
               <div className="flex items-center mb-4">
                 <img 
                   src={feedback.image} 
@@ -62,7 +60,7 @@ const CustomerFeedback = () => {
                 ))}
               </div>
               <p className="text-sm md:text-base text-text-normal group-hover:text-hover-text">{feedback.feedback}</p>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

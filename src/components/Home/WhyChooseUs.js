@@ -1,12 +1,13 @@
+// src/components/WhyChooseUs.js
 import React, { useEffect, useRef, useState } from "react";
 import { FaStar, FaDollarSign, FaPhone } from "react-icons/fa";
+import Card from '../Utils/Card'; // Adjust the import path as needed
 
 const WhyChooseUs = () => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    console.log("---WhyChooseUs---")
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -39,10 +40,9 @@ const WhyChooseUs = () => {
         Why Choose Us
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 relative z-10">
-        
+
         {/* Feature 1: Quality Service */}
-        <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
-                        hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
+        <Card className={`flex flex-col items-center text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}>
           <FaStar className="text-5xl md:text-6xl text-yellow-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-yellow-400 hover:scale-110" />
           <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text" aria-label="Unmatched Quality Service">Unmatched Quality Service</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Experience exceptional service that prioritizes your needs.</p>
@@ -61,11 +61,10 @@ const WhyChooseUs = () => {
             </li>
           </ul>
           <blockquote className="mt-4 italic text-gray-400 z-10 p-2 rounded-md bg-transparent border-l-4 border-yellow-600">“Their service exceeded my expectations!” - Happy Customer</blockquote>
-        </div>
+        </Card>
 
         {/* Feature 2: Affordable Rates */}
-        <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
-                        hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-0-5s' : ''}`}>
+        <Card className={`flex flex-col items-center text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-0-5s' : ''}`}>
           <FaDollarSign className="text-5xl md:text-6xl text-green-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-green-400 hover:scale-110" />
           <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text" aria-label="Transparent and Affordable Rates">Transparent and Affordable Rates</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Discover competitive pricing without hidden fees.</p>
@@ -84,11 +83,10 @@ const WhyChooseUs = () => {
             </li>
           </ul>
           <blockquote className="mt-4 italic text-gray-400 z-10 p-2 rounded-md bg-transparent border-l-4 border-green-600">“Incredible value for the price!” - Satisfied User</blockquote>
-        </div>
+        </Card>
 
         {/* Feature 3: 24/7 Support */}
-        <div className={`flex flex-col items-center bg-card-background rounded-small p-6 md:p-8 border-thin border-custom-border shadow-lg transition-all duration-300 
-                        hover:shadow-bright hover:border-hover-border text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-1s' : ''}`}>
+        <Card className={`flex flex-col items-center text-gray-500 ${isVisible ? 'animate__animated animate__fadeInUp animate__delay-1s' : ''}`}>
           <FaPhone className="text-5xl md:text-6xl text-blue-600 mb-2 md:mb-4 z-10 transition-all duration-300 transform hover:text-blue-400 hover:scale-110" />
           <h3 className="text-xl md:text-2xl font-bold mb-2 text-text-normal z-10 hover:text-hover-text" aria-label="24/7 Support at Your Fingertips">24/7 Support at Your Fingertips</h3>
           <p className="text-center mb-2 text-sm md:text-base z-10">Our dedicated team is here to help whenever you need us.</p>
@@ -107,7 +105,8 @@ const WhyChooseUs = () => {
             </li>
           </ul>
           <blockquote className="mt-4 italic text-gray-400 z-10 p-2 rounded-md bg-transparent border-l-4 border-blue-600">“They provide unmatched customer service!” - Loyal Client</blockquote>
-        </div>
+        </Card>
+        
       </div>
     </section>
   );
