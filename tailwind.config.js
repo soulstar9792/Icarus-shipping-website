@@ -5,7 +5,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'custom-border': '#21262d',
+        'custom-border': '#31363d',
+        'custom-hover': '#777777',
+        'custom-text': '#aaaaaa',
         'custom-background': '#0d1117',
         'card-background': '#0d1117',
         'text-normal': '#8b949e',

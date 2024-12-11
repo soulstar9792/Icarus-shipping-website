@@ -3,8 +3,8 @@ import React from 'react';
 
 const MainHeader = () => {
   return (
-    <div className="bg-gray-200 p-4">
-      <h1 className="text-2xl font-semibold">Main Header</h1>
+    <div className="bg-custom-background text-white p-4 border-thin border-custom-border">
+      <h1 className="text-2xl font-semibold"></h1>
     </div>
   );
 }
