@@ -1,20 +1,79 @@
 // src/components/Main/Sidebar.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { FaTachometerAlt, FaTag, FaShoppingCart, FaClipboardList, FaBoxes, FaDollarSign, FaAddressCard, FaUserShield } from 'react-icons/fa'; // Importing FaDollarSign
+import $GS from '../../styles/constants'; // Import styles
+import logo from '../../assets/logo.png';  // Update this path to where your logo is stored
+
+const menuItems = [
+  {
+    path: '/main/dashboard',
+    icon: <FaTachometerAlt className="mr-2" />,
+    label: 'Dashboard',
+  },
+  {
+    path: '/main/order-label',
+    icon: <FaTag className="mr-2" />,
+    label: 'Order Label',
+  },
+  {
+    path: '/main/bulk-order',
+    icon: <FaShoppingCart className="mr-2" />,
+    label: 'Bulk Order',
+  },
+  {
+    path: '/main/orders',
+    icon: <FaClipboardList className="mr-2" />,
+    label: 'Orders',
+  },
+  {
+    path: '/main/batch-orders',
+    icon: <FaBoxes className="mr-2" />,
+    label: 'Batch Orders',
+  },
+  {
+    path: '/main/deposit',
+    icon: <FaDollarSign className="mr-2" />, // Using FaDollarSign as the new deposit icon
+    label: 'Deposit',
+  },
+  {
+    path: '/main/address',
+    icon: <FaAddressCard className="mr-2" />,
+    label: 'Address',
+  },
+  {
+    path: '/main/admin',
+    icon: <FaUserShield className="mr-2" />,
+    label: 'Admin Panel',
+  },
+];
 
 const Sidebar = () => {
+  const location = useLocation(); // Get the current location
+
   return (
-    <div className="w-1/4 bg-gray-800 text-white h-full p-4">
-      <h2 className="text-xl font-bold mb-4">Menu</h2>
-      <ul>
-        <li className="mb-2"><Link to="/main/dashboard">Dashboard</Link></li>
-        <li className="mb-2"><Link to="/main/order-label">Order Label</Link></li>
-        <li className="mb-2"><Link to="/main/bulk-order">Bulk Order</Link></li>
-        <li className="mb-2"><Link to="/main/orders">Orders</Link></li>
-        <li className="mb-2"><Link to="/main/batch-orders">Batch Orders</Link></li>
-        <li className="mb-2"><Link to="/main/deposit">Deposit</Link></li>
-        <li className="mb-2"><Link to="/main/address">Address</Link></li>
-        <li className="mb-2"><Link to="/main/admin">Admin Panel</Link></li>
+    <div className={`w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer}`}>
+      {/* Logo Section */}
+      
+      
+      <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`} > 
+        <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
+        <h1 className={`text-xl transition-colors duration-300`}>Icarus Ships</h1>
+      </Link>
+      <ul className="w-full">
+        {menuItems.map((item, index) => {
+          // Check if the current item's path matches the current location
+          const isActive = location.pathname === item.path;
+          return (
+            <li className={`${$GS.Box_1} ${isActive ? $GS.ActiveBox : ''}`} key={index}>
+              <Link className={`${$GS.SidebarItem}`} to={item.path}>
+                <span className={`${isActive ? $GS.hoverText : ''} flex items-center`}>
+                  {item.icon} {item.label}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
