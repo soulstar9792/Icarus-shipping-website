@@ -26,6 +26,7 @@ const MainHeader = () => {
     '/main/deposit': 'Deposit',
     '/main/address': 'Address',
     '/main/admin': 'Admin Panel',
+    '/main/account': 'Manage Account', // Add account route title
   };
 
   const currentTitle = routeTitles[location.pathname] || 'Welcome';
@@ -42,7 +43,7 @@ const MainHeader = () => {
           />
         </button>
         {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 bg-white text-black rounded-md shadow-lg z-10 p-4 w-48">
+          <div className="absolute right-0 mt-2 bg-white text-black rounded-md shadow-lg z-40 p-4 w-48">
             {/* User Info Section */}
             <div className="flex flex-col items-start mb-4">
               <img
@@ -54,8 +55,8 @@ const MainHeader = () => {
               <span className="text-sm text-gray-500">{`Balance: $${currentUser?.balance || '0.00'}`}</span>
             </div>
             {/* Dropdown Links */}
-            <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">
-              Profile
+            <Link to="/main/account" className="block px-4 py-2 hover:bg-gray-100">
+              Account
             </Link>
             <button
               onClick={handleLogout}
