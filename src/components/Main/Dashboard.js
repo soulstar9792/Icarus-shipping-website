@@ -23,7 +23,6 @@ const Dashboard = () => {
 
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
-      <h1 className={`${$GS.textHeading_1} mb-6`}>Dashboard</h1>
 
       {/* Row for Balance, Total Deposited, Total Orders, and Total Spent */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">

@@ -6,8 +6,6 @@ import $GS from '../../styles/constants'; // Import your styles
 const OrderLabel = () => {
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
-      <h1 className={`${$GS.textHeading_1} mb-6`}>Order Label</h1>
-
       {/* Responsive grid for cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Combined Package Information and Require Signature Card */}
