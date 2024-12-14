@@ -14,7 +14,7 @@ const OrderLabel = () => {
         <Card className="col-span-1">
           <h2 className={`${$GS.textHeading_2} mb-4`}>Package Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="packageType" className={`${$GS.textNormal_1}`}>Type</label>
               <input id="packageType" type="text"
                      className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
@@ -85,7 +85,7 @@ const OrderLabel = () => {
         <Card className="col-span-1">
           <h2 className={`${$GS.textHeading_2} mb-4`}>From Address</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="fromAddress" className={`${$GS.textNormal_1}`}>Saved Address</label>
               <select id="fromAddress" className="border border-custom-border p-2 w-full bg-transparent text-custom-text">
                 <option>Select a saved address...</option>
@@ -101,7 +101,7 @@ const OrderLabel = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="nameFrom" className={`${$GS.textNormal_1}`}>Name *</label>
               <input id="nameFrom" type="text"
                      className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
@@ -117,7 +117,7 @@ const OrderLabel = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="phoneFrom" className={`${$GS.textNormal_1}`}>Phone</label>
               <input id="phoneFrom" type="text"
                      className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
@@ -133,7 +133,7 @@ const OrderLabel = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="street2From" className={`${$GS.textNormal_1}`}>Street 2 (optional)</label>
               <input id="street2From" type="text"
                      className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
@@ -149,7 +149,7 @@ const OrderLabel = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="stateFrom" className={`${$GS.textNormal_1}`}>State</label>
               <select id="stateFrom" className="border border-custom-border p-2 w-full bg-transparent text-custom-text">
                 <option>Select state...</option>
@@ -170,7 +170,7 @@ const OrderLabel = () => {
           <h2 className={`${$GS.textHeading_2} mb-4`}>To Address</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="toAddress" className={`${$GS.textNormal_1}`}>Saved Address</label>
               <select id="toAddress" className="border border-custom-border p-2 w-full bg-transparent text-custom-text">
                 <option>Select a saved address...</option>
@@ -186,7 +186,7 @@ const OrderLabel = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="nameTo" className={`${$GS.textNormal_1}`}>Name *</label>
               <input id="nameTo" type="text"
                      className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
@@ -202,7 +202,7 @@ const OrderLabel = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="phoneTo" className={`${$GS.textNormal_1}`}>Phone</label>
               <input id="phoneTo" type="text"
                      className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
@@ -218,7 +218,7 @@ const OrderLabel = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="street2To" className={`${$GS.textNormal_1}`}>Street 2 (optional)</label>
               <input id="street2To" type="text"
                      className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
@@ -234,7 +234,7 @@ const OrderLabel = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
+            <div className="content-end">
               <label htmlFor="stateTo" className={`${$GS.textNormal_1}`}>State</label>
               <select id="stateTo" className="border border-custom-border p-2 w-full bg-transparent text-custom-text">
                 <option>Select state...</option>
