@@ -28,7 +28,7 @@ const Main = () => {
   return (
     <div className="flex h-screen bg-custom-background">
       <Sidebar /> {/* Static Sidebar on the left */}
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-[calc(100%-250px)]">
         <MainHeader />
         <div className="flex-1 overflow-auto">
           <Routes>

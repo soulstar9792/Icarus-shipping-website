@@ -21,7 +21,7 @@ const Login = (props) => {
     
     if (email === mockCredentials.email && password === mockCredentials.password) {
       console.log('Login successful');
-      login({ email, token: "1234" }); // Simulate setting user state
+      login({ email, token: "1234", name: "Icarus", balance: 5000 }); // Simulate setting user state
       navigate('/main/dashboard'); // Redirect to Dashboard on success
     } else {
       setError('Invalid email or password');
