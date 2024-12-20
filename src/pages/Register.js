@@ -19,7 +19,7 @@ const Register = () => {
 
     if (name && email && password && confirmPassword ) {
       try {
-        const response = await fetch('http://localhost:5000/api/users/register', {
+        const response = await fetch('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/users/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, email, password, confirmPassword }),
