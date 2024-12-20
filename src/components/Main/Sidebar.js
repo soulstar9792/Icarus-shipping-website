@@ -1,9 +1,10 @@
 // src/components/Main/Sidebar.js
-import React from 'react';
+import React, { use } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaTachometerAlt, FaTag, FaShoppingCart, FaClipboardList, FaBoxes, FaDollarSign, FaAddressCard, FaUserShield } from 'react-icons/fa'; // Importing FaDollarSign
 import $GS from '../../styles/constants'; // Import styles
 import logo from '../../assets/logo.png';  // Update this path to where your logo is stored
+import { useSelector } from 'react-redux';
 
 const menuItems = [
   {
@@ -42,7 +43,7 @@ const menuItems = [
     label: 'Address',
   },
   {
-    path: '/main/admin',
+    path: '/admin',
     icon: <FaUserShield className="mr-2" />,
     label: 'Admin Panel',
   },
@@ -50,12 +51,11 @@ const menuItems = [
 
 const Sidebar = () => {
   const location = useLocation(); // Get the current location
-
+  const user = useSelector(store => store.user);
+  console.log(user);
   return (
     <div className={`w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer}`}>
       {/* Logo Section */}
-      
-      
       <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`} > 
         <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
         <h1 className={`text-xl transition-colors duration-300`}>Icarus Ships</h1>
@@ -66,11 +66,11 @@ const Sidebar = () => {
           const isActive = location.pathname === item.path;
           return (
             <li className={`${$GS.Box_1} ${isActive ? $GS.ActiveBox : ''}`} key={index}>
-              <Link className={`${$GS.SidebarItem}`} to={item.path}>
+              {index !== 7 &&  <Link className={`${$GS.SidebarItem}`} to={item.path}>
                 <span className={`${isActive ? $GS.hoverText : ''} flex items-center`}>
                   {item.icon} {item.label}
                 </span>
-              </Link>
+              </Link>}
             </li>
           );
         })}

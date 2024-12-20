@@ -1,18 +1,20 @@
 // src/components/Main/MainHeader.js
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext'; // Import AuthContext
+import { useDispatch, useSelector } from 'react-redux'; // Import hooks from react-redux
 import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { logout } from './../../redux/authSlice'; // Import logout action from authSlice
 import avatar from '../../assets/avatar-empty.png';
 
 const MainHeader = () => {
-  const { currentUser, logout } = useAuth(); // Get user and logout function from context
+  const dispatch = useDispatch(); // Create dispatch for Redux
+  const currentUser = useSelector((state) => state.auth.user); // Get user from Redux store
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   // Function to handle logout
   const handleLogout = () => {
-    logout(); // Log out the user
+    dispatch(logout()); // Dispatch logout action
     navigate('/login'); // Redirect to the login page
   };
 

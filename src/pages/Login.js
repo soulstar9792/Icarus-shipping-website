@@ -1,30 +1,29 @@
 // src/pages/Login.js
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import AuthContext
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../redux/authSlice';
+import { useNavigate } from 'react-router-dom';
 
-const mockCredentials = {
-  email: 'test@example.com',
-  password: 'password123',
-};
-
-const Login = (props) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth(); // Get the login function from context
-  console.log("---Login---", props);
+  const dispatch = useDispatch();
+  const authError = useSelector((state) => state.auth.error); // Get error from Redux state
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    if (email === mockCredentials.email && password === mockCredentials.password) {
-      console.log('Login successful');
-      login({ email, token: "1234", name: "Icarus", balance: 5000 }); // Simulate setting user state
+
+    setError(''); // Clear previous errors
+
+    // Dispatch the login action
+    try {
+      await dispatch(login({ email, password })).unwrap(); // Use unwrap to handle fulfilled/rejected
       navigate('/main/dashboard'); // Redirect to Dashboard on success
-    } else {
-      setError('Invalid email or password');
+    } catch (err) {
+      setError(authError || 'Login failed. Please try again.'); // Use error from Redux state
     }
   };
 
