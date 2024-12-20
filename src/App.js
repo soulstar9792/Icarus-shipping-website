@@ -20,6 +20,7 @@ function App() {
     return location.pathname === '/' ||
            location.pathname === '/login' ||
            location.pathname === '/register';
+           
   };
 
   return (
