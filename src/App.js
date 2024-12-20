@@ -6,11 +6,14 @@ import 'animate.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Main from './pages/Main'; 
+import Main from './pages/Main';
 import Navbar from './components/Navbar';
-import { SectionProvider } from './context/SectionContext'; 
-import { AuthProvider } from './context/AuthContext'; 
-import PrivateRoute from './components/PrivateRoute'; 
+import { SectionProvider } from './context/SectionContext';
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import Admin from './pages/Admin';
+import store from './store/store';
+import { Provider } from 'react-redux';
 
 function App() {
   const location = useLocation();
@@ -18,23 +21,26 @@ function App() {
   // Determine if the current route is public
   const isPublicRoute = () => {
     return location.pathname === '/' ||
-           location.pathname === '/login' ||
-           location.pathname === '/register';
-           
+      location.pathname === '/login' ||
+      location.pathname === '/register';
   };
 
   return (
-    <div className="App">
-      {isPublicRoute() && <Navbar />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <Provider store={store}>
+      <div className="App">
+        {isPublicRoute() && <Navbar />}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/admin/*" element={<Admin />} />
 
-        {/* Protected Routes */}
-        <Route path="/main/*" element={<PrivateRoute><Main /></PrivateRoute>} /> {/* Note the /* */}
-      </Routes>
-    </div>
+          {/* Protected Routes */}
+          <Route path="/main/*" element={<PrivateRoute><Main /></PrivateRoute>} /> {/* Note the /* */}
+          {/* <Route path="/admin/*" element={<PrivateRoute><Admin /></PrivateRoute>} /> Note the /* */}
+        </Routes>
+      </div>
+    </Provider>
   );
 }
 
