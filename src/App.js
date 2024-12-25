@@ -11,6 +11,7 @@ import Navbar from './components/Navbar';
 import { SectionProvider } from './context/SectionContext';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
 import Admin from './pages/Admin';
 import store from './store/store';
 import { Provider } from 'react-redux';
@@ -33,11 +34,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin/*" element={<Admin />} />
 
           {/* Protected Routes */}
-          <Route path="/main/*" element={<PrivateRoute><Main /></PrivateRoute>} /> {/* Note the /* */}
-          {/* <Route path="/admin/*" element={<PrivateRoute><Admin /></PrivateRoute>} /> Note the /* */}
+          <Route path="/main/*" element={<PrivateRoute><Main /></PrivateRoute>} /> 
+          <Route path="/admin/*" element={<PrivateRoute><AdminRoute><Admin /></AdminRoute></PrivateRoute>} />
         </Routes>
       </div>
     </Provider>

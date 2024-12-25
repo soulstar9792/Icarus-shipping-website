@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -19,21 +20,16 @@ const Register = () => {
 
     if (name && email && password && confirmPassword ) {
       try {
-        const response = await fetch('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/users/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, confirmPassword }),
-        });
-        const data = await response.json();
-
-        if (response.ok) {
-          console.log('Registration successful'); // Handle success
-          navigate('/login'); // Redirect to login on success
+        const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password, confirmPassword });
+        console.log(response);
+        if (response.data.ok) {
+          console.log('Registration successful'); 
+          navigate('/login'); 
         } else {
-          setError(data.message || 'Registration failed');
+          setError(response.data.message || 'Registration failed');
         }
       } catch (err) {
-        setError('An error occurred. Please try again.');
+        setError(err.response.data.message || 'An error occurred. Please try again.');
       }
     } else {
       setError('Please fill in all fields');

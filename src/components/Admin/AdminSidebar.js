@@ -28,7 +28,7 @@ const AdminSidebar = () => {
   return (
     <div className={`w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer}`}>
       {/* Logo Section */}
-      <Link to="/admin/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`}>
+      <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`}>
         <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
         <h1 className={`text-xl transition-colors duration-300`}>Icarus Admin</h1>
       </Link>

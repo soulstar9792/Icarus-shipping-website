@@ -1,39 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkToken } from '../redux/authSlice'; // Assume this is an action to verify the token
 
 const PrivateRoute = ({ children }) => {
-  const [isValidToken, setIsValidToken] = useState(null); // null means loading
-  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const token = localStorage.getItem('token'); // Get the token from local storage
+  const [loading, setLoading] = useState(true); // Add loading state
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = !!user; // Check if user is authenticated by the presence of user object
 
   useEffect(() => {
-    const verifyToken = async () => {
-      if (token) {
-        try {
-          // Replace with your actual backend endpoint for token verification
-          const response = await axios.post('http://localhost:5000/api/verify-token', { token });
-          if (response.data.valid) {
-            setIsValidToken(true); // Token is valid
-          } else {
-            setIsValidToken(false); // Token is not valid
-          }
-        } catch (error) {
-          console.error('Token verification error:', error);
-          setIsValidToken(false); // Set to false on error
-        }
-      } else {
-        setIsValidToken(false); // No token present
-      }
-    };
-
-    verifyToken();
+    if (token) {
+      dispatch(checkToken(token)).finally(() => setLoading(false)); // Set loading to false after token check
+    } else {
+      setLoading(false); // If no token, also stop loading
+    }
   }, [token]);
 
-  if (isValidToken === null) {
-    return <div>Loading...</div>; // Optional loading state
+  if (loading) {
+    return <div>Loading...</div>; // or a loading spinner
   }
-  return isValidToken ? children : <Navigate to="/login" message="Please login to access this page" />;
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 };
 
 export default PrivateRoute;

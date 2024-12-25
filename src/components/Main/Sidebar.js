@@ -1,5 +1,5 @@
 // src/components/Main/Sidebar.js
-import React, { use } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaTachometerAlt, FaTag, FaShoppingCart, FaClipboardList, FaBoxes, FaDollarSign, FaAddressCard, FaUserShield } from 'react-icons/fa'; // Importing FaDollarSign
 import $GS from '../../styles/constants'; // Import styles
@@ -50,23 +50,26 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
-  const location = useLocation(); // Get the current location
-  const user = useSelector(store => store.user);
-  console.log(user);
+  setTimeout(() => {
+  }, 1000);
+
+  const location = useLocation();
+  const user = useSelector(state => state.auth.user);
+  console.log(useSelector(state => state));
+
   return (
     <div className={`w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer}`}>
       {/* Logo Section */}
-      <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`} > 
+      <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`} >
         <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
         <h1 className={`text-xl transition-colors duration-300`}>Icarus Ships</h1>
       </Link>
       <ul className="w-full">
         {menuItems.map((item, index) => {
-          // Check if the current item's path matches the current location
           const isActive = location.pathname === item.path;
           return (
             <li className={`${$GS.Box_1} ${isActive ? $GS.ActiveBox : ''}`} key={index}>
-              {index !== 7 &&  <Link className={`${$GS.SidebarItem}`} to={item.path}>
+              {index !== 7 && <Link className={`${$GS.SidebarItem}`} to={item.path}>
                 <span className={`${isActive ? $GS.hoverText : ''} flex items-center`}>
                   {item.icon} {item.label}
                 </span>
@@ -74,6 +77,14 @@ const Sidebar = () => {
             </li>
           );
         })}
+        {user.user_role === 'admin' &&
+          <li className={`${$GS.Box_1} `} key={8}>
+            <Link className={`${$GS.SidebarItem}`} to={menuItems[7].path}>
+              <span className={`${$GS.hoverText} flex items-center`}>
+                {menuItems[7].icon} {menuItems[7].label}
+              </span>
+            </Link>
+          </li>}
       </ul>
     </div>
   );
