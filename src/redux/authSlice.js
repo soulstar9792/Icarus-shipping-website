@@ -5,7 +5,9 @@ import axios from 'axios';
 // Define the async thunk for login
 export const login = createAsyncThunk('auth/login', async ({ email, password }) => {
   try {
-    const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+    const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/login', { email, password });
+    console.log(response.data);
+    
     return response.data;  // Assuming the API returns a JSON response with a token
   } catch (error) {
     return Promise.reject(error.response.data); // Handle errors in the API
@@ -14,7 +16,7 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }) 
 
 
 export const checkToken = createAsyncThunk('auth/checkToken', async (token) => {
-  const response = await axios.get('http://localhost:5000/api/auth/verify', {
+  const response = await axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/verify', {
     headers: { 'token': token },
   });
   console.log(response.data);
