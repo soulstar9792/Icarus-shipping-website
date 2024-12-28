@@ -14,7 +14,8 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await dispatch(login({ email, password })); // Unwrap to check for errors
+      console.log({ email, password }); // Call the login action
+      await dispatch(login({ email, password })).unwrap(); // Unwrap to check for errors
       navigate('/main/dashboard'); // Redirect to a different route after successful login
     } catch (err) {
       console.error('Login failed:', err.message);
@@ -35,7 +36,7 @@ const Login = () => {
               id="email"
               className="w-full p-4 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {setEmail(e.target.value); console.log(email)}}
               required
             />
           </div>
