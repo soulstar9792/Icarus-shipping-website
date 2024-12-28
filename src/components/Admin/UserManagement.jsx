@@ -8,7 +8,7 @@ const UserManagement = () => {
 
   const [users, setUsers] = useState([]);
   const getUser = () => {
-    return axios.get('http://localhost:5000/api/auth/users', {
+    return axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users', {
       headers: { 'token': localStorage.getItem('token') },
     });
   }
@@ -40,7 +40,7 @@ const UserManagement = () => {
 
   const toggleAccess = (id, activation) => {
     console.log(id, activation);
-    axios.post(`http://localhost:5000/api/auth/users/activation/${id}`, 
+    axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/auth/users/activation/${id}`, 
       { activation : activation == 'Allow' ? 'block' : 'allow' }, // Pass the user_activation in the request body
       {
         headers: { 'token': localStorage.getItem('token') }, // Include headers here
