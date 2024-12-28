@@ -23,7 +23,7 @@ const UserManagement = () => {
 
 
   const handleRoleChange = (id, newRole) => {
-    axios.post(`http://localhost:5000/api/auth/users/role/${id}`, 
+    axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/role/${id}`, 
       { user_role: newRole }, // Pass the user_role in the request body
       {
         headers: { 'token': localStorage.getItem('token') }, // Include headers here
@@ -56,7 +56,7 @@ const UserManagement = () => {
   };
 
   const deleteUser = (id) => {
-    axios.delete(`http://localhost:5000/api/auth/users/${id}`, {
+    axios.delete(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/${id}`, {
       headers: { 'token': localStorage.getItem('token') },
     })
     .then(res => {
