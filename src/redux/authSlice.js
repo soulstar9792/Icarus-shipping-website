@@ -6,8 +6,6 @@ import axios from 'axios';
 export const login = createAsyncThunk('auth/login', async ({ email, password }) => {
   try {
     const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/login', { email, password });
-    console.log(response.data);
-    
     return response.data;  // Assuming the API returns a JSON response with a token
   } catch (error) {
     return Promise.reject(error.response.data); // Handle errors in the API
