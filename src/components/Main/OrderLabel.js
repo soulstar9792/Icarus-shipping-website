@@ -1,9 +1,35 @@
 // src/components/Main/OrderLabel.js
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '../Utils/Card'; // Ensure you have a Card component
 import $GS from '../../styles/constants'; // Import your styles
+import LabelServicesType from '../../LabelServicesType.json';
 
 const OrderLabel = () => {
+
+  const [selectedCourier, setSelectedCourier] = useState("");
+  const [availableServices, setAvailableServices] = useState([]);
+
+  console.log(LabelServicesType);
+  
+  const couriers = [
+    { id: 1, name: "UPS" },
+    { id: 2, name: "USPS" }
+    // Add more couriers as needed
+  ];
+  const handleCourierChange = (e) => {
+    const selected = e.target.value;
+    setSelectedCourier(selected);
+
+    const selectedCourierData = LabelServicesType.find(courier => courier.courier === selected);
+
+    if (selectedCourierData) {
+      const servicesList = Object.keys(selectedCourierData.services);
+      setAvailableServices(servicesList);
+    } else {
+      setAvailableServices([]);
+    }
+  };
+
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
       {/* Responsive grid for cards */}
@@ -11,18 +37,42 @@ const OrderLabel = () => {
         {/* Combined Package Information and Require Signature Card */}
         <Card className="col-span-1">
           <h2 className={`${$GS.textHeading_2} mb-4`}>Package Information</h2>
+          <div className="mb-4">
+            <label htmlFor="courier" className={`${$GS.textNormal_1} pt-2 block`}>Select Courier *</label>
+            <select
+              id="courier"
+              className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+              value={selectedCourier}
+              onChange={handleCourierChange}
+            >
+              <option value="" className="text-gray-500">Select a courier...</option>
+              {couriers.map(courier => (
+                <option key={courier.id} value={courier.name}>
+                  {courier.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="content-end">
               <label htmlFor="packageType" className={`${$GS.textNormal_1}`}>Type</label>
-              <input id="packageType" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="UPS US Next Day Air Manifested (96%+ Success Rate)" />
+              <select
+                id="serviceType"
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+                disabled={!availableServices.length} // Disable if no services available
+              >
+                <option value="" className="text-gray-500">Select a service...</option>
+                {availableServices.map((service, index) => (
+                  <option key={index} value={service}>{service}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label htmlFor="packageWeight" className={`${$GS.textNormal_1}`}>Package Weight</label>
               <input id="packageWeight" type="number"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="0 lbs" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="0 lbs" />
             </div>
           </div>
 
@@ -31,41 +81,41 @@ const OrderLabel = () => {
             <div>
               <label htmlFor="length" className={`${$GS.textNormal_1}`}>Length * (in)</label>
               <input id="length" type="number"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="0 in" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="0 in" />
             </div>
             <div>
               <label htmlFor="width" className={`${$GS.textNormal_1}`}>Width * (in)</label>
               <input id="width" type="number"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="0 in" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="0 in" />
             </div>
             <div>
               <label htmlFor="height" className={`${$GS.textNormal_1}`}>Height * (in)</label>
               <input id="height" type="number"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="0 in" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="0 in" />
             </div>
           </div>
 
           <label htmlFor="description" className={`${$GS.textNormal_1} mt-4`}>Description (optional)</label>
           <textarea id="description"
-                    className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                    placeholder="Enter package information" />
+            className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+            placeholder="Enter package information" />
 
           {/* References Side by Side */}
           <div className="flex justify-between mt-4">
             <div className="w-1/2 pr-2">
               <label htmlFor="reference1" className={`${$GS.textNormal_1}`}>Reference 1 (optional)</label>
               <input id="reference1" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Enter first reference number" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Enter first reference number" />
             </div>
             <div className="w-1/2 pl-2">
               <label htmlFor="reference2" className={`${$GS.textNormal_1}`}>Reference 2 (optional)</label>
               <input id="reference2" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Enter second reference number" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Enter second reference number" />
             </div>
           </div>
 
@@ -93,8 +143,8 @@ const OrderLabel = () => {
             <div>
               <label htmlFor="fromCountry" className={`${$GS.textNormal_1}`}>Country *</label>
               <input id="fromCountry" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     defaultValue="United States" readOnly />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                defaultValue="United States" readOnly />
             </div>
           </div>
 
@@ -102,15 +152,15 @@ const OrderLabel = () => {
             <div className="content-end">
               <label htmlFor="nameFrom" className={`${$GS.textNormal_1}`}>Name *</label>
               <input id="nameFrom" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Name" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Name" />
             </div>
 
             <div>
               <label htmlFor="companyFrom" className={`${$GS.textNormal_1}`}>Company / Reference Number (optional)</label>
               <input id="companyFrom" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Company" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Company" />
             </div>
           </div>
 
@@ -118,15 +168,15 @@ const OrderLabel = () => {
             <div className="content-end">
               <label htmlFor="phoneFrom" className={`${$GS.textNormal_1}`}>Phone</label>
               <input id="phoneFrom" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Phone" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Phone" />
             </div>
 
             <div>
               <label htmlFor="streetFrom" className={`${$GS.textNormal_1}`}>Street *</label>
               <input id="streetFrom" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Street" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Street" />
             </div>
           </div>
 
@@ -134,15 +184,15 @@ const OrderLabel = () => {
             <div className="content-end">
               <label htmlFor="street2From" className={`${$GS.textNormal_1}`}>Street 2 (optional)</label>
               <input id="street2From" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Street 2" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Street 2" />
             </div>
 
             <div>
               <label htmlFor="cityFrom" className={`${$GS.textNormal_1}`}>City</label>
               <input id="cityFrom" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="City" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="City" />
             </div>
           </div>
 
@@ -157,8 +207,8 @@ const OrderLabel = () => {
             <div>
               <label htmlFor="zipFrom" className={`${$GS.textNormal_1}`}>Zip *</label>
               <input id="zipFrom" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Zip" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Zip" />
             </div>
           </div>
         </Card>
@@ -178,8 +228,8 @@ const OrderLabel = () => {
             <div>
               <label htmlFor="toCountry" className={`${$GS.textNormal_1}`}>Country *</label>
               <input id="toCountry" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     defaultValue="United States" readOnly />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                defaultValue="United States" readOnly />
             </div>
           </div>
 
@@ -187,15 +237,15 @@ const OrderLabel = () => {
             <div className="content-end">
               <label htmlFor="nameTo" className={`${$GS.textNormal_1}`}>Name *</label>
               <input id="nameTo" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Name" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Name" />
             </div>
 
             <div>
               <label htmlFor="companyTo" className={`${$GS.textNormal_1}`}>Company / Reference Number (optional)</label>
               <input id="companyTo" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Company" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Company" />
             </div>
           </div>
 
@@ -203,15 +253,15 @@ const OrderLabel = () => {
             <div className="content-end">
               <label htmlFor="phoneTo" className={`${$GS.textNormal_1}`}>Phone</label>
               <input id="phoneTo" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Phone" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Phone" />
             </div>
 
             <div>
               <label htmlFor="streetTo" className={`${$GS.textNormal_1}`}>Street *</label>
               <input id="streetTo" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Street" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Street" />
             </div>
           </div>
 
@@ -219,15 +269,15 @@ const OrderLabel = () => {
             <div className="content-end">
               <label htmlFor="street2To" className={`${$GS.textNormal_1}`}>Street 2 (optional)</label>
               <input id="street2To" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Street 2" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Street 2" />
             </div>
 
             <div>
               <label htmlFor="cityTo" className={`${$GS.textNormal_1}`}>City</label>
               <input id="cityTo" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="City" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="City" />
             </div>
           </div>
 
@@ -242,8 +292,8 @@ const OrderLabel = () => {
             <div>
               <label htmlFor="zipTo" className={`${$GS.textNormal_1}`}>Zip *</label>
               <input id="zipTo" type="text"
-                     className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-                     placeholder="Zip" />
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                placeholder="Zip" />
             </div>
           </div>
         </Card>
@@ -254,7 +304,7 @@ const OrderLabel = () => {
         <p className={`${$GS.textHeading_2} m-8`}>Price: $12.00</p>
         <div className="flex justify-center">
           <Card>
-            <span className={`${$GS.textHeading_2} cursor-pointer`} onClick={() => {}}>Order Label</span>
+            <span className={`${$GS.textHeading_2} cursor-pointer`} onClick={() => { }}>Order Label</span>
           </Card>
         </div>
         <div className="text-center text-sm text-gray-400">
