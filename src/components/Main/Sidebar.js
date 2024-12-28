@@ -55,7 +55,7 @@ const Sidebar = () => {
 
   const location = useLocation();
   const user = useSelector(state => state.auth.user);
-  console.log(useSelector(state => state));
+  
 
   return (
     <div className={`w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer}`}>
