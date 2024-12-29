@@ -41,7 +41,7 @@ const UserManagement = () => {
   };
 
   const toggleAccess = (id, activation) => {
-    axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/auth/users/activation/${id}`,
+    axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/activation/${id}`,
       { activation: activation === 'Allow' ? 'block' : 'allow' },
       {
         headers: { 'token': localStorage.getItem('token') },
