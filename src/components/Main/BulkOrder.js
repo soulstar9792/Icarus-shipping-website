@@ -3,16 +3,93 @@ import React, { useState } from 'react';
 import Card from '../Utils/Card'; // Ensure you have a Card component
 import $GS from '../../styles/constants'; // Import your styles
 import { FaUpload } from 'react-icons/fa'; // Import a suitable icon
+import Papa from 'papaparse'; // Import PapaParse for parsing CSV
+import axios from 'axios';
 
 import './BulkOrder.css'; // Import custom CSS for styling.
 
 const BulkOrder = () => {
   const [csvFile, setCsvFile] = useState(null);
-  const [labelType, setLabelType] = useState('');
+  const [courierType, setCourierType] = useState('');
+  const [uploadedData, setUploadedData] = useState([]); // State for storing parsed CSV data
 
   const handleFileChange = (event) => {
-    setCsvFile(event.target.files[0]);
-    // Implement logic to read and validate the CSV file
+    const file = event.target.files[0];
+    setCsvFile(file);
+
+    // Parse CSV file
+    if (file) {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          setUploadedData(results.data);
+        },
+        error: (error) => {
+          console.error("Error parsing CSV:", error);
+        },
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const selectedCourier = courierType; // Get the selected courier type
+    const shipments = uploadedData.map((row) => {
+      return {
+        courier: selectedCourier,
+        service_name: row.ServiceName, // Assuming you want to use `ServiceName` from the CSV
+        manifested: false,
+        sender: {
+          sender_name: row.FromSenderName,
+          sender_phone: row.FromPhone,
+          sender_company: row.FromCompany,
+          sender_address1: row.FromStreet1,
+          sender_address2: row.FromStreet2,
+          sender_city: row.FromCity,
+          sender_state_province: row.FromStateProvince,
+          sender_zip_postal: row.FromZipPostal,
+          sender_country: row.FromCountry,
+        },
+        receiver: {
+          receiver_name: row.ToRecipientName,
+          receiver_phone: row.ToPhone,
+          receiver_company: row.ToCompany,
+          receiver_address1: row.ToStreet1,
+          receiver_address2: row.ToStreet2,
+          receiver_city: row.ToCity,
+          receiver_state_province: row.ToStateProvince,
+          receiver_zip_postal: row.ToZipPostal,
+          receiver_country: row.ToCountry,
+        },
+        package: {
+          package_length: row.PackageLength,
+          package_width: row.PackageWidth,
+          package_height: row.PackageHeight,
+          package_weight: row.PackageWeight,
+          package_weight_unit: "LB", // Assuming weight is in pounds
+          package_description: row.PackageDescription,
+          package_reference1: row.PackageReference1 || "", // Handling missing fields
+          package_reference2: row.PackageReference2 || "", // Same as above
+        },
+      };
+    });
+
+    console.log(shipments);
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/orders/bulk', shipments, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const result = await response.data;
+      console.log(result);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    
+
   };
 
   return (
@@ -22,14 +99,13 @@ const BulkOrder = () => {
         <label htmlFor="labelType" className={`${$GS.textNormal_1} mb-2`}>Label Type</label>
         <select
           id="labelType"
-          value={labelType}
-          onChange={(e) => setLabelType(e.target.value)}
+          value={courierType}
+          onChange={(e) => setCourierType(e.target.value)}
           className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
         >
-          <option value="">Select Label Type...</option>
-          <option value="type1">Label Type 1</option>
-          <option value="type2">Label Type 2</option>
-          <option value="type3">Label Type 3</option>
+          <option value="">Select Courier Type...</option>
+          <option value="UPS">UPS</option>
+          <option value="USPS">USPS</option>
         </select>
       </div>
 
@@ -43,7 +119,16 @@ const BulkOrder = () => {
             e.preventDefault();
             const files = e.dataTransfer.files;
             if (files.length) {
-              setCsvFile(files[0]);
+              const file = files[0];
+              setCsvFile(file);
+              // Parse CV file
+              Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: (results) => {
+                  setUploadedData(results.data);
+                },
+              });
             }
           }}
           onClick={() => document.getElementById('file-upload').click()} // Trigger file input on click
@@ -102,157 +187,31 @@ const BulkOrder = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Example row for structure; real data would come from your CSV parser */}
-              <tr className="bg-custom-background text-custom-text">
-                {/* From Section */}
-                <td className="border border-custom-border p-2">John Doe</td>
-                <td className="border border-custom-border p-2">Acme Corp</td>
-                <td className="border border-custom-border p-2">123-456-7890</td>
-                <td className="border border-custom-border p-2">123 Elm Street</td>
-                <td className="border border-custom-border p-2">Apt 4B</td>
-                <td className="border border-custom-border p-2">Springfield</td>
-                {/* To Section */}
-                <td className="border border-custom-border p-2">Jane Smith</td>
-                <td className="border border-custom-border p-2">XYZ Ltd.</td>
-                <td className="border border-custom-border p-2">987-654-3210</td>
-                <td className="border border-custom-border p-2">456 Oak Avenue</td>
-                <td className="border border-custom-border p-2">Suite 200</td>
-                <td className="border border-custom-border p-2">Metropolis</td>
-                {/* Package Info Section */}
-                <td className="border border-custom-border p-2">UPS US Next Day</td>
-                <td className="border border-custom-border p-2">2 lbs</td>
-                <td className="border border-custom-border p-2">10 in</td>
-                <td className="border border-custom-border p-2">5 in</td>
-                <td className="border border-custom-border p-2">8 in</td>
-                <td className="border border-custom-border p-2">Fragile, handle with care</td>
-              </tr>
-              {/* Repeat rows as needed */}
-              <tr className="bg-custom-background text-custom-text">
-                <td className="border border-custom-border p-2">Alice Johnson</td>
-                <td className="border border-custom-border p-2">Beta LLC</td>
-                <td className="border border-custom-border p-2">101-202-3030</td>
-                <td className="border border-custom-border p-2">789 Pine Lane</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Gotham</td>
-                <td className="border border-custom-border p-2">Bob Brown</td>
-                <td className="border border-custom-border p-2">Delta Inc.</td>
-                <td className="border border-custom-border p-2">202-303-4040</td>
-                <td className="border border-custom-border p-2">101 Spruce St</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Star City</td>
-                <td className="border border-custom-border p-2">Type B</td>
-                <td className="border border-custom-border p-2">1 lbs</td>
-                <td className="border border-custom-border p-2">8 in</td>
-                <td className="border border-custom-border p-2">4 in</td>
-                <td className="border border-custom-border p-2">3 in</td>
-                <td className="border border-custom-border p-2">Standard delivery</td>
-              </tr>
-              {/* Add more rows to test scroll behavior */}
-              
-              <tr className="bg-custom-background text-custom-text">
-                <td className="border border-custom-border p-2">Alice Johnson</td>
-                <td className="border border-custom-border p-2">Beta LLC</td>
-                <td className="border border-custom-border p-2">101-202-3030</td>
-                <td className="border border-custom-border p-2">789 Pine Lane</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Gotham</td>
-                <td className="border border-custom-border p-2">Bob Brown</td>
-                <td className="border border-custom-border p-2">Delta Inc.</td>
-                <td className="border border-custom-border p-2">202-303-4040</td>
-                <td className="border border-custom-border p-2">101 Spruce St</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Star City</td>
-                <td className="border border-custom-border p-2">Type B</td>
-                <td className="border border-custom-border p-2">1 lbs</td>
-                <td className="border border-custom-border p-2">8 in</td>
-                <td className="border border-custom-border p-2">4 in</td>
-                <td className="border border-custom-border p-2">3 in</td>
-                <td className="border border-custom-border p-2">Standard delivery</td>
-              </tr>
-              
-              <tr className="bg-custom-background text-custom-text">
-                <td className="border border-custom-border p-2">Alice Johnson</td>
-                <td className="border border-custom-border p-2">Beta LLC</td>
-                <td className="border border-custom-border p-2">101-202-3030</td>
-                <td className="border border-custom-border p-2">789 Pine Lane</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Gotham</td>
-                <td className="border border-custom-border p-2">Bob Brown</td>
-                <td className="border border-custom-border p-2">Delta Inc.</td>
-                <td className="border border-custom-border p-2">202-303-4040</td>
-                <td className="border border-custom-border p-2">101 Spruce St</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Star City</td>
-                <td className="border border-custom-border p-2">Type B</td>
-                <td className="border border-custom-border p-2">1 lbs</td>
-                <td className="border border-custom-border p-2">8 in</td>
-                <td className="border border-custom-border p-2">4 in</td>
-                <td className="border border-custom-border p-2">3 in</td>
-                <td className="border border-custom-border p-2">Standard delivery</td>
-              </tr>
-              
-              <tr className="bg-custom-background text-custom-text">
-                <td className="border border-custom-border p-2">Alice Johnson</td>
-                <td className="border border-custom-border p-2">Beta LLC</td>
-                <td className="border border-custom-border p-2">101-202-3030</td>
-                <td className="border border-custom-border p-2">789 Pine Lane</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Gotham</td>
-                <td className="border border-custom-border p-2">Bob Brown</td>
-                <td className="border border-custom-border p-2">Delta Inc.</td>
-                <td className="border border-custom-border p-2">202-303-4040</td>
-                <td className="border border-custom-border p-2">101 Spruce St</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Star City</td>
-                <td className="border border-custom-border p-2">Type B</td>
-                <td className="border border-custom-border p-2">1 lbs</td>
-                <td className="border border-custom-border p-2">8 in</td>
-                <td className="border border-custom-border p-2">4 in</td>
-                <td className="border border-custom-border p-2">3 in</td>
-                <td className="border border-custom-border p-2">Standard delivery</td>
-              </tr>
-              
-              <tr className="bg-custom-background text-custom-text">
-                <td className="border border-custom-border p-2">Alice Johnson</td>
-                <td className="border border-custom-border p-2">Beta LLC</td>
-                <td className="border border-custom-border p-2">101-202-3030</td>
-                <td className="border border-custom-border p-2">789 Pine Lane</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Gotham</td>
-                <td className="border border-custom-border p-2">Bob Brown</td>
-                <td className="border border-custom-border p-2">Delta Inc.</td>
-                <td className="border border-custom-border p-2">202-303-4040</td>
-                <td className="border border-custom-border p-2">101 Spruce St</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Star City</td>
-                <td className="border border-custom-border p-2">Type B</td>
-                <td className="border border-custom-border p-2">1 lbs</td>
-                <td className="border border-custom-border p-2">8 in</td>
-                <td className="border border-custom-border p-2">4 in</td>
-                <td className="border border-custom-border p-2">3 in</td>
-                <td className="border border-custom-border p-2">Standard delivery</td>
-              </tr>
-              
-              <tr className="bg-custom-background text-custom-text">
-                <td className="border border-custom-border p-2">Alice Johnson</td>
-                <td className="border border-custom-border p-2">Beta LLC</td>
-                <td className="border border-custom-border p-2">101-202-3030</td>
-                <td className="border border-custom-border p-2">789 Pine Lane</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Gotham</td>
-                <td className="border border-custom-border p-2">Bob Brown</td>
-                <td className="border border-custom-border p-2">Delta Inc.</td>
-                <td className="border border-custom-border p-2">202-303-4040</td>
-                <td className="border border-custom-border p-2">101 Spruce St</td>
-                <td className="border border-custom-border p-2">N/A</td>
-                <td className="border border-custom-border p-2">Star City</td>
-                <td className="border border-custom-border p-2">Type B</td>
-                <td className="border border-custom-border p-2">1 lbs</td>
-                <td className="border border-custom-border p-2">8 in</td>
-                <td className="border border-custom-border p-2">4 in</td>
-                <td className="border border-custom-border p-2">3 in</td>
-                <td className="border border-custom-border p-2">Standard delivery</td>
-              </tr>
+              {uploadedData.map((row, index) => (
+                <tr key={index} className="bg-custom-background text-custom-text">
+                  {/* From Section */}
+                  <td className="border border-custom-border p-2">{row.FromSenderName}</td>
+                  <td className="border border-custom-border p-2">{row.FromCompany}</td>
+                  <td className="border border-custom-border p-2">{row.FromPhone}</td>
+                  <td className="border border-custom-border p-2">{row.FromStreet1}</td>
+                  <td className="border border-custom-border p-2">{row.FromStreet2}</td>
+                  <td className="border border-custom-border p-2">{row.FromCity}</td>
+                  {/* To Section */}
+                  <td className="border border-custom-border p-2">{row.ToRecipientName}</td>
+                  <td className="border border-custom-border p-2">{row.ToCompany}</td>
+                  <td className="border border-custom-border p-2">{row.ToPhone}</td>
+                  <td className="border border-custom-border p-2">{row.ToStreet1}</td>
+                  <td className="border border-custom-border p-2">{row.ToStreet2}</td>
+                  <td className="border border-custom-border p-2">{row.ToCity}</td>
+                  {/* Package Info Section */}
+                  <td className="border border-custom-border p-2">{row.ServiceName}</td>
+                  <td className="border border-custom-border p-2">{row.PackageWeight} lbs</td>
+                  <td className="border border-custom-border p-2">{row.PackageLength} in</td>
+                  <td className="border border-custom-border p-2">{row.PackageWidth} in</td>
+                  <td className="border border-custom-border p-2">{row.PackageHeight} in</td>
+                  <td className="border border-custom-border p-2">{row.PackageDescription}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -262,9 +221,9 @@ const BulkOrder = () => {
       <div className="flex justify-between items-center mt-8">
         <p className={`${$GS.textHeading_2} m-8`}>Total Price: $24.00</p>
         <div className="flex justify-center">
-          <Card>
-            <span className={`${$GS.textHeading_2} cursor-pointer`} onClick={() => {}}>Submit Bulk Order</span>
-          </Card>
+          <button type="submit" onClick={handleSubmit}  className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
+                    bg-card-background group hover:border-hover-border hover:shadow-bright`}>Submit Bulk Order</button>
+
         </div>
         <div className="text-center text-sm text-gray-400">
           <p>© {new Date().getFullYear()} Icarus Ships. All rights reserved.</p>
