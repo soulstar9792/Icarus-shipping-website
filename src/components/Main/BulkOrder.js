@@ -6,6 +6,7 @@ import { FaUpload } from 'react-icons/fa'; // Import a suitable icon
 import Papa from 'papaparse'; // Import PapaParse for parsing CSV
 import axios from 'axios';
 import Loading from '../Loading';
+import Notification from '../Notification';
 
 import './BulkOrder.css'; // Import custom CSS for styling.
 
@@ -14,6 +15,9 @@ const BulkOrder = () => {
   const [courierType, setCourierType] = useState('');
   const [uploadedData, setUploadedData] = useState([]); // State for storing parsed CSV data
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ visible: false, message: "", type: "" });
+  const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
+  const [fileName, setFileName] = useState(null); // Store data needed for downloading
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -36,6 +40,20 @@ const BulkOrder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (courierType === "") {
+      setNotification({ visible: true, message: "Please select a courier type", type: "error" });
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
+      return;
+    }
+    if (uploadedData.length === 0) {
+      setNotification({ visible: true, message: "Please upload a CSV file", type: "error" });
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
+      return;
+    }
     setLoading(true);
     const selectedCourier = courierType; // Get the selected courier type
     const shipments = uploadedData.map((row) => {
@@ -78,20 +96,41 @@ const BulkOrder = () => {
       };
     });
 
-    console.log(shipments);
-
     try {
-      const response = await axios.post('http://localhost:5000/api/orders/bulk', shipments, {
+      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk', shipments, {
         headers: { 'Content-Type': 'application/json' }
       });
       const result = await response.data;
+      if (result.fileName) { // Assume the response contains a download Id
+        setFileName(result.fileName); 
+        setModalVisible(true); // Show modal
+      }
       console.log(result);
       setLoading(false);
     } catch (error) {
       console.error('Error:', error);
     }
+  };
 
+  const handleDownload = async () => {
+    try {
+      const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`, {
+        responseType: 'blob', // Important for downloading files
+      });
 
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'label.pdf'); // Set the file name for download
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      // Close modal after download
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error downloading PDF:', error.message);
+    }
   };
 
   return (
@@ -107,7 +146,6 @@ const BulkOrder = () => {
               value={courierType}
               onChange={(e) => setCourierType(e.target.value)}
               className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-              required
             >
               <option value="">Select Courier Type...</option>
               <option value="UPS">UPS</option>
@@ -234,8 +272,40 @@ const BulkOrder = () => {
             </div>
           </div>
         </div>)}
+      <Notification {...notification} onClose={() => setNotification({ ...notification, visible: false })} />
+      <Modal
+        isVisible={modalVisible}
+        message="Your orders have been submitted successfully!"
+        onClose={() => setModalVisible(false)}
+        onDownload={handleDownload}
+      />
     </div>
   );
 };
 
 export default BulkOrder;
+
+
+const Modal = ({ isVisible, message, onClose, onDownload }) => {
+  if (!isVisible) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg p-4 shadow-lg">
+        <h2 className="text-lg font-bold mb-4">{message}</h2>
+        <button
+          onClick={onDownload}
+          className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+        >
+          Download PDF
+        </button>
+        <button
+          onClick={onClose}
+          className="bg-gray-300 text-black px-4 py-2 rounded"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};

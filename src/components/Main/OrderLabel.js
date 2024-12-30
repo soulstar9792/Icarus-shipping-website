@@ -10,9 +10,8 @@ import { jsPDF } from 'jspdf';
 const Modal = ({ isVisible, onClose, imageData }) => {
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    // Add the image to the PDF
-    doc.addImage(imageData, 'PNG', 10, 10, 190, 0); // Adjust width (190) and height accordingly
-    doc.save('label.pdf'); // Save as label.pdf
+    doc.addImage(imageData, 'PNG', 10, 10, 190, 0); 
+    doc.save('label.pdf');
   };
 
   if (!isVisible) return null;
