@@ -5,6 +5,7 @@ import $GS from '../../styles/constants'; // Import your styles
 import { FaUpload } from 'react-icons/fa'; // Import a suitable icon
 import Papa from 'papaparse'; // Import PapaParse for parsing CSV
 import axios from 'axios';
+import Loading from '../Loading';
 
 import './BulkOrder.css'; // Import custom CSS for styling.
 
@@ -12,6 +13,7 @@ const BulkOrder = () => {
   const [csvFile, setCsvFile] = useState(null);
   const [courierType, setCourierType] = useState('');
   const [uploadedData, setUploadedData] = useState([]); // State for storing parsed CSV data
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -34,7 +36,7 @@ const BulkOrder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const selectedCourier = courierType; // Get the selected courier type
     const shipments = uploadedData.map((row) => {
       return {
@@ -84,151 +86,154 @@ const BulkOrder = () => {
       });
       const result = await response.data;
       console.log(result);
-
+      setLoading(false);
     } catch (error) {
       console.error('Error:', error);
     }
-    
+
 
   };
 
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
-      {/* Label Type Select */}
-      <div className="mb-6">
-        <label htmlFor="labelType" className={`${$GS.textNormal_1} mb-2`}>Label Type</label>
-        <select
-          id="labelType"
-          value={courierType}
-          onChange={(e) => setCourierType(e.target.value)}
-          className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-        >
-          <option value="">Select Courier Type...</option>
-          <option value="UPS">UPS</option>
-          <option value="USPS">USPS</option>
-        </select>
-      </div>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div>
+          <div className="mb-6">
+            <label htmlFor="labelType" className={`${$GS.textNormal_1} mb-2`}>Label Type</label>
+            <select
+              id="labelType"
+              value={courierType}
+              onChange={(e) => setCourierType(e.target.value)}
+              className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+              required
+            >
+              <option value="">Select Courier Type...</option>
+              <option value="UPS">UPS</option>
+              <option value="USPS">USPS</option>
+            </select>
+          </div>
 
-      {/* CSV Upload Section */}
-      <Card className="mb-6 p-6">
-        <h2 className={`${$GS.textHeading_2} mb-4`}>Upload CSV Template</h2>
-        <div
-          className="border-2 border-dashed border-blue-400 p-6 text-center rounded-md cursor-pointer"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            const files = e.dataTransfer.files;
-            if (files.length) {
-              const file = files[0];
-              setCsvFile(file);
-              // Parse CV file
-              Papa.parse(file, {
-                header: true,
-                skipEmptyLines: true,
-                complete: (results) => {
-                  setUploadedData(results.data);
-                },
-              });
-            }
-          }}
-          onClick={() => document.getElementById('file-upload').click()} // Trigger file input on click
-        >
-          <FaUpload className="mx-auto mb-2 text-blue-600" size={40} />
-          <p className="text-blue-600">Drag & drop your CSV file here</p>
-          <span className="inline-block mt-2 text-blue-600">
-            or <span className="underline">choose a file</span>
-          </span>
-          <input
-            id="file-upload"
-            type="file"
-            accept=".csv"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </div>
-        {csvFile && (
-          <p className={`${$GS.textNormal_1} mt-2`}>Uploaded File: {csvFile.name}</p>
-        )}
-      </Card>
+          {/* CSV Upload Section */}
+          <Card className="mb-6 p-6">
+            <h2 className={`${$GS.textHeading_2} mb-4`}>Upload CSV Template</h2>
+            <div
+              className="border-2 border-dashed border-blue-400 p-6 text-center rounded-md cursor-pointer"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                const files = e.dataTransfer.files;
+                if (files.length) {
+                  const file = files[0];
+                  setCsvFile(file);
+                  // Parse CV file
+                  Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: (results) => {
+                      setUploadedData(results.data);
+                    },
+                  });
+                }
+              }}
+              onClick={() => document.getElementById('file-upload').click()} // Trigger file input on click
+            >
+              <FaUpload className="mx-auto mb-2 text-blue-600" size={40} />
+              <p className="text-blue-600">Drag & drop your CSV file here</p>
+              <span className="inline-block mt-2 text-blue-600">
+                or <span className="underline">choose a file</span>
+              </span>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".csv"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </div>
+            {csvFile && (
+              <p className={`${$GS.textNormal_1} mt-2`}>Uploaded File: {csvFile.name}</p>
+            )}
+          </Card>
 
-      {/* Data Table Section */}
-      <Card>
-        <h2 className={`${$GS.textHeading_2} mb-4`}>Uploaded Data</h2>
-        <div className="overflow-x-auto max-h-96">
-          <table className="min-w-full border-separate border-spacing-0 border-custom-border">
-            <thead className="bg-custom-background text-custom-text sticky top-0 z-30 border border-custom-border">
-              <tr>
-                <th colSpan="6" className="border border-custom-border p-2 text-left">From</th>
-                <th colSpan="6" className="border border-custom-border p-2 text-left">To</th>
-                <th colSpan="6" className="border border-custom-border p-2 text-left">Package Info</th>
-              </tr>
-              <tr className="bg-custom-background text-custom-text">
-                {/* From Section */}
-                <th className="border border-custom-border p-2">Name *</th>
-                <th className="border border-custom-border p-2">Company</th>
-                <th className="border border-custom-border p-2">Phone</th>
-                <th className="border border-custom-border p-2">Street *</th>
-                <th className="border border-custom-border p-2">Street 2</th>
-                <th className="border border-custom-border p-2">City</th>
-                {/* To Section */}
-                <th className="border border-custom-border p-2">Name *</th>
-                <th className="border border-custom-border p-2">Company</th>
-                <th className="border border-custom-border p-2">Phone</th>
-                <th className="border border-custom-border p-2">Street *</th>
-                <th className="border border-custom-border p-2">Street 2</th>
-                <th className="border border-custom-border p-2">City</th>
-                {/* Package Info Section */}
-                <th className="border border-custom-border p-2">Type *</th>
-                <th className="border border-custom-border p-2">Weight *</th>
-                <th className="border border-custom-border p-2">Length</th>
-                <th className="border border-custom-border p-2">Width</th>
-                <th className="border border-custom-border p-2">Height</th>
-                <th className="border border-custom-border p-2">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {uploadedData.map((row, index) => (
-                <tr key={index} className="bg-custom-background text-custom-text">
-                  {/* From Section */}
-                  <td className="border border-custom-border p-2">{row.FromSenderName}</td>
-                  <td className="border border-custom-border p-2">{row.FromCompany}</td>
-                  <td className="border border-custom-border p-2">{row.FromPhone}</td>
-                  <td className="border border-custom-border p-2">{row.FromStreet1}</td>
-                  <td className="border border-custom-border p-2">{row.FromStreet2}</td>
-                  <td className="border border-custom-border p-2">{row.FromCity}</td>
-                  {/* To Section */}
-                  <td className="border border-custom-border p-2">{row.ToRecipientName}</td>
-                  <td className="border border-custom-border p-2">{row.ToCompany}</td>
-                  <td className="border border-custom-border p-2">{row.ToPhone}</td>
-                  <td className="border border-custom-border p-2">{row.ToStreet1}</td>
-                  <td className="border border-custom-border p-2">{row.ToStreet2}</td>
-                  <td className="border border-custom-border p-2">{row.ToCity}</td>
-                  {/* Package Info Section */}
-                  <td className="border border-custom-border p-2">{row.ServiceName}</td>
-                  <td className="border border-custom-border p-2">{row.PackageWeight} lbs</td>
-                  <td className="border border-custom-border p-2">{row.PackageLength} in</td>
-                  <td className="border border-custom-border p-2">{row.PackageWidth} in</td>
-                  <td className="border border-custom-border p-2">{row.PackageHeight} in</td>
-                  <td className="border border-custom-border p-2">{row.PackageDescription}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-
-      {/* Price Section */}
-      <div className="flex justify-between items-center mt-8">
-        <p className={`${$GS.textHeading_2} m-8`}>Total Price: $24.00</p>
-        <div className="flex justify-center">
-          <button type="submit" onClick={handleSubmit}  className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
+          {/* Data Table Section */}
+          <Card>
+            <h2 className={`${$GS.textHeading_2} mb-4`}>Uploaded Data</h2>
+            <div className="overflow-x-auto max-h-96">
+              <table className="min-w-full border-separate border-spacing-0 border-custom-border">
+                <thead className="bg-custom-background text-custom-text sticky top-0 z-30 border border-custom-border">
+                  <tr>
+                    <th colSpan="6" className="border border-custom-border p-2 text-left">From</th>
+                    <th colSpan="6" className="border border-custom-border p-2 text-left">To</th>
+                    <th colSpan="6" className="border border-custom-border p-2 text-left">Package Info</th>
+                  </tr>
+                  <tr className="bg-custom-background text-custom-text">
+                    {/* From Section */}
+                    <th className="border border-custom-border p-2">Name *</th>
+                    <th className="border border-custom-border p-2">Company</th>
+                    <th className="border border-custom-border p-2">Phone</th>
+                    <th className="border border-custom-border p-2">Street *</th>
+                    <th className="border border-custom-border p-2">Street 2</th>
+                    <th className="border border-custom-border p-2">City</th>
+                    {/* To Section */}
+                    <th className="border border-custom-border p-2">Name *</th>
+                    <th className="border border-custom-border p-2">Company</th>
+                    <th className="border border-custom-border p-2">Phone</th>
+                    <th className="border border-custom-border p-2">Street *</th>
+                    <th className="border border-custom-border p-2">Street 2</th>
+                    <th className="border border-custom-border p-2">City</th>
+                    {/* Package Info Section */}
+                    <th className="border border-custom-border p-2">Type *</th>
+                    <th className="border border-custom-border p-2">Weight *</th>
+                    <th className="border border-custom-border p-2">Length</th>
+                    <th className="border border-custom-border p-2">Width</th>
+                    <th className="border border-custom-border p-2">Height</th>
+                    <th className="border border-custom-border p-2">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {uploadedData.map((row, index) => (
+                    <tr key={index} className="bg-custom-background text-custom-text">
+                      {/* From Section */}
+                      <td className="border border-custom-border p-2">{row.FromSenderName}</td>
+                      <td className="border border-custom-border p-2">{row.FromCompany}</td>
+                      <td className="border border-custom-border p-2">{row.FromPhone}</td>
+                      <td className="border border-custom-border p-2">{row.FromStreet1}</td>
+                      <td className="border border-custom-border p-2">{row.FromStreet2}</td>
+                      <td className="border border-custom-border p-2">{row.FromCity}</td>
+                      {/* To Section */}
+                      <td className="border border-custom-border p-2">{row.ToRecipientName}</td>
+                      <td className="border border-custom-border p-2">{row.ToCompany}</td>
+                      <td className="border border-custom-border p-2">{row.ToPhone}</td>
+                      <td className="border border-custom-border p-2">{row.ToStreet1}</td>
+                      <td className="border border-custom-border p-2">{row.ToStreet2}</td>
+                      <td className="border border-custom-border p-2">{row.ToCity}</td>
+                      {/* Package Info Section */}
+                      <td className="border border-custom-border p-2">{row.ServiceName}</td>
+                      <td className="border border-custom-border p-2">{row.PackageWeight} lbs</td>
+                      <td className="border border-custom-border p-2">{row.PackageLength} in</td>
+                      <td className="border border-custom-border p-2">{row.PackageWidth} in</td>
+                      <td className="border border-custom-border p-2">{row.PackageHeight} in</td>
+                      <td className="border border-custom-border p-2">{row.PackageDescription}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+          <div className="flex justify-between items-center mt-8">
+            <p className={`${$GS.textHeading_2} m-8`}>Total Price: $24.00</p>
+            <div className="flex justify-center">
+              <button type="submit" onClick={handleSubmit} className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
                     bg-card-background group hover:border-hover-border hover:shadow-bright`}>Submit Bulk Order</button>
 
-        </div>
-        <div className="text-center text-sm text-gray-400">
-          <p>© {new Date().getFullYear()} Icarus Ships. All rights reserved.</p>
-        </div>
-      </div>
+            </div>
+            <div className="text-center text-sm text-gray-400">
+              <p>© {new Date().getFullYear()} Icarus Ships. All rights reserved.</p>
+            </div>
+          </div>
+        </div>)}
     </div>
   );
 };
