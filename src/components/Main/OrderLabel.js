@@ -6,6 +6,7 @@ import LabelServicesType from '../../LabelServicesType.json';
 import axios from 'axios';
 import Notification from '../Notification';
 import { jsPDF } from 'jspdf';
+import { useSelector } from 'react-redux';
 
 const Modal = ({ isVisible, onClose, imageData }) => {
   const handleDownloadPDF = () => {
@@ -31,6 +32,7 @@ const Modal = ({ isVisible, onClose, imageData }) => {
 };
 
 const OrderLabel = () => {
+  const user = useSelector(state => state.auth.user);  
   const [selectedCourier, setSelectedCourier] = useState("");
   const [availableServices, setAvailableServices] = useState([]);
   const [notification, setNotification] = useState({ visible: false, message: "", type: "" });
@@ -102,6 +104,7 @@ const OrderLabel = () => {
       return;
     }
     const shipmentData = {
+      user_id: user._id,
       courier: selectedCourier,
       service_name: service,
       manifested: false,

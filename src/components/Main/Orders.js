@@ -1,15 +1,49 @@
 // src/components/Orders.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../Utils/Card'; // Ensure you have a Card component
 import $GS from '../../styles/constants'; // Import your styles
+import axios from 'axios';
+import Loading from '../Loading'; // Import Loading component
+import jsPDF from 'jspdf';
+import Modal from '../Modal';
 
 const Orders = () => {
-  const ordersData = [
-    { no: 1, type: 'Standard Delivery', from: 'Alice Johnson', to: 'Bob Brown', price: '$10.00', status: 'Completed', added: '2023-10-24' },
-    { no: 2, type: 'Express Delivery', from: 'Charlie Smith', to: 'Diana Prince', price: '$20.00', status: 'Pending', added: '2023-10-25' },
-    { no: 3, type: 'Next Day Delivery', from: 'Bruce Wayne', to: 'Clark Kent', price: '$30.00', status: 'Shipped', added: '2023-10-26' },
-    // Add more orders as needed...
-  ];
+  const [orders, setOrders] = useState([]); // State to store orders
+  const [loading, setLoading] = useState(true); // State to manage loading status
+  const [error, setError] = useState(null); // State to manage error
+  const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
+  const [currentImage, setCurrentImage] = useState(''); // State to store current image
+
+
+  const getOrders = () => {
+    return axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders', {
+      headers: { 'token': localStorage.getItem('token') },
+    });
+  };
+
+
+  useEffect(() => {
+    getOrders().then(res => {
+      setLoading(true)
+      setOrders(res.data.orders);
+      console.log(res.data.orders);
+      setLoading(false);
+    }).catch(err => {
+      setError(err);
+      setLoading(false);
+    });
+  }, []);
+  const handleImageClick = (imageBase64) => {
+    console.log("12312312");
+    setCurrentImage(imageBase64);
+    setModalVisible(true);
+  };
+
+  const downloadImageAsPDF = () => {
+    const doc = new jsPDF();
+    doc.addImage(currentImage, 'JPEG', 10, 10, 180, 160);
+    doc.save('download.pdf');
+  };
 
   return (
     <div className="orders-container px-4 md:px-10 py-10 md:py-20 bg-custom-background">
@@ -20,24 +54,31 @@ const Orders = () => {
             <thead className="bg-custom-background text-custom-text sticky top-0 z-30 border border-custom-border">
               <tr>
                 <th className="border border-custom-border p-2">No</th>
-                <th className="border border-custom-border p-2">Type</th>
-                <th className="border border-custom-border p-2">From</th>
-                <th className="border border-custom-border p-2">To</th>
-                <th className="border border-custom-border p-2">Price</th>
-                <th className="border border-custom-border p-2">Status</th>
+                <th className="border border-custom-border p-2">Service</th>
+                <th className="border border-custom-border p-2">Image</th>
+                <th className="border border-custom-border p-2">Sender</th>
+                <th className="border border-custom-border p-2">Receiver</th>
+                <th className="border border-custom-border p-2">Tracking Number</th>
                 <th className="border border-custom-border p-2">Added</th>
               </tr>
             </thead>
             <tbody className="bg-custom-background text-custom-text">
-              {ordersData.map(order => (
-                <tr key={order.no}>
-                  <td className="border border-custom-border p-2">{order.no}</td>
-                  <td className="border border-custom-border p-2">{order.type}</td>
-                  <td className="border border-custom-border p-2">{order.from}</td>
-                  <td className="border border-custom-border p-2">{order.to}</td>
-                  <td className="border border-custom-border p-2">{order.price}</td>
-                  <td className="border border-custom-border p-2">{order.status}</td>
-                  <td className="border border-custom-border p-2">{order.added}</td>
+              {orders.map(order => (
+                <tr key={order._id}>
+                  <td className="border border-custom-border p-2">{order._id}</td>
+                  <td className="border border-custom-border p-2">{order.service_name}</td>
+                  <td className="border border-custom-border p-2" onClick={() => handleImageClick(order.image)}>
+                    <img
+                      src={`data:image/jpeg;base64,${order.image}`} // Adjust the format if necessary
+                      alt="Order"
+
+                      style={{ cursor: 'pointer', width: '70px', height: '100px' }} // Adjust size as needed
+                    />
+                  </td>
+                  <td className="border border-custom-border p-2">{order.sender.sender_name} <br /> <span className='text-sm text-gray-500'>{order.sender.sender_company}</span></td>
+                  <td className="border border-custom-border p-2">{order.receiver.receiver_name} <br /> <span className='text-sm text-gray-500'>{order.receiver.receiver_company}</span></td>
+                  <td className="border border-custom-border p-2">{order.tracking_number}</td>
+                  <td className="border border-custom-border p-2">{order.createdAt}</td>
                 </tr>
               ))}
               {/* Add more rows here if necessary */}
@@ -45,6 +86,9 @@ const Orders = () => {
           </table>
         </div>
       </Card>
+      {/* <Modal imageData={currentImage} isVisible={modalVisible} onClose={() => setModalVisible(false)} /> */}
+      {modalVisible && <Modal isVisible={modalVisible} onClose={() => setModalVisible(false)} imageData={`data:image/png;base64,${currentImage}`} />}
+      {loading && <Loading />}
     </div>
   );
 };

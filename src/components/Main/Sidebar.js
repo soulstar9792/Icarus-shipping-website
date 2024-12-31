@@ -43,7 +43,7 @@ const menuItems = [
     label: 'Address',
   },
   {
-    path: '/admin',
+    path: '/admin/dashboard',
     icon: <FaUserShield className="mr-2" />,
     label: 'Admin Panel',
   },

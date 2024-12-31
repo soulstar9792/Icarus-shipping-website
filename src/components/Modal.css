@@ -1,0 +1,10 @@
+.modal {
+    transform: scale(0); /* Start scaled down */
+    opacity: 0; /* Start invisible */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Animate both transform and opacity */
+  }
+  
+  .modal-active {
+    transform: scale(1); /* Scale to normal size */
+    opacity: 1; /* Fade in */
+  }
