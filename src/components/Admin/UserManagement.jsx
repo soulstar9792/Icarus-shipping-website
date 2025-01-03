@@ -41,19 +41,19 @@ const UserManagement = () => {
   };
   const handleBalanceChange = (id, balance) => {
     console.log(id, balance); 
-
-    // axios.post(`http://localhost:5000/api/auth/users/balance/${id}`,
-    //   { balance: balance },
-    //   {
-    //     headers: { 'token': localStorage.getItem('token') },
-    //   }
-    // )
-    //   .then(res => {
-    //     setUsers(users.map(user => user._id === id ? { ...user, balance: balance } : user));
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
+    setUsers(users.map(user => user._id === id ? { ...user, balance: balance } : user));
+    axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/balance/${id}`,
+      { balance: balance },
+      {
+        headers: { 'token': localStorage.getItem('token') },
+      }
+    )
+      .then(res => {
+        // setUsers(users.map(user => user._id === id ? { ...user, balance: balance } : user));
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
   const toggleAccess = (id, activation) => {
     axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/activation/${id}`,
@@ -107,7 +107,7 @@ const UserManagement = () => {
             </thead>
             <tbody>
               {users.map((user) => {
-                let balance = user.balance;
+                var balance = user.balance;
                 return (
                   <tr key={user._id} className="hover:bg-gray-900">
                     <td className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}>{user._id}</td>
