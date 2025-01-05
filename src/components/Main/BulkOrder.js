@@ -1,9 +1,9 @@
 // src/components/Main/BulkOrder.js
 import React, { useState } from 'react';
-import Card from '../Utils/Card'; // Ensure you have a Card component
-import $GS from '../../styles/constants'; // Import your styles
-import { FaUpload } from 'react-icons/fa'; // Import a suitable icon
-import Papa from 'papaparse'; // Import PapaParse for parsing CSV
+import Card from '../Utils/Card'; 
+import $GS from '../../styles/constants'; 
+import { FaUpload } from 'react-icons/fa'; 
+import Papa from 'papaparse'; 
 import axios from 'axios';
 import Loading from '../Loading';
 import Notification from '../Notification';
@@ -96,7 +96,7 @@ const BulkOrder = () => {
       };
     });
     try {
-      const response = await axios.post('http://localhost:5000/api/orders', shipments, {
+      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders', shipments, {
         headers: { 'Content-Type': 'application/json' }
       });
       const result = await response.data;
