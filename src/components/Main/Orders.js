@@ -18,7 +18,7 @@ const Orders = () => {
   console.log(user);
 
   const getOrders = () => {
-    return axios.get('http://localhost:5000/api/orders/'+ user._id, {
+    return axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/'+ user._id, {
       headers: { 'token': localStorage.getItem('token') },
     });
   };
