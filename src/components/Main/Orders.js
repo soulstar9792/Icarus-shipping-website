@@ -6,17 +6,19 @@ import axios from 'axios';
 import Loading from '../Loading'; // Import Loading component
 import jsPDF from 'jspdf';
 import Modal from '../Modal';
+import { useSelector } from 'react-redux';
 
 const Orders = () => {
+  const user = useSelector(state => state.auth.user);
   const [orders, setOrders] = useState([]); // State to store orders
   const [loading, setLoading] = useState(true); // State to manage loading status
   const [error, setError] = useState(null); // State to manage error
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
   const [currentImage, setCurrentImage] = useState(''); // State to store current image
-
+  console.log(user);
 
   const getOrders = () => {
-    return axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders', {
+    return axios.get('http://localhost:5000/api/orders/'+ user._id, {
       headers: { 'token': localStorage.getItem('token') },
     });
   };
@@ -34,7 +36,6 @@ const Orders = () => {
     });
   }, []);
   const handleImageClick = (imageBase64) => {
-    console.log("12312312");
     setCurrentImage(imageBase64);
     setModalVisible(true);
   };
