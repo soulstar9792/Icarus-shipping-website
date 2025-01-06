@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Card from '../Utils/Card'; // Ensure you have a Card component
 import $GS from '../../styles/constants'; // Import your styles
 import LabelServicesType from '../../LabelServicesType.json';
+import states from '../../states.json';
 import axios from 'axios';
 import Notification from '../Notification';
 import { jsPDF } from 'jspdf';
@@ -377,7 +378,10 @@ const OrderLabel = () => {
                 <select id="stateFrom" className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
                   value={sender.state}
                   onChange={(e) => setSender({ ...sender, state: e.target.value })}>
-                  <option>Select state...</option>
+                  <option value={""}>Select state...</option>
+                  {states.map(state => (
+                    <option key={state.abbreviation} value={state.abbreviation}>{state.state}</option>
+                  ))}
                 </select>
               </div>
 
@@ -490,7 +494,10 @@ const OrderLabel = () => {
                 <select id="stateTo" className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
                   value={receiver.state}
                   onChange={(e) => setReceiver({ ...receiver, state: e.target.value })}>
-                  <option>Select state...</option>
+                  <option value={""}>Select state...</option>
+                  {states.map(state => (
+                    <option key={state.abbreviation} value={state.abbreviation}>{state.state}</option>
+                  ))}
                 </select>
               </div>
 

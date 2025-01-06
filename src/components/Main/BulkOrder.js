@@ -96,7 +96,7 @@ const BulkOrder = () => {
       };
     });
     try {
-      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders', shipments, {
+      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk', shipments, {
         headers: { 'Content-Type': 'application/json' }
       });
       const result = await response.data;
