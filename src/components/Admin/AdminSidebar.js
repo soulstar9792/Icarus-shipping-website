@@ -22,31 +22,34 @@ const adminMenuItems = [
   },
 ];
 
-const AdminSidebar = () => {
+const AdminSidebar = ({isSidebarOpen, toggleSidebar}) => {
   const location = useLocation(); // Get the current location
 
   return (
-    <div className={`w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer}`}>
-      {/* Logo Section */}
-      <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`}>
-        <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
-        <h1 className={`text-xl transition-colors duration-300`}>Icarus Admin</h1>
-      </Link>
-      <ul className="w-full">
-        {adminMenuItems.map((item, index) => {
-          // Check if the current item's path matches the current location
-          const isActive = location.pathname === item.path;
-          return (
-            <li className={`${$GS.Box_1} ${isActive ? $GS.ActiveBox : ''}`} key={index}>
-              <Link className={`${$GS.SidebarItem}`} to={item.path}>
-                <span className={`${isActive ? $GS.hoverText : ''} flex items-center`}>
-                  {item.icon} {item.label}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+    <div  className={` lg:block lg:w-fit lg:relative ${isSidebarOpen ? 'block fixed bg-black h-screen bg-opacity-50 top-0 left-0 z-50 w-screen' : 'hidden'}`} onClick={toggleSidebar}>
+      <div className={`${isSidebarOpen ? 'block top-0 left-0 z-50' : 'hidden'} lg:block w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer}`}>
+        {/* Logo Section */}
+        <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`}>
+          <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
+          <h1 className={`text-xl transition-colors duration-300`}>Icarus Admin</h1>
+        </Link>
+        <ul className="w-full">
+          {adminMenuItems.map((item, index) => {
+            // Check if the current item's path matches the current location
+            const isActive = location.pathname === item.path;
+            return (
+              <li className={`${$GS.Box_1} ${isActive ? $GS.ActiveBox : ''}`} key={index}>
+                <Link className={`${$GS.SidebarItem}`} to={item.path}>
+                  <span className={`${isActive ? $GS.hoverText : ''} flex items-center`}>
+                    {item.icon} {item.label}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
     </div>
   );
 }

@@ -162,7 +162,7 @@ const OrderLabel = () => {
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
       <form onSubmit={handleSubmit}>
         {/* Responsive grid for cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Notification {...notification} onClose={() => setNotification({ ...notification, visible: false })} />
           {/* Package Information Card */}
           <Card className="col-span-1">
@@ -516,7 +516,7 @@ const OrderLabel = () => {
         </div>
 
         {/* Price And Submit Section */}
-        <div className="flex justify-between items-center mt-8">
+        <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
           <p className={`${$GS.textHeading_2} m-8`}>Price: $12.00</p>
           <div className="flex justify-center">
             <button type="submit" className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 

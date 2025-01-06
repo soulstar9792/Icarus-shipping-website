@@ -49,43 +49,46 @@ const menuItems = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({isSidebarOpen, toggleSidebar}) => {
   setTimeout(() => {
   }, 1000);
 
   const location = useLocation();
   const user = useSelector(state => state.auth.user);
-  
+
 
   return (
-    <div className={`w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer}`}>
-      {/* Logo Section */}
-      <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`} >
-        <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
-        <h1 className={`text-xl transition-colors duration-300`}>Icarus Ships</h1>
-      </Link>
-      <ul className="w-full">
-        {menuItems.map((item, index) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <li className={`${$GS.Box_1} ${isActive ? $GS.ActiveBox : ''}`} key={index}>
-              {index !== 7 && <Link className={`${$GS.SidebarItem}`} to={item.path}>
-                <span className={`${isActive ? $GS.hoverText : ''} flex items-center`}>
-                  {item.icon} {item.label}
+    <div className={` lg:block lg:w-fit lg:relative ${isSidebarOpen ? 'block fixed bg-black h-screen bg-opacity-50 top-0 left-0 z-50 w-screen' : 'hidden'}`} onClick={toggleSidebar}>
+      <div className={`${isSidebarOpen ? 'block top-0 left-0 z-50' : 'hidden'} lg:block w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer} `}>
+        {/* Logo Section */}
+        <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`} >
+          <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
+          <h1 className={`text-xl transition-colors duration-300`}>Icarus Ships</h1>
+        </Link>
+        <ul className="w-full">
+          {menuItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <li className={`${$GS.Box_1} ${isActive ? $GS.ActiveBox : ''}`} key={index}>
+                {index !== 7 && <Link className={`${$GS.SidebarItem}`} to={item.path}>
+                  <span className={`${isActive ? $GS.hoverText : ''} flex items-center`}>
+                    {item.icon} {item.label}
+                  </span>
+                </Link>}
+              </li>
+            );
+          })}
+          {user.user_role === 'admin' &&
+            <li className={`${$GS.Box_1} `} key={8}>
+              <Link className={`${$GS.SidebarItem}`} to={menuItems[7].path}>
+                <span className={`${$GS.hoverText} flex items-center`}>
+                  {menuItems[7].icon} {menuItems[7].label}
                 </span>
-              </Link>}
-            </li>
-          );
-        })}
-        {user.user_role === 'admin' &&
-          <li className={`${$GS.Box_1} `} key={8}>
-            <Link className={`${$GS.SidebarItem}`} to={menuItems[7].path}>
-              <span className={`${$GS.hoverText} flex items-center`}>
-                {menuItems[7].icon} {menuItems[7].label}
-              </span>
-            </Link>
-          </li>}
-      </ul>
+              </Link>
+            </li>}
+        </ul>
+      </div>
+
     </div>
   );
 }

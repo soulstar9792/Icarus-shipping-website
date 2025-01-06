@@ -26,7 +26,7 @@ const Dashboard = () => {
 
       {/* Row for Balance, Total Deposited, Total Orders, and Total Spent */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        
+
         <Card>
           <div className="flex items-center">
             <FaDollarSign className={`${$GS.iconSize} text-custom-border mr-2`} />
@@ -70,10 +70,11 @@ const Dashboard = () => {
 
       {/* Recent Orders and Recent Deposits in cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Recent Orders Card */}
-          <Card className="col-span-2 bg-custom-background">
-            <h2 className={`${$GS.textHeading_2} mb-4`}>Recent Orders</h2>
-            <table className="min-w-full bg-transparent border border-custom-border">
+        {/* Recent Orders Card */}
+        <Card className="col-span-2 bg-custom-background ">
+          <h2 className={`${$GS.textHeading_2} mb-4`}>Recent Orders</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full w-full bg-transparent border border-custom-border overflow-x-auto">
               <thead>
                 <tr className="bg-custom-background text-white text-left">
                   <th className="px-4 py-2 border-b border-custom-border">Type</th>
@@ -93,13 +94,16 @@ const Dashboard = () => {
                 ))}
               </tbody>
             </table>
-          </Card>
 
-          {/* Recent Deposits Card */}
-          <Card className="bg-custom-background">
-            <h2 className={`${$GS.textHeading_2} mb-4`}>Recent Deposits</h2>
+          </div>
+        </Card>
+
+        {/* Recent Deposits Card */}
+        <Card className="bg-custom-background">
+          <h2 className={`${$GS.textHeading_2} mb-4`}>Recent Deposits</h2>
+          <div className="overflow-x-auto">
             <table className="min-w-full bg-transparent border border-custom-border">
-              <thead>
+              <thead className=' overflow-x-auto'>
                 <tr className="bg-custom-background text-white text-left">
                   <th className="px-4 py-2 border-b border-custom-border">Amount</th>
                   <th className="px-4 py-2 border-b border-custom-border">Date</th>
@@ -114,7 +118,8 @@ const Dashboard = () => {
                 ))}
               </tbody>
             </table>
-          </Card>
+          </div>
+        </Card>
       </div>
     </div>
   );
