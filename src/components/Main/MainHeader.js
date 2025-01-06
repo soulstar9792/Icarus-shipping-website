@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'; // Import hooks from rea
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { logout } from './../../redux/authSlice'; // Import logout action from authSlice
 import avatar from '../../assets/avatar-empty.png';
+import hamburger from '../../assets/hamburger.svg';
 
-const MainHeader = () => {
+const MainHeader = ({ toggleSidebar, isSidebarOpen }) => {
   const dispatch = useDispatch(); // Create dispatch for Redux
   const currentUser = useSelector((state) => state.auth.user); // Get user from Redux store
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -35,6 +36,9 @@ const MainHeader = () => {
 
   return (
     <div className="bg-custom-background text-white p-4 border-b border-custom-border flex justify-between items-center">
+      <button className="lg:hidden flex items-center focus:outline-none" onClick={toggleSidebar}>
+        <img src={hamburger} alt="Hamburger" className="w-[60px] h-[60px]" />
+      </button>
       <h1 className="text-2xl font-semibold">{currentTitle}</h1>
       <div className="relative">
         <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center focus:outline-none">

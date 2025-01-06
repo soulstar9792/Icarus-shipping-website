@@ -1,5 +1,5 @@
 // src/pages/Main.js
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import PrivateRoute from '../components/PrivateRoute';
 import Dashboard from '../components/Main/Dashboard';
@@ -27,11 +27,16 @@ const routes = [
 ];
 
 const Main = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    console.log(isSidebarOpen);
+  };
   return (
     <div className="flex h-screen bg-custom-background">
-      <Sidebar /> {/* Static Sidebar on the left */}
-      <div className="flex flex-col w-[calc(100%-250px)]">
-        <MainHeader />
+      <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} toggleSidebar={toggleSidebar} /> {/* Static Sidebar on the left */}
+      <div className="flex flex-col lg:w-[calc(100%-250px)] w-full ">
+        <MainHeader toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         <div className="flex-1 overflow-auto">
           <Routes>
             {routes.map(route => (

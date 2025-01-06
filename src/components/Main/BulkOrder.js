@@ -259,7 +259,7 @@ const BulkOrder = () => {
               </table>
             </div>
           </Card>
-          <div className="flex justify-between items-center mt-8">
+          <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
             <p className={`${$GS.textHeading_2} m-8`}>Total Price: $24.00</p>
             <div className="flex justify-center">
               <button type="submit" onClick={handleSubmit} className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
