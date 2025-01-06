@@ -148,7 +148,9 @@ const OrderLabel = () => {
         headers: { 'Content-Type': 'application/json' }
       });
       const result = await response.data;
-      setLabelImage(result.data.base64_encoded_image); // Set the base64 image data received from the backend
+      setLabelImage(result.data.image);
+      console.log(result, result.data.base64_encoded_image);
+      
       setModalVisible(true); // Show the modal
       setNotification({ visible: true, message: "Order label created successfully!", type: "success" });
       console.log(result);
