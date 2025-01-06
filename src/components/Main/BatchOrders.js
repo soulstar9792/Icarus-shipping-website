@@ -4,6 +4,7 @@ import Card from '../Utils/Card'; // Ensure you have a Card component
 import $GS from '../../styles/constants'; // Import your styles
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import Loading from '../Loading';
 const BatchOrders = () => {
   const user = useSelector(state => state.auth.user);
   const [currentPage, setCurrentPage] = useState(1);
@@ -11,16 +12,19 @@ const BatchOrders = () => {
   const [batchOrdersData, setBatchOrdersData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
   const [fileName, setFileName] = useState(null);
-
+  const [loading, setLoading] = useState(true); // State to manage loading status
 
   const getBatchOrders = () => {
+    
     return axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/' + user._id, {
       headers: { 'token': localStorage.getItem('token') },
     });
   };
   useEffect(() => {
     getBatchOrders().then((res) => {
+      setLoading(true);
       setBatchOrdersData(res.data);
+      setLoading(false);
       console.log(res.data);
     });
   }, []);
@@ -60,6 +64,8 @@ const BatchOrders = () => {
   };
   return (
     <div className="batch-orders-container px-4 md:px-10 py-10 md:py-20 bg-custom-background">
+      
+      {loading && <Loading />}
       <Card>
         <h2 className={`${$GS.textHeading_2} mb-4`}>Batch Orders List</h2>
         <div className="overflow-x-auto">
@@ -80,7 +86,7 @@ const BatchOrders = () => {
                   <td className="border border-custom-border p-2">{order.courier}</td>
                   <td className="border border-custom-border p-2">
                     <button className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border1 border-blue-600 mx-1 bg-blue-700 font-bold`}
-                     onClick={() => handleDownload(order.__filename)}>
+                      onClick={() => handleDownload(order.__filename)}>
                       Download
                     </button>
                   </td>
