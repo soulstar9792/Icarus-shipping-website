@@ -54,21 +54,6 @@ const UserManagement = () => {
     setShowModal(true); // Show modal
     setSelectedUser(id); // Set the selected user
   };
-  const updateBalance = (id) => {
-    const user = users.find(user => user._id === id);
-    axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/balance/${id}`,
-      { balance: user.balance },
-      {
-        headers: { 'token': localStorage.getItem('token') },
-      }
-    )
-      .then(res => {
-        console.log('Balance updated successfully');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
 
   const confirmBalanceUpdate = () => {
     if (selectedUser) {

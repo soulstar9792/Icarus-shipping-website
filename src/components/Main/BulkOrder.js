@@ -9,8 +9,10 @@ import Loading from '../Loading';
 import Notification from '../Notification';
 
 import './BulkOrder.css'; // Import custom CSS for styling.
+import { useSelector } from 'react-redux';
 
 const BulkOrder = () => {
+  const user = useSelector(state => state.auth.user);  
   const [csvFile, setCsvFile] = useState(null);
   const [courierType, setCourierType] = useState('');
   const [uploadedData, setUploadedData] = useState([]); // State for storing parsed CSV data
@@ -96,7 +98,7 @@ const BulkOrder = () => {
       };
     });
     try {
-      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk', shipments, {
+      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/' + user._id, shipments, {
         headers: { 'Content-Type': 'application/json' }
       });
       const result = await response.data;
