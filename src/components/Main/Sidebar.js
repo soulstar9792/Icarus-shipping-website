@@ -61,7 +61,7 @@ const Sidebar = ({isSidebarOpen, toggleSidebar}) => {
     <div className={` lg:block lg:w-fit lg:relative ${isSidebarOpen ? 'block fixed bg-black h-screen bg-opacity-50 top-0 left-0 z-50 w-screen' : 'hidden'}`} onClick={toggleSidebar}>
       <div className={`${isSidebarOpen ? 'block top-0 left-0 z-50' : 'hidden'} lg:block w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${$GS.cardContainer} `}>
         {/* Logo Section */}
-        <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex items-center`} >
+        <Link to="/main/dashboard" className={`${$GS.textHeading_2} mt-10 flex justify-center mx-auto items-center`} >
           <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
           <h1 className={`text-xl transition-colors duration-300`}>Icarus Ships</h1>
         </Link>
