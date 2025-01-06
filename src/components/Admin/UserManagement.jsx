@@ -8,6 +8,9 @@ import Loading from '../Loading';
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false); // State to manage modal visibility
+  const [selectedUser, setSelectedUser] = useState(null); // State to hold currently selected user for update
+  const [newBalance, setNewBalance] = useState(''); // State for balance input
 
   const getUser = () => {
     return axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users', {
@@ -39,22 +42,56 @@ const UserManagement = () => {
         console.log(err);
       });
   };
+
   const handleBalanceChange = (id, balance) => {
-    console.log(id, balance); 
-    setUsers(users.map(user => user._id === id ? { ...user, balance: balance } : user));
+    // Update the state immediately for better user experience
+    setUsers(users.map(user => user._id === id ? { ...user, balance } : user));
+    return balance;
+  };
+  const handleSubmitUpdate = (id, balance) => {
+    setUsers(users.map(user => user._id === id ? { ...user, balance } : user));
+    setNewBalance(balance); // Store the balance temporarily
+    setShowModal(true); // Show modal
+    setSelectedUser(id); // Set the selected user
+  };
+  const updateBalance = (id) => {
+    const user = users.find(user => user._id === id);
     axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/balance/${id}`,
-      { balance: balance },
+      { balance: user.balance },
       {
         headers: { 'token': localStorage.getItem('token') },
       }
     )
       .then(res => {
-        // setUsers(users.map(user => user._id === id ? { ...user, balance: balance } : user));
+        console.log('Balance updated successfully');
       })
       .catch(err => {
         console.log(err);
       });
   };
+
+  const confirmBalanceUpdate = () => {
+    if (selectedUser) {
+      axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/balance/${selectedUser}`,
+        { balance: newBalance },
+        {
+          headers: { 'token': localStorage.getItem('token') },
+        }
+      )
+        .then(res => {
+          setUsers(users.map(user => user._id === selectedUser ? { ...user, balance: newBalance } : user));
+          setShowModal(false); // Close modal after updating
+          setNewBalance(''); // Reset balance
+          setSelectedUser(null); // Reset selected user
+        })
+        .catch(err => {
+          console.log(err);
+          setShowModal(false); // Close modal even on error
+        });
+    }
+  };
+
+
   const toggleAccess = (id, activation) => {
     axios.post(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/activation/${id}`,
       { activation: activation === 'Allow' ? 'block' : 'allow' },
@@ -101,13 +138,13 @@ const UserManagement = () => {
                 <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Role</th>
                 <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Services</th>
                 <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Balance</th>
+                <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base"></th>
                 <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Access</th>
                 <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => {
-                var balance = user.balance;
                 return (
                   <tr key={user._id} className="hover:bg-gray-900">
                     <td className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}>{user._id}</td>
@@ -124,7 +161,23 @@ const UserManagement = () => {
                       </select>
                     </td>
                     <td className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}>service1</td>
-                    <td className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}><input type='text' value={balance} onChange={(e) => { handleBalanceChange(user._id, e.target.value); }} className={`${$GS.inputStyle} bg-gray-900 border border-custom-border px-2 py-1 rounded-md w-[100px]`} /></td>
+                    <td className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}>
+                      <input
+                        type='text'
+                        value={user.balance}
+                        onChange={(e) => handleBalanceChange(user._id, e.target.value)}
+                        className={`${$GS.inputStyle} bg-gray-900 border border-custom-border px-2 py-1 rounded-md w-[100px]`}
+                      />
+                    </td>
+                    <td className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}>
+                      <button
+                        className={`${$GS.buttonStyle} rounded-md py-1 px-2 bg-blue-500 hover:bg-blue-700 ml-1`}
+                        onClick={() => handleSubmitUpdate(user._id, user.balance)}
+                      >
+                        Update
+                      </button>
+
+                    </td>
                     <td className={`border-b border-custom-border px-2 py-2`}>
                       <button
                         onClick={(e) => toggleAccess(user._id, e.target.innerHTML)}
@@ -145,8 +198,42 @@ const UserManagement = () => {
           </table>
         </div>
       </Card>)}
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={confirmBalanceUpdate}
+        balance={newBalance}
+      />
     </div>
   );
 };
 
 export default UserManagement;
+
+
+const ConfirmModal = ({ isOpen, onClose, onConfirm, balance }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-75">
+      <div className="bg-white rounded-lg p-6">
+        <h3 className="text-lg font-semibold mb-4">Confirm Balance Update</h3>
+        <p>Are you sure you want to update the balance to <strong>${balance}</strong>?</p>
+        <div className="mt-6 flex justify-between">
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded-md"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            onClick={onConfirm}
+          >
+            Accept
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
