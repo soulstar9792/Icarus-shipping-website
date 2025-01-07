@@ -156,6 +156,12 @@ const OrderLabel = () => {
       console.log(result);
 
     } catch (error) {
+      // Formatted error message 
+      const errorMsg =error.response?.data?.message || "An Unknown Error Occured";
+      const formattedMsg =errorMsg.split(":")[1]?.trim();
+      const FinalMsg = formattedMsg.charAt(0).toUpperCase() +formattedMsg.slice(1);
+      
+      setNotification({visible:true,message:FinalMsg,type:"error"})
       console.error('Error:', error);
     }
   };
