@@ -4,9 +4,12 @@ import AdminSidebar from '../components/Admin/AdminSidebar';
 import Dashboard from '../components/Admin/Dashboard';
 import UserManagement from '../components/Admin/UserManagement';
 import hamburger from '../assets/hamburger.svg';
+import ServicesPrice from '../components/Admin/ServicesPrice';
+
 const adminRoutes = [
     { path: 'dashboard', Component: Dashboard },
     { path: 'user-management', Component: UserManagement },
+    { path: 'service-prices', Component: ServicesPrice },
 ];
 
 const Admin = () => {
