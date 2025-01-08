@@ -1,5 +1,5 @@
 // src/components/Main/BulkOrder.js
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import Card from '../Utils/Card'; 
 import $GS from '../../styles/constants'; 
 import { FaUpload } from 'react-icons/fa'; 
@@ -20,6 +20,7 @@ const BulkOrder = () => {
   const [notification, setNotification] = useState({ visible: false, message: "", type: "" });
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
   const [fileName, setFileName] = useState(null); // Store data needed for downloading
+  const [totalPrice, setTotalPrice]= useState(0);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -57,6 +58,7 @@ const BulkOrder = () => {
       return;
     }
     setLoading(true);
+    if(csvFile){
     const selectedCourier = courierType; // Get the selected courier type
     const shipments = uploadedData.map((row) => {
       return {
@@ -111,6 +113,7 @@ const BulkOrder = () => {
     } catch (error) {
       console.error('Error:', error);
     }
+  }
   };
 
   const handleDownload = async () => {
@@ -133,6 +136,68 @@ const BulkOrder = () => {
       console.error('Error downloading PDF:', error.message);
     }
   };
+
+  const getBulkCost = async () =>{
+    try {
+     if(courierType){ 
+    const selectedCourier = courierType
+      if(csvFile){
+    const shipments = uploadedData.map((row) => {
+      return {
+        courier: selectedCourier,
+        service_name: row.ServiceName, // Assuming you want to use `ServiceName` from the CSV
+        manifested: false,
+        sender: {
+          sender_name: row.FromSenderName,
+          sender_phone: row.FromPhone,
+          sender_company: row.FromCompany,
+          sender_address1: row.FromStreet1,
+          sender_address2: row.FromStreet2,
+          sender_city: row.FromCity,
+          sender_state_province: row.FromStateProvince,
+          sender_zip_postal: row.FromZipPostal,
+          sender_country: row.FromCountry,
+        },
+        receiver: {
+          receiver_name: row.ToRecipientName,
+          receiver_phone: row.ToPhone,
+          receiver_company: row.ToCompany,
+          receiver_address1: row.ToStreet1,
+          receiver_address2: row.ToStreet2,
+          receiver_city: row.ToCity,
+          receiver_state_province: row.ToStateProvince,
+          receiver_zip_postal: row.ToZipPostal,
+          receiver_country: row.ToCountry,
+        },
+        package: {
+          package_length: row.PackageLength,
+          package_width: row.PackageWidth,
+          package_height: row.PackageHeight,
+          package_weight: row.PackageWeight,
+          package_weight_unit: "LB", // Assuming weight is in pounds
+          package_description: row.PackageDescription,
+          package_reference1: row.PackageReference1 || "", // Handling missing fields
+          package_reference2: row.PackageReference2 || "", // Same as above
+        },
+      };
+      });
+      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/price/bulk' ,{userId:  user._id, shipments:  shipments }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      setTotalPrice(response.data.totalPrice); 
+      console.log(totalPrice);
+      }}
+    }catch(err){
+        console.log("Error Occured : ", err)
+      }
+  }
+ 
+  useEffect(()=>{
+    if(csvFile){
+      getBulkCost();
+    }
+  },[courierType,uploadedData])
+
 
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
@@ -262,7 +327,7 @@ const BulkOrder = () => {
             </div>
           </Card>
           <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
-            <p className={`${$GS.textHeading_2} m-8`}>Total Price: $24.00</p>
+            <p className={`${$GS.textHeading_2} m-8`}>Total Price: ${totalPrice}</p>
             <div className="flex justify-center">
               <button type="submit" onClick={handleSubmit} className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
                     bg-card-background group hover:border-hover-border hover:shadow-bright`}>Submit Bulk Order</button>
