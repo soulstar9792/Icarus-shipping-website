@@ -54,7 +54,7 @@ const Dashboard = () => {
             <FaDollarSign className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Balance</h3>
-              <p className={`${$GS.textNormal_1}`}>${user.balance.toFixed(2)}</p>
+              <p className={`${$GS.textNormal_1}`}>${user?.balance?.toFixed(2) ||user.balance }</p>
             </div>
           </div>
         </Card>
@@ -64,7 +64,7 @@ const Dashboard = () => {
             <FaArrowUp className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Total Deposited</h3>
-              <p className={`${$GS.textNormal_1}`}>{user.totalDeposit? "$"+user.totalDeposit.toFixed(2):"-----" }</p>
+              <p className={`${$GS.textNormal_1}`}>{user?.totalDeposit? "$"+user?.totalDeposit?.toFixed(2):"-----" }</p>
             </div>
           </div>
         </Card>
@@ -74,7 +74,7 @@ const Dashboard = () => {
             <FaShoppingCart className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Total Orders</h3>
-              <p className={`${$GS.textNormal_1}`}>{orders.length}</p>
+              <p className={`${$GS.textNormal_1}`}>{orders?.length}</p>
             </div>
           </div>
         </Card>
@@ -84,7 +84,7 @@ const Dashboard = () => {
             <FaFileAlt className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Total Spent</h3>
-              <p className={`${$GS.textNormal_1}`}>{user.totalSpent? "$"+user.totalSpent.toFixed(2): "-----"}</p>
+              <p className={`${$GS.textNormal_1}`}>{user?.totalSpent? "$"+user?.totalSpent?.toFixed(2): "-----"}</p>
             </div>
           </div>
         </Card>
@@ -105,12 +105,12 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-              {orders.map((order, index) => (
+              {orders?.map((order, index) => (
                   <tr key={index} className="hover:border-hover-border">
-                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order.courier}</td>
-                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order.sender.sender_name}</td>
-                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order.receiver.receiver_name}</td>
-                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order.tracking_number}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.courier}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.sender.sender_name}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.receiver.receiver_name}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.tracking_number}</td>
                   </tr>
                 ))}
               </tbody>
