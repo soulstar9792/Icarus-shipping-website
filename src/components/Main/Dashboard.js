@@ -34,7 +34,7 @@ const Dashboard = () => {
       if(user){
         const fetchOrders = async () =>{
         try{
-            const response = await axios.get(`http://localhost:5000/api/orders/${user._id}`);
+            const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/${user._id}`);
             setOrders(response.data.orders);
         }catch(e){
           console.log("The Error",e);
@@ -54,7 +54,7 @@ const Dashboard = () => {
             <FaDollarSign className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Balance</h3>
-              <p className={`${$GS.textNormal_1}`}>{user.balance? "$"+user.balance.toFixed(2):"----"}</p>
+              <p className={`${$GS.textNormal_1}`}>${user.balance.toFixed(2)}</p>
             </div>
           </div>
         </Card>
