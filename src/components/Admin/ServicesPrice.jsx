@@ -78,6 +78,7 @@ function App() {
                   <th key={service} className="px-6 py-3 text-left border border-gray-600" colSpan={2}>{service}</th>
                 )}
               </tr>
+              
               <tr className="bg-black">
                 <th className="px-6 py-3 text-left border border-gray-600"></th>
                 {users[0]?.services[0]?.services && Object.keys(users[0].services[0].services).map(service => [
@@ -85,8 +86,21 @@ function App() {
                   <th key={`${service}-manifested`} className="px-6 py-3 text-left border border-gray-600">Manifested</th>
                 ])}
               </tr>
-            </thead>
+              <tr className="bg-gray-800">
+    <th className="px-6 py-3 text-left border border-gray-600">Standard Prices</th>
+    {users[0]?.services[0]?.services && Object.keys(users[0].services[0].services).map(service => [
+      <td key={`${service}-static-standard`} className="px-6 py-3 text-center border border-gray-600">
+
+        0.5 
+      </td>,
+      <td key={`${service}-static-manifested`} className="px-6 py-3 text-center border border-gray-600">
+        0.9
+      </td>
+    ])}
+  </tr>
+</thead>
             <tbody>
+              
               {users.map((user) => (
                 <tr key={user._id} className="hover:bg-black">
                   <td className="px-6 py-4 border border-black">{user.name}</td>
@@ -131,6 +145,24 @@ function App() {
                   <th key={`${service}-manifested`} className="px-6 py-3 text-left border border-gray-600">Manifested</th>
                 ])}
               </tr>
+              <tr className="bg-black">
+                <th className="px-6 py-3 text-left border border-gray-600"></th>
+                {users[0]?.services[0]?.services && Object.keys(users[0].services[0].services).map(service => [
+                  <th key={`${service}-standard`} className="px-6 py-3 text-left border border-gray-600">Standard</th>,
+                  <th key={`${service}-manifested`} className="px-6 py-3 text-left border border-gray-600">Manifested</th>
+                ])}
+              </tr>
+              <tr className="bg-gray-800">
+    <th className="px-6 py-3 text-left border border-gray-600">Standard Prices</th>
+    {users[0]?.services[0]?.services && Object.keys(users[0].services[0].services).map(service => [
+      <td key={`${service}-static-standard`} className="px-6 py-3 text-center border border-gray-600">
+        0.1
+      </td>,
+      <td key={`${service}-static-manifested`} className="px-6 py-3 text-center border border-gray-600">
+        0
+      </td>
+    ])}
+  </tr>
             </thead>
             <tbody>
               {users.map((user) => (
