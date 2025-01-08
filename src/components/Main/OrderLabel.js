@@ -1,5 +1,5 @@
 // src/components/Main/OrderLabel.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../Utils/Card'; // Ensure you have a Card component
 import $GS from '../../styles/constants'; // Import your styles
 import LabelServicesType from '../../LabelServicesType.json';
@@ -38,6 +38,7 @@ const OrderLabel = () => {
   const [availableServices, setAvailableServices] = useState([]);
   const [notification, setNotification] = useState({ visible: false, message: "", type: "" });
   const [service, setService] = useState("");
+  const [price, setPrice] = useState(0); 
   const [sender, setSender] = useState({
     name: "",
     phone: "",
@@ -165,6 +166,19 @@ const OrderLabel = () => {
       console.error('Error:', error);
     }
   };
+
+  const getServiceCost = async(userId,courier,service)=>{
+    console.log("the service " , service); 
+     const res = await axios.post("http://localhost:5000/api/orders/price/single",{userId,courier,service},{headers:{'Content-Type' : 'application/json'}} );
+      setPrice(res.data.price);
+  }
+  useEffect(()=>{
+    if(selectedCourier){
+      if(service){
+    getServiceCost(user._id,selectedCourier,service); 
+      }
+    }
+  },[selectedCourier,service])
 
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
@@ -525,7 +539,7 @@ const OrderLabel = () => {
 
         {/* Price And Submit Section */}
         <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
-          <p className={`${$GS.textHeading_2} m-8`}>Price: $12.00</p>
+          <p className={`${$GS.textHeading_2} m-8`}>Price: ${price}</p>
           <div className="flex justify-center">
             <button type="submit" className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
                     bg-card-background group hover:border-hover-border hover:shadow-bright`}>Order Label</button>
