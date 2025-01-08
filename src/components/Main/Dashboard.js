@@ -1,10 +1,13 @@
 // src/components/Main/Dashboard.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaDollarSign, FaArrowUp, FaFileAlt, FaShoppingCart } from 'react-icons/fa'; // Importing icons
 import Card from '../Utils/Card'; // Ensure you have a Card component
 import $GS from '../../styles/constants'; // Import your styles
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const Dashboard = () => {
+  
   // Placeholder data for demonstration
   const mockData = {
     balance: 5000,
@@ -21,6 +24,25 @@ const Dashboard = () => {
     ],
   };
 
+  const [orders,setOrders] = useState([]);
+  // Get the user 
+  const user = useSelector((state)=>state.auth.user); 
+  
+  // Fetch the Order 
+  useEffect(()=>{
+    
+      if(user){
+        const fetchOrders = async () =>{
+        try{
+            const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/${user._id}`);
+            setOrders(response.data.orders);
+        }catch(e){
+          console.log("The Error",e);
+        }
+      }
+      fetchOrders();
+    }
+  },[user])
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
 
@@ -32,7 +54,7 @@ const Dashboard = () => {
             <FaDollarSign className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Balance</h3>
-              <p className={`${$GS.textNormal_1}`}>${mockData.balance}</p>
+              <p className={`${$GS.textNormal_1}`}>${user?.balance?.toFixed(2) ||user.balance }</p>
             </div>
           </div>
         </Card>
@@ -42,7 +64,7 @@ const Dashboard = () => {
             <FaArrowUp className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Total Deposited</h3>
-              <p className={`${$GS.textNormal_1}`}>${mockData.totalDeposited}</p>
+              <p className={`${$GS.textNormal_1}`}>{user?.totalDeposit? "$"+user?.totalDeposit?.toFixed(2):"-----" }</p>
             </div>
           </div>
         </Card>
@@ -52,7 +74,7 @@ const Dashboard = () => {
             <FaShoppingCart className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Total Orders</h3>
-              <p className={`${$GS.textNormal_1}`}>{mockData.totalOrders}</p>
+              <p className={`${$GS.textNormal_1}`}>{orders?.length}</p>
             </div>
           </div>
         </Card>
@@ -62,7 +84,7 @@ const Dashboard = () => {
             <FaFileAlt className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Total Spent</h3>
-              <p className={`${$GS.textNormal_1}`}>${mockData.totalSpent}</p>
+              <p className={`${$GS.textNormal_1}`}>{user?.totalSpent? "$"+user?.totalSpent?.toFixed(2): "-----"}</p>
             </div>
           </div>
         </Card>
@@ -80,16 +102,16 @@ const Dashboard = () => {
                   <th className="px-4 py-2 border-b border-custom-border">Type</th>
                   <th className="px-4 py-2 border-b border-custom-border">From</th>
                   <th className="px-4 py-2 border-b border-custom-border">To</th>
-                  <th className="px-4 py-2 border-b border-custom-border">Status</th>
+                  <th className="px-4 py-2 border-b border-custom-border">Tracking ID </th>
                 </tr>
               </thead>
               <tbody>
-                {mockData.recentOrders.map((order, index) => (
+              {orders?.map((order, index) => (
                   <tr key={index} className="hover:border-hover-border">
-                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order.type}</td>
-                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order.from}</td>
-                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order.to}</td>
-                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order.status}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.courier}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.sender.sender_name}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.receiver.receiver_name}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.tracking_number}</td>
                   </tr>
                 ))}
               </tbody>
