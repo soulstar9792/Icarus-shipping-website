@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaTachometerAlt, FaUserCog, FaTag } from 'react-icons/fa'; // Import necessary icons
+import { FaTachometerAlt, FaUserCog, FaTag } from 'react-icons/fa';
+import { BsCurrencyDollar } from "react-icons/bs";
 import $GS from '../../styles/constants'; // Import styles
 import logo from '../../assets/logo.png';  // Update the path to your logo
 
@@ -19,6 +20,11 @@ const adminMenuItems = [
     path: '/admin/order-label-management',
     icon: <FaTag className="mr-2" />,
     label: 'Order Label Management',
+  },
+  {
+    path: '/admin/service-prices',
+    icon: <BsCurrencyDollar className="mr-2" />,
+    label: 'Service Prices ',
   },
 ];
 
