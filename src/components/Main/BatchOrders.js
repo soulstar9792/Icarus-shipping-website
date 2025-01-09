@@ -25,7 +25,7 @@ const BatchOrders = () => {
       setLoading(true);
       setBatchOrdersData(res.data);
       setLoading(false);
-      console.log(res.data);
+      // console.log(res.data);
     });
   }, []);
 
@@ -42,7 +42,7 @@ const BatchOrders = () => {
     setCurrentPage(pageNumber);
   };
   const handleDownload = async (fileName) => {
-    console.log(fileName)
+    // console.log(fileName)
     try {
       const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`, {
         responseType: 'blob', // Important for downloading files
