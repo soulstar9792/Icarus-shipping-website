@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState, useCallback } from 'react';
-import { FiSend, FiUser, FiEdit2, FiTrash2 } from 'react-icons/fi';
+import { FiSend, FiUser,  FiTrash2, FiX } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import states from '../../states.json';
 
