@@ -1,11 +1,16 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaTachometerAlt, FaUserCog, FaTag } from 'react-icons/fa';
+import { FaTachometerAlt, FaUserCog, FaTag, FaUser } from 'react-icons/fa';
 import { BsCurrencyDollar } from "react-icons/bs";
 import $GS from '../../styles/constants'; // Import styles
 import logo from '../../assets/logo.png';  // Update the path to your logo
 
 const adminMenuItems = [
+  {
+    path: '/main/dashboard',
+    icon: <FaUser className="mr-2" />,
+    label: 'User Panel',
+  },
   {
     path: '/admin/dashboard',
     icon: <FaTachometerAlt className="mr-2" />,
