@@ -30,7 +30,7 @@ const Main = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
-    console.log(isSidebarOpen);
+    // console.log(isSidebarOpen);
   };
   return (
     <div className="flex h-screen bg-custom-background">
