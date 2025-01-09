@@ -5,11 +5,9 @@ import { useSelector } from 'react-redux';
 
 const AdminRoute = ({ children }) => {
     const user = useSelector(state => state.auth.user); // Get the user from Redux state
-    console.log(useSelector(state => state));
     
 
     // Check if the user is an admin based on your user structure
-    console.log(user);
     
     if (!user || user.user_role !== 'admin') {
         return <Navigate to="/" replace />; // Redirect non-admin users

@@ -17,7 +17,7 @@ export const checkToken = createAsyncThunk('auth/checkToken', async (token) => {
   const response = await axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/verify', {
     headers: { 'token': token },
   });
-  console.log(response.data);
+  // console.log(response.data);
   return response.data;
 });
 
