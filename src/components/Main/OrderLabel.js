@@ -84,7 +84,6 @@ const OrderLabel = () => {
   const handleCourierChange = (e) => {
     const selected = e.target.value;
     setSelectedCourier(selected);
-    console.log(selectedCourier);
 
     const selectedCourierData = LabelServicesType.find(courier => courier.courier === selected);
     if (selectedCourierData) {
@@ -143,18 +142,16 @@ const OrderLabel = () => {
         package_reference2: packageDetails.reference2,
       },
     };
-    console.log(shipmentData);
     try {
       const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders', shipmentData, {
         headers: { 'Content-Type': 'application/json' }
       });
       const result = await response.data;
       setLabelImage(result.data.image);
-      console.log(result, result.data.base64_encoded_image);
+      // console.log(result, result.data.base64_encoded_image);
       
       setModalVisible(true); // Show the modal
       setNotification({ visible: true, message: "Order label created successfully!", type: "success" });
-      console.log(result);
 
     } catch (error) {
       // Formatted error message 

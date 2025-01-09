@@ -21,7 +21,6 @@ const Account = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Logic to submit form data to your API or service
-    console.log("Account data submitted:", formData);
   };
 
   return (
