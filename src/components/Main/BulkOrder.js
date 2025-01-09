@@ -22,24 +22,79 @@ const BulkOrder = () => {
   const [fileName, setFileName] = useState(null); // Store data needed for downloading
   const [totalPrice, setTotalPrice]= useState(0);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setCsvFile(file);
 
-    // Parse CSV file
-    if (file) {
-      Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-          setUploadedData(results.data);
-        },
-        error: (error) => {
-          console.error("Error parsing CSV:", error);
-        },
-      });
+  const validateRow = (row) => {
+  const requiredFields = [
+    "FromSenderName", "FromPhone", "FromStreet1", "FromCity", 
+    "ToRecipientName", "ToPhone", "ToStreet1", "ToCity", 
+    "PackageWeight", "ServiceName"
+  ];
+
+  const errors = requiredFields.reduce((acc, field) => {
+    if (!row[field] || row[field].trim() === "") {
+      acc.push(`${field} is required.`);
     }
-  };
+    return acc;
+  }, []);
+
+  if (isNaN(parseFloat(row.PackageWeight)) || parseFloat(row.PackageWeight) <= 0) {
+    errors.push("PackageWeight must be a positive number.");
+  }
+
+  return errors.length ? { isValid: false, errors } : { isValid: true };
+};
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  setCsvFile(file);
+
+  if (file) {
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        const { data } = results;
+        const invalidRows = [];
+        const validData = [];
+
+        data.forEach((row, index) => {
+          const validation = validateRow(row);
+          if (!validation.isValid) {
+            invalidRows.push({ rowIndex: index + 1, errors: validation.errors });
+          } else {
+            validData.push(row);
+          }
+        });
+
+        if (invalidRows.length) {
+          // console.error("Invalid rows:", invalidRows);
+          setNotification({
+            visible: true,
+            message: `Some Fields are missing`,
+            type: "error",
+          });
+        } else {
+          setNotification({
+            visible: true,
+            message: "CSV file uploaded successfully!",
+            type: "success",
+          });
+        }
+
+        setUploadedData(validData);
+      },
+      error: (error) => {
+        console.error("Error parsing CSV:", error);
+        setNotification({
+          visible: true,
+          message: "Error parsing CSV file.",
+          type: "error",
+        });
+      },
+    });
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +115,7 @@ const BulkOrder = () => {
     setLoading(true);
     if(csvFile){
     const selectedCourier = courierType; // Get the selected courier type
+    if(uploadedData){
     const shipments = uploadedData.map((row) => {
       return {
         courier: selectedCourier,
@@ -114,7 +170,7 @@ const BulkOrder = () => {
       console.error('Error:', error);
     }
   }
-  };
+  }};
 
   const handleDownload = async () => {
     try {
