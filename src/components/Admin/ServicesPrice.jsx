@@ -54,7 +54,6 @@ function App() {
         }
       );
   
-      console.log("Response from server:", response.data);
     } catch (err) {
       console.error("Error updating cost:", err);
     }

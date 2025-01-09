@@ -15,7 +15,6 @@ const Orders = () => {
   const [error, setError] = useState(null); // State to manage error
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
   const [currentImage, setCurrentImage] = useState(''); // State to store current image
-  console.log(user);
 
   const getOrders = () => {
     return axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/'+ user._id, {
@@ -28,7 +27,7 @@ const Orders = () => {
     getOrders().then(res => {
       setLoading(true)
       setOrders(res.data.orders);
-      console.log(res.data.orders);
+      // console.log(res.data.orders);
       setLoading(false);
     }).catch(err => {
       setError(err);
