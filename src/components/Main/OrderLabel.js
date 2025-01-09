@@ -165,7 +165,7 @@ const OrderLabel = () => {
   };
 
   const getServiceCost = async(userId,courier,service)=>{
-     const res = await axios.post("https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/orders/price/single",{userId,courier,service},{headers:{'Content-Type' : 'application/json'}} );
+     const res = await axios.post("https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/price/single",{userId,courier,service},{headers:{'Content-Type' : 'application/json'}} );
       setPrice(res.data.price);
   }
   useEffect(()=>{
