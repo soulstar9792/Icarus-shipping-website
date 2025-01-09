@@ -14,7 +14,6 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      console.log({ email, password }); // Call the login action
       await dispatch(login({ email, password })).unwrap(); // Unwrap to check for errors
       navigate('/main/dashboard'); // Redirect to a different route after successful login
     } catch (err) {
