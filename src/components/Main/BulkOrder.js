@@ -108,7 +108,7 @@ const BulkOrder = () => {
         setFileName(result.fileName); 
         setModalVisible(true); // Show modal
       }
-      console.log(result);
+      // console.log(result);
       setLoading(false);
     } catch (error) {
       console.error('Error:', error);
@@ -185,7 +185,6 @@ const BulkOrder = () => {
         headers: { 'Content-Type': 'application/json' }
       });
       setTotalPrice(response.data.totalPrice); 
-      console.log(totalPrice);
       }}
     }catch(err){
         console.log("Error Occured : ", err)
