@@ -34,11 +34,11 @@ const Modal = ({ isVisible, onClose, imageData }) => {
 
 const OrderLabel = () => {
   const user = useSelector(state => state.auth.user);  
+  const [price, setPrice] = useState(0); 
   const [selectedCourier, setSelectedCourier] = useState("");
   const [availableServices, setAvailableServices] = useState([]);
   const [notification, setNotification] = useState({ visible: false, message: "", type: "" });
   const [service, setService] = useState("");
-  const [price, setPrice] = useState(0); 
   const [sender, setSender] = useState({
     name: "",
     phone: "",
@@ -50,6 +50,7 @@ const OrderLabel = () => {
     zip: "",
     country: "US", // Default country
   });
+  const [savedAddress, setSavedAddress] = useState([]); 
 
   const [receiver, setReceiver] = useState({
     name: "",
@@ -84,6 +85,7 @@ const OrderLabel = () => {
   const handleCourierChange = (e) => {
     const selected = e.target.value;
     setSelectedCourier(selected);
+    console.log(selectedCourier);
 
     const selectedCourierData = LabelServicesType.find(courier => courier.courier === selected);
     if (selectedCourierData) {
@@ -142,29 +144,33 @@ const OrderLabel = () => {
         package_reference2: packageDetails.reference2,
       },
     };
+    console.log(shipmentData);
     try {
       const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders', shipmentData, {
         headers: { 'Content-Type': 'application/json' }
       });
       const result = await response.data;
+       
       setLabelImage(result.data.image);
-      // console.log(result, result.data.base64_encoded_image);
+      console.log(result, result.data.base64_encoded_image);
       
       setModalVisible(true); // Show the modal
       setNotification({ visible: true, message: "Order label created successfully!", type: "success" });
+      console.log(result);
 
     } catch (error) {
       // Formatted error message 
       const errorMsg =error.response?.data?.message || "An Unknown Error Occured";
-      const formattedMsg =errorMsg.split(":")[1]?.trim();
-      const FinalMsg = formattedMsg.charAt(0).toUpperCase() +formattedMsg.slice(1);
-      
+      const formattedMsg =errorMsg.split(":")[1]?.trim() || errorMsg;
+      const FinalMsg = formattedMsg?.charAt(0).toUpperCase() +formattedMsg?.slice(1) || errorMsg;
       setNotification({visible:true,message:FinalMsg,type:"error"})
       console.error('Error:', error);
     }
   };
 
+
   const getServiceCost = async(userId,courier,service)=>{
+    console.log("the service " , service); 
      const res = await axios.post("https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/price/single",{userId,courier,service},{headers:{'Content-Type' : 'application/json'}} );
       setPrice(res.data.price);
   }
@@ -175,6 +181,61 @@ const OrderLabel = () => {
       }
     }
   },[selectedCourier,service])
+
+  const getSavedAddresss = async ()=>{
+    try{const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`,{},{headers:{"Content-Type":"application/json"}})
+    setSavedAddress(response.data.savedAddress); 
+  }catch(e){
+    console.log("Error Occured"); 
+  }
+  }
+
+  const HandleSelectChangeSender = (e) =>{
+    if(e.target.value){
+    const selectedOption = JSON.parse(e.target.value);
+    for(const address of savedAddress){
+      if(address.city == selectedOption.city && address.phone===selectedOption.phone){
+        setSender({
+          name:     address.name || "",
+          phone:    address.phone ||  "",
+          company:  address.company ||"",
+          address1: address.street  || "",
+          address2: address.street2 || "",
+          city:     address.city || "", 
+          state:  address.state || "",
+          zip: address.zip || "",
+          country: address.country || "", 
+
+        })
+      } 
+    }
+
+    }
+  }
+  
+  const HandleSelectChangeReciver = (e) =>{
+    if(e.target.value){
+    const selectedOption = JSON.parse(e.target.value);
+    for(const address of savedAddress){
+      if(address.city == selectedOption.city && address.phone===selectedOption.phone){
+        setReceiver({
+          name:     address.name || "",
+          phone:    address.phone ||  "",
+          company:  address.company ||"",
+          address1: address.street  || "",
+          address2: address.street2 || "",
+          city:     address.city || "", 
+          state:  address.state || "",
+          zip: address.zip || "",
+          country: address.country || "", 
+
+        })
+      } 
+    }
+
+    }
+  }
+
 
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
@@ -311,8 +372,17 @@ const OrderLabel = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="content-end">
                 <label htmlFor="fromAddress" className={`${$GS.textNormal_1}`}>Saved Address</label>
-                <select id="fromAddress" className="border border-custom-border p-2 w-full bg-transparent text-custom-text">
-                  <option>Select a saved address...</option>
+                <select onClick={getSavedAddresss} onChange={HandleSelectChangeSender} id="fromAddress" className="border border-custom-border p-2 w-full bg-transparent text-custom-text">
+                  <option value={""} >Select a saved address...</option>
+                  
+                  {savedAddress.map((ad,i)=>{
+                      const optionData =JSON.stringify({
+                        city: ad.city, 
+                        phone:ad.phone
+                      })
+                    return <option key={i} value={optionData}>{ad.street},{ad.city}</option>
+                  })}
+                     
                 </select>
               </div>
               <div>
@@ -423,8 +493,16 @@ const OrderLabel = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="content-end">
                 <label htmlFor="toAddress" className={`${$GS.textNormal_1}`}>Saved Address</label>
-                <select id="toAddress" className="border border-custom-border p-2 w-full bg-transparent text-custom-text">
-                  <option>Select a saved address...</option>
+                <select onClick={getSavedAddresss} onChange={HandleSelectChangeReciver} id="fromAddress" className="border border-custom-border p-2 w-full bg-transparent text-custom-text">
+                  <option value={""} >Select a saved address...</option>
+                  {savedAddress.map((ad,i)=>{
+                      const optionData =JSON.stringify({
+                        city: ad.city, 
+                        phone:ad.phone
+                      })
+                    return <option key={i} value={optionData}>{ad.street},{ad.city}</option>
+                  })}
+                     
                 </select>
               </div>
 
@@ -533,7 +611,7 @@ const OrderLabel = () => {
           </Card>
         </div>
 
-        {/* Price And Submit Section */}
+        {/* Price And Submit Section */}-
         <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
           <p className={`${$GS.textHeading_2} m-8`}>Price: ${price}</p>
           <div className="flex justify-center">
