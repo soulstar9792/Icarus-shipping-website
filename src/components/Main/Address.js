@@ -351,25 +351,28 @@ const Address = () => {
       </thead>
       <tbody>
         {addresses.length > 0 ? (
-          addresses.map((address) => (
+          addresses.map((address,index) => (
             <tr key={address._id} className="hover:bg-gray-900">
-              <td className="border-b border-custom-border px-2 py-2 text-sm md:text-base text-white">{address.name}</td>
-              <td className="border-b border-custom-border px-2 py-2 text-sm md:text-base text-white">{address.company || 'N/A'}</td>
-              <td className="border-b border-custom-border px-2 py-2 text-sm md:text-base text-white">{address.phone}</td>
-              <td className="border-b border-custom-border px-2 py-2 text-sm md:text-base text-white">
+              <td className={`border-b ${index===0 && "bg-gray-800/80 "} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>
+              {address.name}
+              </td>
+              <td className={`border-b ${index===0 && "bg-gray-800/80"} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>{address.company || 'N/A'}</td>
+              <td className={`border-b ${index===0 && "bg-gray-800/80"} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>{address.phone}</td>
+              <td className={`border-b ${index===0 && "bg-gray-800/80"} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>
                 {address.street}
                 {address.street2 && `, ${address.street2}`}
               </td>
-              <td className="border-b border-custom-border px-2 py-2 text-sm md:text-base text-white">{address.city}</td>
-              <td className="border-b border-custom-border px-2 py-2 text-sm md:text-base text-white">{address.state}</td>
-              <td className="border-b border-custom-border px-2 py-2 text-sm md:text-base text-white">{address.zip}</td>
-              <td className="border-b border-custom-border px-2 py-2 text-sm md:text-base text-white">
+              <td className={`border-b ${index===0 && "bg-gray-800/80"} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>{address.city}</td>
+              <td className={`border-b ${index===0 && "bg-gray-800/80"} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>{address.state}</td>
+              <td className={`border-b ${index===0 && "bg-gray-800/80"} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>{address.zip}</td>
+              <td className={`border-b ${index===0 && "bg-gray-800/80 flex  items-center "} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>
                 <button
                   onClick={() => handleDelete(address._id)}
                   className="px-5 py-2 flex gap-2 items-center   bg-red-500 text-white rounded-md hover:bg-red-700 transition-colors"
                 >
                   Delete <FiTrash2 />
                 </button>
+                {index === 0 && <span className="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded-full">User's Address</span>}
               </td>
             </tr>
           ))

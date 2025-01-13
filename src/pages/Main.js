@@ -13,6 +13,7 @@ import AdminPanel from '../components/Main/AdminPanel';
 import Sidebar from '../components/Main/Sidebar'; // Import Sidebar
 import MainHeader from '../components/Main/MainHeader'; // Import MainHeader
 import Account from '../components/Main/Account'; // Import the Account component
+import SKUManagement from '../components/Main/SKUMangement';
 
 const routes = [
   { path: 'dashboard', Component: Dashboard },
@@ -22,6 +23,7 @@ const routes = [
   { path: 'batch-orders', Component: BatchOrders },
   { path: 'deposit', Component: Deposit },
   { path: 'address', Component: Address },
+  { path: 'sku', Component: SKUManagement },
   { path: 'admin', Component: AdminPanel },
   { path: 'account', Component: Account } // Add the new Account route
 ];
