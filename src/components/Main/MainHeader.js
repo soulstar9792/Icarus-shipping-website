@@ -28,6 +28,7 @@ const MainHeader = ({ toggleSidebar, isSidebarOpen }) => {
     '/main/batch-orders': 'Batch Orders',
     '/main/deposit': 'Deposit',
     '/main/address': 'Address',
+    '/main/sku'    : 'SKU Mangement',
     '/main/admin': 'Admin Panel',
     '/main/account': 'Manage Account', // Add account route title
   };
