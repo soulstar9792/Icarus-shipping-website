@@ -5,6 +5,7 @@ import { FaTachometerAlt, FaTag, FaShoppingCart, FaClipboardList, FaBoxes, FaDol
 import $GS from '../../styles/constants'; // Import styles
 import logo from '../../assets/logo.png';  // Update this path to where your logo is stored
 import { useSelector } from 'react-redux';
+import { MdFindInPage } from 'react-icons/md';
 
 const menuItems = [
   {
@@ -42,11 +43,18 @@ const menuItems = [
     icon: <FaAddressCard className="mr-2" />,
     label: 'Address',
   },
+  
   {
     path: '/admin/dashboard',
     icon: <FaUserShield className="mr-2" />,
     label: 'Admin Panel',
   },
+  {
+    path: '/main/sku',
+    icon: <MdFindInPage  className="mr-2" />,
+    label: 'SKU Mangement',
+  },
+  
 ];
 
 const Sidebar = ({isSidebarOpen, toggleSidebar}) => {
