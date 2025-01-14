@@ -20,7 +20,7 @@ const BulkOrder = () => {
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ visible: false, message: "", type: "" });
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
-  const [fileName, setFileName] = useState(null); // Store data needed for downloading
+  const [fileName, setFileName] = useState(null); 
   const [totalPrice, setTotalPrice]= useState(0);
   const [senderAddress,setSenderAddress] = useState(null); 
   const [availableServices, setAvailableServices] = useState([]);
@@ -79,12 +79,11 @@ const BulkOrder = () => {
 
 
   const validateRow = (row) => {
-  const requiredFields = [
-    "FromSenderName", "FromPhone", "FromStreet1", "FromCity", 
-    "ToRecipientName", "ToPhone", "ToStreet1", "ToCity", 
-    "PackageWeight", "ServiceName"
-  ];
-
+const  requiredFields = [
+  "FromSenderName", "FromPhone", "FromStreet1", "FromCity", 
+  "ToRecipientName", "ToPhone", "ToStreet1", "ToCity", 
+  "PackageWeight", "ServiceName"
+];
 
 
 
@@ -141,6 +140,15 @@ const handleFileChange = (event) => {
         type:"error"
       })
       return;
+    }
+    if(!SkuData.length){
+      console.log("NO SKU DATA")
+      setNotification({
+        visible:true,
+        message:"Please Add a SKU on the SKU Tab",
+        type:"error"
+      })
+      return; 
     }
     setTxtFile(file); 
     setCsvFile(null); 
@@ -200,34 +208,16 @@ const handleFileChange = (event) => {
     transformHeader: header=>header.trim(),
     complete: (results)=>{
       const {data} = results; 
-      const invalidRows = [];
-      const validData = [];
-      const labelData = extractTxtLabelData(data); 
-      setUploadedData(labelData);
-      data.forEach((row,index)=>{
-        const validation = validateRow(row); 
-        if(!validateRow.isValid){
-          invalidRows.push({rowIndex:index+1, errors: validation.errors}); 
-        }else{
-          validData.push(row);
-        }
-      })
-      if (invalidRows.length) {
-        setNotification({
-          visible: true,
-          message: "Some fields are missing in the text file",
-          type: "error",
-        });
-      } else {
-        setNotification({
-          visible: true,
-          message: "Text file uploaded and parsed successfully!",
-          type: "success",
-        });
+        
         const labelData = extractTxtLabelData(data);
         const splitData = splitDataByMaxQty(labelData);
+        setNotification({
+            visible: true,
+            message: "File uploaded  successfully!",
+            type: "success",
+          })
+
         setUploadedData(splitData); 
-      }
     },
     error:(error)=>{
       setNotification({
@@ -286,9 +276,9 @@ const extractTxtLabelData = (data) => {
       package_description: row.PackageDescription || 'N/A',
       package_reference1: row.PackageReference1 || '',
       package_reference2: row.PackageReference2 || '',
-  }));
-};
-
+    }));
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (courierType === "" && txtFile) {
@@ -309,12 +299,13 @@ const extractTxtLabelData = (data) => {
     if(csvFile || txtFile){
       const selectedCourier = courierType; // Get the selected courier type
       if(uploadedData){
-    const shipments = uploadedData.map((row) => {
+        const shipments = uploadedData.map((row) => {
       return {
-        courier: selectedCourier,
-        service_name: row.ServiceName ?row.service_name : selectedService , // Assuming you want to use `ServiceName` from the CSV
+        courier: selectedCourier || row.ServiceName.split(' ')[0],
+        service_name: row.ServiceName ?row.ServiceName : selectedService , // Assuming you want to use `ServiceName` from the CSV
         manifested: false,
         sender: {
+          ...(txtFile?{order_id:row.sku_number}:{}),
           sender_name: row.FromSenderName,
           sender_phone: row.FromPhone,
           sender_company: row.FromCompany,
@@ -346,6 +337,7 @@ const extractTxtLabelData = (data) => {
           package_description: row.PackageDescription,
           package_reference1: row.PackageReference1 || "", // Handling missing fields
           package_reference2: row.PackageReference2 || "", // Same as above
+          order_item_quanity: row.quantity || 1,
         },
       };
     });
@@ -368,24 +360,33 @@ const extractTxtLabelData = (data) => {
 
   const handleDownload = async () => {
     try {
-      const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`, {
-        responseType: 'blob', // Important for downloading files
-      });
+      const fileExtension = fileName.split('.').pop(); 
+    const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`, {
+      responseType: 'blob',
+    });
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'label.pdf'); // Set the file name for download
+  
+      const contentDisposition = response.headers['content-disposition'];
+      const fileNameFromResponse = contentDisposition
+        ? contentDisposition.split('filename=')[1].replace(/"/g, '')
+        : fileName; 
+      link.setAttribute('download', fileNameFromResponse);
+  
       document.body.appendChild(link);
       link.click();
       link.remove();
-
-      // Close modal after download
+  
+      window.URL.revokeObjectURL(url);
+  
       setModalVisible(false);
     } catch (error) {
-      console.error('Error downloading PDF:', error.message);
+      console.error('Error downloading file:', error.message);
     }
   };
+  
 
   const getBulkCost = async () =>{
     try {
@@ -505,6 +506,7 @@ const splitDataByMaxQty = (data) => {
         PackageWidth: skuDetails?.width ?? row.PackageWidth,
         PackageHeight: skuDetails?.height ?? row.PackageHeight,
         PackageWeight: skuDetails?.weight ?? row.PackageWeight,
+        quantity: skuDetails?.maxQty ?? null
       };
     });
   
@@ -641,7 +643,7 @@ const splitDataByMaxQty = (data) => {
             <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">Street *</th>
             <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">Street 2</th>
             <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">City</th>
-            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">Quantity</th>
+            {txtFile && <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">Quantity</th>}
             <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">Weight *</th>
             <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">Length</th>
             <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">Width</th>
@@ -703,6 +705,9 @@ const splitDataByMaxQty = (data) => {
               <td className="border border-custom-border p-4 break-words">
                 {renderTableCell(index, 'ToCity', row.ToCity)}
               </td>
+              {txtFile && <td className="border border-custom-border p-4 break-words">
+                {renderTableCell(index, 'FromCity', row.quantity)}
+              </td>}
               <td className="border border-custom-border p-4 text-center">1</td>
               <td className="border border-custom-border p-4 break-words">
                 {renderTableCell(index, 'PackageWeight', row.PackageWeight ? `${row.PackageWeight} lbs` : 'N/A')}
@@ -772,7 +777,6 @@ export default BulkOrder;
 
 const Modal = ({ isVisible, message, onClose, onDownload }) => {
   if (!isVisible) return null;
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg p-4 shadow-lg">
@@ -781,7 +785,7 @@ const Modal = ({ isVisible, message, onClose, onDownload }) => {
           onClick={onDownload}
           className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
         >
-          Download PDF
+          Download File
         </button>
         <button
           onClick={onClose}
