@@ -107,8 +107,8 @@ useEffect(() => {
     if (user) {
       try {
         const [addressResponse, skuResponse] = await Promise.all([
-          axios.get(`http://localhost:5000/api/auth/get-address/${user._id}`),
-          axios.get(`http://localhost:5000/api/auth/get-sku/${user._id}`)
+          axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`),
+          axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`)
         ]);
         setSenderAddress(addressResponse.data?.savedAddress[0]);
         setSkuData(skuResponse.data.SkuData);
@@ -344,7 +344,7 @@ const extractTxtLabelData = (data) => {
     });
     try {
       console.log("Shipments",shipments)
-      const response = await axios.post('http://localhost:5000/api/orders/bulk/' + user._id, shipments, {
+      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/' + user._id, shipments, {
         headers: { 'Content-Type': 'application/json' }
       });
       const result = await response.data;
@@ -362,7 +362,7 @@ const extractTxtLabelData = (data) => {
 
   const handleDownload = async () => {
     try {
-    const response = await axios.get(`http://localhost:5000/api/orders/download/${fileName}`, {
+    const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`, {
       responseType: 'blob',
     });
 
@@ -433,7 +433,7 @@ const extractTxtLabelData = (data) => {
       };
       });
 
-      const response = await axios.post('http://localhost:5000/api/orders/price/bulk' ,{userId:  user._id, shipments:  shipments }, {
+      const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/price/bulk' ,{userId:  user._id, shipments:  shipments }, {
         headers: { 'Content-Type': 'application/json' }
       });
       setTotalPrice(response.data.totalPrice); 
