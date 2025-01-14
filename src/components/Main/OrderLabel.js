@@ -22,7 +22,7 @@ const Modal = ({ isVisible, onClose, imageData }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-4 rounded-lg">
         <h2 className="text-lg font-bold mb-2">Label Image</h2>
-        <img src={imageData} width={500} height={800} alt="Label" className="mb-4" />
+        <img src={imageData} width={400} height={600} alt="Label" className="mb-4" />
         <div className="flex justify-end">
           <button onClick={onClose} className="mr-2 p-2 bg-gray-300 rounded">Close</button>
           <button onClick={handleDownloadPDF} className="p-2 bg-blue-600 text-white rounded">Download PDF</button>
