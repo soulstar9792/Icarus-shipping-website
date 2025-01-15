@@ -83,7 +83,7 @@ const  requiredFields = [
   "FromSenderName", "FromPhone", "FromStreet1", "FromCity", 
   "ToRecipientName", "ToPhone", "ToStreet1", "ToCity", 
   "PackageWeight", "ServiceName"
-];
+]
 
 
 
@@ -129,10 +129,10 @@ const handleFileChange = (event) => {
   const file = event.target.files[0];
   if(file){
   const fileType = file.name.split('.')[1]; 
-  if(fileType=='csv'){
+  if(fileType==='csv'){
   setCsvFile(file);
   setTxtFile(null);
-  }else if(fileType=='txt'){
+  }else if(fileType==='txt'){
     if(!senderAddress){
       setNotification({
         visible:true,
@@ -199,7 +199,7 @@ const handleFileChange = (event) => {
       },
     });
   }
-}else if(fileType=='txt'){
+}else if(fileType==='txt'){
   if(file){
    Papa.parse(file,{
     header:true,
@@ -241,41 +241,41 @@ const handleFileChange = (event) => {
 
 
 const extractTxtLabelData = (data) => {
-
   return data.map(row => ({
     courier: 'selectedCourier',
     service_name: row.ServiceName ?row.service_name : selectedService || 'N/A',
     manifested: false,
       
-      FromSenderName: senderAddress?.name || 'N/A',
-      FromPhone: senderAddress?.phone || 'N/A',
-      FromCompany: senderAddress?.company || 'N/A',
-      FromStreet1: senderAddress?.address1 || 'N/A',
+      FromSenderName: senderAddress?.name || '',
+      FromPhone: senderAddress?.phone || '',
+      FromCompany: senderAddress?.company || '',
+      FromStreet1: senderAddress?.state || ' ',
       FromStreet2: senderAddress?.address2 || '',
-      FromCity: senderAddress?.city || 'N/A',
-      FromStateProvince: senderAddress?.state || 'N/A',
-      FromZipPostal: senderAddress?.zip|| 'N/A',
-      FromCountry: senderAddress?.country || 'N/A',
+      FromCity: senderAddress?.city || ' ',
+      FromStateProvince: senderAddress?.state || ' ',
+      FromZipPostal: senderAddress?.zip|| ' ',
+      FromCountry: senderAddress?.country || '',
 
-      ToRecipientName: row['recipient-name'] || 'N/A',
-      ToPhone: row['buyer-phone-number'] || 'N/A',
-      ToCompany: row['buyer-company'] || 'N/A',
-      ToStreet1: row['ship-address-1'] || 'N/A',
+      ToRecipientName: row['recipient-name'] || '',
+      ToPhone: row['buyer-phone-number'] || '',
+      ToCompany: row['buyer-company'] || '',
+      ToStreet1: row['ship-address-1'] || '',
       ToStreet2: row['ship-address-2'] || '',
-      ToCity: row['ship-city'] || 'N/A',
-      ToStateProvince: row['ship-state'] || 'N/A',
-      ToZipPostal: row['ship-postal-code'] || 'N/A',
-      ToCountry: row['ship-country'] || 'N/A',
+      ToCity: row['ship-city'] || '',
+      ToStateProvince: row['ship-state'] || '',
+      ToZipPostal: row['ship-postal-code'] || '',
+      ToCountry: row['ship-country'] || '',
 
-      sku_number : row['sku'] || 'N/a',
-      package_length: row.PackageLength || 'N/A',
-      package_width: row.PackageWidth || 'N/A',
-      package_height: row.PackageHeight || 'N/A',
-      package_weight: row.PackageWeight || 'N/A',
+      sku_number : row['sku'] || '',
+      order_item_id: row['order-item-id'] || '',
+      package_length: String(row.PackageLength) || '',
+      package_width: String(row.PackageWidth) || '',
+      package_height: String(row.PackageHeight) || '',
+      package_weight: String(row.PackageWeight) || '',
       package_weight_unit: 'LB',
-      package_description: row.PackageDescription || 'N/A',
-      package_reference1: row.PackageReference1 || '',
-      package_reference2: row.PackageReference2 || '',
+      package_description: String(row.PackageDescription )|| '',
+      package_reference1: String(row.PackageReference1 )|| '',
+      package_reference2: String(row.PackageReference2) || '',
     }));
   };
   
@@ -329,19 +329,21 @@ const extractTxtLabelData = (data) => {
         },
         package: {
           sku_number: txtFile?row.sku_number:null,
-          package_length: row.PackageLength,
-          package_width: row.PackageWidth,
-          package_height: row.PackageHeight,
-          package_weight: row.PackageWeight,
+          order_item_id: txtFile?row.order_item_id:null,
+          package_length: (csvFile? row.PackageLength:String(row.PackageLength)),
+          package_width: (csvFile?row.PackageWidth:String(row.PackageWidth)),
+          package_height: (csvFile? row.PackageHeight:String(row.PackageHeight)),
+          package_weight: (csvFile?row.PackageWeight:String(row.PackageWeight)),
           package_weight_unit: "LB", // Assuming weight is in pounds
           package_description: row.PackageDescription,
           package_reference1: row.PackageReference1 || "", // Handling missing fields
           package_reference2: row.PackageReference2 || "", // Same as above
-          order_item_quanity: row.quantity || 1,
+          order_item_quanity: String(row.quantity) || '1',
         },
       };
     });
     try {
+      console.log("Shipments",shipments)
       const response = await axios.post('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/' + user._id, shipments, {
         headers: { 'Content-Type': 'application/json' }
       });
@@ -360,7 +362,6 @@ const extractTxtLabelData = (data) => {
 
   const handleDownload = async () => {
     try {
-      const fileExtension = fileName.split('.').pop(); 
     const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`, {
       responseType: 'blob',
     });
@@ -391,7 +392,7 @@ const extractTxtLabelData = (data) => {
   const getBulkCost = async () =>{
     try {
     const selectedCourier = courierType
-      if(csvFile || txtFile&&courierType){
+      if(csvFile || (txtFile&&courierType)){
     const shipments = uploadedData.map((row) => {
       return {
         courier: selectedCourier,
@@ -763,6 +764,7 @@ const splitDataByMaxQty = (data) => {
         </div>)}
       <Notification {...notification} onClose={() => setNotification({ ...notification, visible: false })} />
       <Modal
+       file={csvFile}
         isVisible={modalVisible}
         message="Your orders have been submitted successfully!"
         onClose={() => setModalVisible(false)}
@@ -775,7 +777,7 @@ const splitDataByMaxQty = (data) => {
 export default BulkOrder;
 
 
-const Modal = ({ isVisible, message, onClose, onDownload }) => {
+const Modal = ({ isVisible, message, onClose, onDownload ,file}) => {
   if (!isVisible) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
