@@ -230,8 +230,8 @@ function App() {
                 </tr>
                 <tr className="bg-black">
                   <th className="px-6 py-3 text-left border border-gray-600"></th>
-                  {users[0]?.services[0]?.services &&
-                    Object.keys(users[0].services[0].services).map(
+                  {users[1]?.services[1]?.services &&
+                    Object.keys(users[1].services[1].services).map(
                       (service) => [
                         <th
                           key={`${service}-standard`}
@@ -252,8 +252,8 @@ function App() {
                   <th className="px-6 py-3 text-left border border-gray-600">
                     Standard Prices
                   </th>
-                  {users[0]?.services[0]?.services &&
-                    Object.keys(users[0].services[0].services).map(
+                  {users[1]?.services[1]?.services &&
+                    Object.keys(users[1].services[1].services).map(
                       (service) => [
                         <td
                           key={`${service}-static-standard`}
