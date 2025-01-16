@@ -1,14 +1,13 @@
 import axios from 'axios';
 import { useEffect, useState, useCallback } from 'react';
-import { FiPlus, FiX, FiHome, FiMapPin, FiSend, FiUser, FiEdit2, FiTrash2 } from 'react-icons/fi';
+import {  FiX,  FiSend,  FiTrash2 } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import states from '../../states.json';
-import $GS from '../../styles/constants'; // Import your styles
 
-const AddressForm = ({ type, onClose, onSubmit, initialData }) => {
+const AddressForm = ({  onClose, onSubmit, initialData ,savedAddress}) => {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
-
+  console.log("saved Addres",savedAddress)
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -17,18 +16,34 @@ const AddressForm = ({ type, onClose, onSubmit, initialData }) => {
     }));
   }, []);
 
-  const handleSubmit = (e) => {
+  const   handleSubmit = (e) => {
     e.preventDefault();
-    const hasErrors = Object.values(errors).some((value)=>{return value && value.trim!=''});
-    if(!hasErrors){
-    onSubmit(formData);
+    const hasErrors = Object.values(errors).some((value) => value && value.trim() !== '');
+    
+    const isDuplicate = savedAddress.some(addr => addr.address_id === formData.address_id);
+    if (isDuplicate) {
+      setErrors(prev => ({
+        ...prev,
+        address_id: "This Address ID already exists. Please use a different one."
+      }));
+      return;
+    }
+
+    if (!hasErrors) {
+      onSubmit(formData);
     }
   };
+
 
   const validateField = (name, value) => {
     let error = "";
 
     switch (name) {
+      case "address_id":
+        if(!value.trim()){
+          error= "Address Id is required"
+          break; 
+        }
       case "name":
         if (!value.trim()) {
           error = "Name is required.";
@@ -107,6 +122,20 @@ const AddressForm = ({ type, onClose, onSubmit, initialData }) => {
       <div className="grid grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">
+            Address ID *
+          </label>
+          <input
+            type="text"
+            name="address_id"
+            value={formData.address_id}
+            onChange={CombinedHandler}
+            className="w-full px-3 py-2 bg-[#242424] border border-[#333333] rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+          />
+          {errors.address_id && <p className="text-red-500 text-sm mt-1">{errors.address_id}</p>}
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
             Name *
           </label>
           <input
@@ -119,6 +148,7 @@ const AddressForm = ({ type, onClose, onSubmit, initialData }) => {
           />
           {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
         </div>
+        <div>
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">
             Company / Reference Number (optional)
@@ -147,7 +177,7 @@ const AddressForm = ({ type, onClose, onSubmit, initialData }) => {
         />
         {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
       </div>
-
+    </div>
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-1">
           Street *
@@ -272,6 +302,7 @@ const Address = () => {
   const [addresses, setAddresses] = useState([]);
 
   const initialAddressState = {
+    address_id: '',
     name: '',
     company: '',
     phone: '',
@@ -296,17 +327,17 @@ const Address = () => {
 
   useEffect(() => {
     getSavedAddresss();
-  }, []);
+  }, [addresses]);
 
   const handleSubmit = async (formData) => {
     try {
-      console.log("the form data", formData); 
       const response = await axios.post(
         `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/save-address/${user._id}`,
         {  formData },
         { headers: { "Content-Type": "application/json" } }
       );
-      setAddresses([...addresses, formData]);
+      const newAddress = response.data.savedAddress
+      setAddresses((prev)=>[...prev],newAddress);
       setAddressModalOpen(false);
     } catch (e) {
       console.log("Error Occurred", e);
@@ -315,14 +346,12 @@ const Address = () => {
 
   const handleDelete = async (id) => {
         try {
-          console.log(id)
           const response = await axios.post(
             `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/delete-address/${user._id}`,
             {id},
             { headers: { "Content-Type": "application/json" } }
           );
           setAddresses((addresses)=>addresses.filter((ad)=>ad._id!=id)); 
-          console.log(response)
         } catch (error) {
           console.log("Error Occured ",error); 
         }
@@ -339,6 +368,7 @@ const Address = () => {
     <table className="min-w-full bg-transparent border border-custom-border">
       <thead>
         <tr className="bg-custom-background text-white text-left">
+          <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Address ID </th>
           <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Name</th>
           <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Company</th>
           <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">Phone</th>
@@ -353,6 +383,7 @@ const Address = () => {
         {addresses.length > 0 ? (
           addresses.map((address,index) => (
             <tr key={address._id} className="hover:bg-gray-900">
+              <td className={`border-b ${index===0 && "bg-gray-800/80"} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>{address.address_id}</td>
               <td className={`border-b ${index===0 && "bg-gray-800/80 "} border-custom-border px-2 py-2 text-sm md:text-base text-white`}>
               {address.name}
               </td>
@@ -410,6 +441,7 @@ const Address = () => {
             onClose={() => setAddressModalOpen(false)}
             onSubmit={handleSubmit}
             initialData={{...initialAddressState, type: 'sender'}}
+            savedAddress = {addresses}
           />
         )}
 
