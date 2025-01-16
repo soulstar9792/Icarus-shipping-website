@@ -1,18 +1,18 @@
 // src/components/Main/Account.js
-import React, { useState } from 'react';
-import Card from '../Utils/Card'; // Ensure you have a Card component
-import $GS from '../../styles/constants'; // Import your styles
+import React, { useState } from "react";
+import Card from "../Utils/Card"; // Ensure you have a Card component
+import $GS from "../../styles/constants"; // Import your styles
 
 const Account = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -29,7 +29,9 @@ const Account = () => {
         <h2 className={`${$GS.textHeading_2} mb-4`}>Manage Your Account</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className={`${$GS.textNormal_1} mb-2 block`} htmlFor="name">Name</label>
+            <label className={`${$GS.textNormal_1} mb-2 block`} htmlFor="name">
+              Name
+            </label>
             <input
               type="text"
               id="name"
@@ -41,7 +43,9 @@ const Account = () => {
             />
           </div>
           <div className="mb-4">
-            <label className={`${$GS.textNormal_1} mb-2 block`} htmlFor="email">Email</label>
+            <label className={`${$GS.textNormal_1} mb-2 block`} htmlFor="email">
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -53,7 +57,12 @@ const Account = () => {
             />
           </div>
           <div className="mb-4">
-            <label className={`${$GS.textNormal_1} mb-2 block`} htmlFor="password">Password</label>
+            <label
+              className={`${$GS.textNormal_1} mb-2 block`}
+              htmlFor="password"
+            >
+              Password
+            </label>
             <input
               type="password"
               id="password"

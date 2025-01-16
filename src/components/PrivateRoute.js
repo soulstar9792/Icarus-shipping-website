@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { checkToken } from '../redux/authSlice'; // Assume this is an action to verify the token
-import Loading from './Loading';
+import React, { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { checkToken } from "../redux/authSlice"; // Assume this is an action to verify the token
+import Loading from "./Loading";
 
 const PrivateRoute = ({ children }) => {
   const dispatch = useDispatch();
-  const token = localStorage.getItem('token'); // Get the token from local storage
+  const token = localStorage.getItem("token"); // Get the token from local storage
   const [loading, setLoading] = useState(true); // Add loading state
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = !!user; // Check if user is authenticated by the presence of user object
@@ -20,7 +20,11 @@ const PrivateRoute = ({ children }) => {
   }, [token]);
 
   if (loading) {
-    return <div><Loading /></div>; // or a loading spinner
+    return (
+      <div>
+        <Loading />
+      </div>
+    ); // or a loading spinner
   }
 
   if (!isAuthenticated) {
