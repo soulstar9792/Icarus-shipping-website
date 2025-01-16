@@ -395,7 +395,7 @@ const BulkOrder = () => {
           console.log("Shipments", shipments);
           const response = await axios.post(
             "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
-            user._id,
+              user._id,
             shipments,
             {
               headers: { "Content-Type": "application/json" },
@@ -543,8 +543,9 @@ const BulkOrder = () => {
           quantity: currentQty,
           maxQty: maxQty,
           totalQty: totalQty,
-          PackageDescription: `${row.PackageDescription || "Package"} (Batch ${i + 1
-            } of ${numberOfLabels})`,
+          PackageDescription: `${row.PackageDescription || "Package"} (Batch ${
+            i + 1
+          } of ${numberOfLabels})`,
         });
       }
     });
@@ -810,10 +811,10 @@ const BulkOrder = () => {
                                 {txtFile && selectedService
                                   ? selectedService
                                   : renderTableCell(
-                                    index,
-                                    "ServiceName",
-                                    row.ServiceName
-                                  )}
+                                      index,
+                                      "ServiceName",
+                                      row.ServiceName
+                                    )}
                               </td>
                               {txtFile && (
                                 <td className="border border-custom-border p-4 break-words">

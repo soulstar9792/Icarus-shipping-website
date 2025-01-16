@@ -1,24 +1,26 @@
 // src/components/BatchOrders.js
-import React, { useState, useEffect } from 'react';
-import Card from '../Utils/Card'; // Ensure you have a Card component
-import $GS from '../../styles/constants'; // Import your styles
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import Loading from '../Loading';
+import React, { useState, useEffect } from "react";
+import Card from "../Utils/Card"; // Ensure you have a Card component
+import $GS from "../../styles/constants"; // Import your styles
+import axios from "axios";
+import { useSelector } from "react-redux";
+import Loading from "../Loading";
 const BatchOrders = () => {
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 5;
   const [batchOrdersData, setBatchOrdersData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
-  const [fileName, setFileName] = useState(null);
   const [loading, setLoading] = useState(true); // State to manage loading status
 
   const getBatchOrders = () => {
-    
-    return axios.get('https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/' + user._id, {
-      headers: { 'token': localStorage.getItem('token') },
-    });
+    return axios.get(
+      "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
+        user._id,
+      {
+        headers: { token: localStorage.getItem("token") },
+      }
+    );
   };
   useEffect(() => {
     getBatchOrders().then((res) => {
@@ -32,7 +34,10 @@ const BatchOrders = () => {
   // Determine the current orders to display
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = batchOrdersData.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = batchOrdersData.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
+  );
 
   // Calculate total pages
   const totalPages = Math.ceil(batchOrdersData.length / ordersPerPage);
@@ -44,14 +49,17 @@ const BatchOrders = () => {
   const handleDownload = async (fileName) => {
     // console.log(fileName)
     try {
-      const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`, {
-        responseType: 'blob', // Important for downloading files
-      });
+      const response = await axios.get(
+        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`,
+        {
+          responseType: "blob", // Important for downloading files
+        }
+      );
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'label.pdf'); // Set the file name for download
+      link.setAttribute("download", "label.pdf"); // Set the file name for download
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -59,12 +67,11 @@ const BatchOrders = () => {
       // Close modal after download
       setModalVisible(false);
     } catch (error) {
-      console.error('Error downloading PDF:', error.message);
+      console.error("Error downloading PDF:", error.message);
     }
   };
   return (
     <div className="batch-orders-container px-4 md:px-10 py-10 md:py-20 bg-custom-background">
-      
       {loading && <Loading />}
       <Card>
         <h2 className={`${$GS.textHeading_2} mb-4`}>Batch Orders List</h2>
@@ -80,17 +87,25 @@ const BatchOrders = () => {
               </tr>
             </thead>
             <tbody className="bg-custom-background text-custom-text">
-              {currentOrders.map(order => (
+              {currentOrders.map((order) => (
                 <tr key={order.no}>
-                  <td className="border border-custom-border p-2">{order._id}</td>
-                  <td className="border border-custom-border p-2">{order.courier}</td>
                   <td className="border border-custom-border p-2">
-                    <button className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border1 border-blue-600 mx-1 bg-blue-700 font-bold`}
-                      onClick={() => handleDownload(order.__filename)}>
+                    {order._id}
+                  </td>
+                  <td className="border border-custom-border p-2">
+                    {order.courier}
+                  </td>
+                  <td className="border border-custom-border p-2">
+                    <button
+                      className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border1 border-blue-600 mx-1 bg-blue-700 font-bold`}
+                      onClick={() => handleDownload(order.__filename)}
+                    >
                       Download
                     </button>
                   </td>
-                  <td className="border border-custom-border p-2">{order.createdAt}</td>
+                  <td className="border border-custom-border p-2">
+                    {order.createdAt}
+                  </td>
                   <td className="border border-custom-border p-2">${"10"}</td>
                 </tr>
               ))}
@@ -102,7 +117,9 @@ const BatchOrders = () => {
         {/* Pagination Controls */}
         <div className="flex justify-center mt-4">
           <button
-            onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
+            onClick={() =>
+              handlePageChange(currentPage > 1 ? currentPage - 1 : 1)
+            }
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             disabled={currentPage === 1}
           >
@@ -112,13 +129,23 @@ const BatchOrders = () => {
             <button
               key={index + 1}
               onClick={() => handlePageChange(index + 1)}
-              className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border-${currentPage === index + 1 ? '2' : '1'} border-blue-600 mx-1 ${currentPage === index + 1 ? 'bg-blue-700 font-bold' : 'bg-blue-400 hover:bg-blue-500'}`}
+              className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border-${
+                currentPage === index + 1 ? "2" : "1"
+              } border-blue-600 mx-1 ${
+                currentPage === index + 1
+                  ? "bg-blue-700 font-bold"
+                  : "bg-blue-400 hover:bg-blue-500"
+              }`}
             >
               {index + 1}
             </button>
           ))}
           <button
-            onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)}
+            onClick={() =>
+              handlePageChange(
+                currentPage < totalPages ? currentPage + 1 : totalPages
+              )
+            }
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             disabled={currentPage === totalPages}
           >
