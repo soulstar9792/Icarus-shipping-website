@@ -34,7 +34,7 @@ const Dashboard = () => {
       if(user){
         const fetchOrders = async () =>{
         try{
-            const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/get-orders/${user._id}`);
+            const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/${user._id}`);
             setOrders(response.data.orders);
         }catch(e){
           console.log("The Error",e);
@@ -103,6 +103,7 @@ const Dashboard = () => {
                   <th className="px-4 py-2 border-b border-custom-border">From</th>
                   <th className="px-4 py-2 border-b border-custom-border">To</th>
                   <th className="px-4 py-2 border-b border-custom-border">Tracking ID </th>
+                  <th className="px-4 py-2 border-b border-custom-border"> Date </th>
                 </tr>
               </thead>
               <tbody>
@@ -112,6 +113,7 @@ const Dashboard = () => {
                     <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.sender.sender_name}</td>
                     <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.receiver.receiver_name}</td>
                     <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.tracking_number}</td>
+                    <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.createdAt.split('T')[0]}</td>
                   </tr>
                 ))}
               </tbody>
