@@ -380,7 +380,7 @@ const OrderLabel = () => {
                         city: ad.city, 
                         phone:ad.phone
                       })
-                    return <option key={i} value={optionData}>{ad.street},{ad.city}</option>
+                    return <option key={i} value={optionData} className='font-bold'> ${ad.address_id}...</option>
                   })}
                      
                 </select>

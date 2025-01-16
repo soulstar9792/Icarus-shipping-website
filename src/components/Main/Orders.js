@@ -63,9 +63,9 @@ const Orders = () => {
               </tr>
             </thead>
             <tbody className="bg-custom-background text-custom-text">
-              {orders.map(order => (
+              {orders.map((order,index) => (
                 <tr key={order._id}>
-                  <td className="border border-custom-border p-2">{order._id}</td>
+                  <td className="border border-custom-border p-2">{index+1}</td>
                   <td className="border border-custom-border p-2">{order.service_name}</td>
                   <td className="border border-custom-border p-2" onClick={() => handleImageClick(order.image)}>
                     <img

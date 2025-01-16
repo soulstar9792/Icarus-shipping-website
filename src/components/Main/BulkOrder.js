@@ -119,6 +119,9 @@ useEffect(() => {
           message: "Error loading initial data",
           type: "error"
         });
+        setTimeout(() => {
+          setNotification({ ...notification, visible: false });
+        }, 2000);
       }
     }
   };
@@ -148,6 +151,9 @@ const handleFileChange = (event) => {
         message:"Please Add a SKU on the SKU Tab",
         type:"error"
       })
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
       return; 
     }
     setTxtFile(file); 
@@ -179,12 +185,18 @@ const handleFileChange = (event) => {
             message: `Some Fields are missing`,
             type: "error",
           });
+          setTimeout(() => {
+            setNotification({ ...notification, visible: false });
+          }, 2000);
         } else {
           setNotification({
             visible: true,
             message: "CSV file uploaded successfully!",
             type: "success",
           });
+          setTimeout(() => {
+            setNotification({ ...notification, visible: false });
+          }, 2000);
         }
 
         setUploadedData(validData);
@@ -216,6 +228,9 @@ const handleFileChange = (event) => {
             message: "File uploaded  successfully!",
             type: "success",
           })
+          setTimeout(() => {
+            setNotification({ ...notification, visible: false });
+          }, 2000);   
 
         setUploadedData(splitData); 
     },
@@ -225,6 +240,9 @@ const handleFileChange = (event) => {
         message:"Error Parsing file",
         type:"error"
       }); 
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
       console.log("Error Parsing file",error);
     }
     
@@ -283,6 +301,17 @@ const extractTxtLabelData = (data) => {
     e.preventDefault();
     if (courierType === "" && txtFile) {
       setNotification({ visible: true, message: "Please select a courier type", type: "error" });
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
+      return;
+    }
+    if(!selectedService && txtFile){
+      setNotification({
+        visible: true,
+        message: "Please Select a Service", 
+        type:"error"
+      })
       setTimeout(() => {
         setNotification({ ...notification, visible: false });
       }, 2000);
@@ -520,8 +549,11 @@ const splitDataByMaxQty = (data) => {
       setNotification({
         visible: true,
         message: `Missing SKUs: ${Array.from(unmatchedSkus).join(', ')}. Please update SKU data.`,
-        type: "warning"
+        type: "error"
       });
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
     }
   };
   
