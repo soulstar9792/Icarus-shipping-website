@@ -34,7 +34,7 @@ const Dashboard = () => {
       if(user){
         const fetchOrders = async () =>{
         try{
-            const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/get-orders/${user._id}`);
+            const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/${user._id}`);
             setOrders(response.data.orders);
         }catch(e){
           console.log("The Error",e);
