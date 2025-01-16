@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
-import { FiX, FiSend, FiTrash2 } from "react-icons/fi";
+import { FiX, FiSend, FiX as FiClose } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import states from "../../states.json";
+import { FaCheck, FaPencilAlt, FaTimes, FaTrash } from "react-icons/fa";
 
 const AddressForm = ({ onClose, onSubmit, initialData, savedAddress }) => {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
-  console.log("saved Addres", savedAddress);
+
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -174,7 +175,7 @@ const AddressForm = ({ onClose, onSubmit, initialData, savedAddress }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
-                Phone *
+                Phone
               </label>
               <input
                 type="tel"
@@ -182,7 +183,6 @@ const AddressForm = ({ onClose, onSubmit, initialData, savedAddress }) => {
                 value={formData.phone}
                 onChange={CombinedHandler}
                 className="w-full px-3 py-2 bg-[#242424] border border-[#333333] rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
               />
               {errors.phone && (
                 <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
@@ -317,10 +317,45 @@ const AddressForm = ({ onClose, onSubmit, initialData, savedAddress }) => {
   );
 };
 
+const EditableCell = ({
+  value,
+  onChange,
+  name,
+  type = "text",
+  options = null,
+}) => {
+  return type === "select" ? (
+    <select
+      value={value}
+      onChange={(e) => onChange(name, e.target.value)}
+      className="w-full bg-[#242424] border border-[#333333] rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <>
+        <option value="">Select state...</option>
+        {states.map((state) => (
+          <option key={state.abbreviation} value={state.abbreviation}>
+            {state.state}
+          </option>
+        ))}
+      </>
+    </select>
+  ) : (
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(name, e.target.value)}
+      className="w-full bg-[#242424] border border-[#333333] rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  );
+};
+
 const Address = () => {
   const user = useSelector((state) => state.auth.user);
   const [isAddressModalOpen, setAddressModalOpen] = useState(false);
   const [addresses, setAddresses] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({});
+  const [editError, setEditError] = useState("");
 
   const initialAddressState = {
     address_id: "",
@@ -336,6 +371,9 @@ const Address = () => {
   };
 
   const getSavedAddresss = async () => {
+    if (!user) {
+      return;
+    }
     try {
       const response = await axios.get(
         `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`,
@@ -343,15 +381,21 @@ const Address = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      setAddresses(response.data.savedAddress);
+      if (
+        JSON.stringify(response.data.savedAddress) !== JSON.stringify(addresses)
+      ) {
+        setAddresses(response.data.savedAddress);
+      }
     } catch (e) {
       console.log("Error Occurred", e);
     }
   };
 
   useEffect(() => {
-    getSavedAddresss();
-  }, [addresses]);
+    if (user) {
+      getSavedAddresss();
+    }
+  }, [user]);
 
   const handleSubmit = async (formData) => {
     try {
@@ -360,9 +404,11 @@ const Address = () => {
         { formData },
         { headers: { "Content-Type": "application/json" } }
       );
-      const newAddress = response.data.savedAddress;
-      setAddresses((prev) => [...prev], newAddress);
+      console.log("Received Data", response.data);
+      const newAddress = response.data.savedAddresss;
+      setAddresses((prev) => [...prev, newAddress]);
       setAddressModalOpen(false);
+      getSavedAddresss();
     } catch (e) {
       console.log("Error Occurred", e);
     }
@@ -381,6 +427,68 @@ const Address = () => {
     }
   };
 
+  const handleEdit = (address) => {
+    setEditingId(address._id);
+    setEditData({ ...address });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditData({});
+  };
+
+  const handleSaveEdit = async () => {
+    const isDuplicate = addresses.some(
+      (addr) =>
+        addr.address_id === editData.address_id && addr._id !== editData._id
+    );
+
+    if (isDuplicate) {
+      setEditError(
+        "This Address ID already exists. Please use a different one."
+      );
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/update-address/${user._id}/${editData._id}`,
+        { formData: editData },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      setAddresses(response.data.updatedAddress);
+      setEditingId(null);
+      setEditData({});
+      setEditError("");
+    } catch (error) {
+      console.log("Error Occurred ", error);
+      setEditError("Failed to save changes. Please try again.");
+    }
+  };
+
+  const handleFieldChange = (name, value) => {
+    setEditError("");
+
+    if (name === "address_id") {
+      const isDuplicate = addresses.some(
+        (addr) => addr.address_id === value && addr._id !== editData._id
+      );
+
+      if (isDuplicate) {
+        setEditError(
+          "This Address ID already exists. Please use a different one."
+        );
+        return;
+      }
+    }
+
+    setEditData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-custom-black p-8">
       <div className="max-w-6xl mx-auto space-y-12">
@@ -393,7 +501,7 @@ const Address = () => {
               <thead>
                 <tr className="bg-custom-background text-white text-left">
                   <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
-                    Address ID{" "}
+                    Address ID
                   </th>
                   <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
                     Name
@@ -417,12 +525,15 @@ const Address = () => {
                     ZIP
                   </th>
                   <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
+                    Country
+                  </th>
+                  <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {addresses.length > 0 ? (
+                {addresses?.length > 0 ? (
                   addresses.map((address, index) => (
                     <tr key={address._id} className="hover:bg-gray-900">
                       <td
@@ -430,81 +541,198 @@ const Address = () => {
                           index === 0 && "bg-gray-800/80"
                         } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
                       >
-                        {address.address_id}
-                      </td>
-                      <td
-                        className={`border-b ${
-                          index === 0 && "bg-gray-800/80 "
-                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
-                      >
-                        {address.name}
-                      </td>
-                      <td
-                        className={`border-b ${
-                          index === 0 && "bg-gray-800/80"
-                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
-                      >
-                        {address.company || "N/A"}
-                      </td>
-                      <td
-                        className={`border-b ${
-                          index === 0 && "bg-gray-800/80"
-                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
-                      >
-                        {address.phone}
-                      </td>
-                      <td
-                        className={`border-b ${
-                          index === 0 && "bg-gray-800/80"
-                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
-                      >
-                        {address.street}
-                        {address.street2 && `, ${address.street2}`}
-                      </td>
-                      <td
-                        className={`border-b ${
-                          index === 0 && "bg-gray-800/80"
-                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
-                      >
-                        {address.city}
-                      </td>
-                      <td
-                        className={`border-b ${
-                          index === 0 && "bg-gray-800/80"
-                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
-                      >
-                        {address.state}
-                      </td>
-                      <td
-                        className={`border-b ${
-                          index === 0 && "bg-gray-800/80"
-                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
-                      >
-                        {address.zip}
-                      </td>
-                      <td
-                        className={`border-b ${
-                          index === 0 && "bg-gray-800/80 flex  items-center "
-                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
-                      >
-                        <button
-                          onClick={() => handleDelete(address._id)}
-                          className="px-5 py-2 flex gap-2 items-center   bg-red-500 text-white rounded-md hover:bg-red-700 transition-colors"
-                        >
-                          Delete <FiTrash2 />
-                        </button>
-                        {index === 0 && (
-                          <span className="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded-full">
-                            User's Address
-                          </span>
+                        {editingId === address?._id ? (
+                          <EditableCell
+                            value={editData.address_id}
+                            onChange={handleFieldChange}
+                            name="address_id"
+                          />
+                        ) : (
+                          address.address_id
                         )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        {editingId === address._id ? (
+                          <EditableCell
+                            value={editData.name}
+                            onChange={handleFieldChange}
+                            name="name"
+                          />
+                        ) : (
+                          address.name
+                        )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        {editingId === address._id ? (
+                          <EditableCell
+                            value={editData.company}
+                            onChange={handleFieldChange}
+                            name="company"
+                          />
+                        ) : (
+                          address.company || "N/A"
+                        )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        {editingId === address._id ? (
+                          <EditableCell
+                            value={editData.phone}
+                            onChange={handleFieldChange}
+                            name="phone"
+                          />
+                        ) : (
+                          address.phone
+                        )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        {editingId === address._id ? (
+                          <EditableCell
+                            value={editData.street}
+                            onChange={handleFieldChange}
+                            name="street"
+                          />
+                        ) : (
+                          <>
+                            {address.street}
+                            {address.street2 && `, ${address.street2}`}
+                          </>
+                        )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        {editingId === address._id ? (
+                          <EditableCell
+                            value={editData.city}
+                            onChange={handleFieldChange}
+                            name="city"
+                          />
+                        ) : (
+                          address.city
+                        )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        {editingId === address._id ? (
+                          <EditableCell
+                            value={editData.state}
+                            onChange={handleFieldChange}
+                            name="state"
+                            type="select"
+                          />
+                        ) : (
+                          address.state
+                        )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        {editingId === address._id ? (
+                          <EditableCell
+                            value={editData.zip}
+                            onChange={handleFieldChange}
+                            name="zip"
+                          />
+                        ) : (
+                          address.zip
+                        )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        {editingId === address._id ? (
+                          <EditableCell
+                            value={editData.country}
+                            onChange={handleFieldChange}
+                            name="country"
+                          />
+                        ) : (
+                          address.country
+                        )}
+                      </td>
+                      <td
+                        className={`border-b ${
+                          index === 0 && "bg-gray-800/80"
+                        } border-custom-border px-2 py-2 text-sm md:text-base text-white`}
+                      >
+                        <div className="flex items-center gap-2">
+                          {editingId === address._id ? (
+                            <>
+                              <button
+                                onClick={handleSaveEdit}
+                                className={`text-green-500 p-2 ${
+                                  editError
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }`}
+                                disabled={!!editError}
+                              >
+                                <FaCheck />
+                              </button>
+                              <button
+                                onClick={handleCancelEdit}
+                                className="text-red-500 p-2"
+                              >
+                                <FaTimes />
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => handleEdit(address)}
+                                className="p-2 hover:bg-gray-700 rounded-full"
+                              >
+                                <FaPencilAlt
+                                  size={20}
+                                  className="text-blue-500"
+                                />
+                              </button>
+                              <button
+                                onClick={() => handleDelete(address._id)}
+                                className="p-2 hover:bg-gray-700 rounded-full"
+                              >
+                                <FaTrash size={20} className="text-red-500" />
+                              </button>
+                            </>
+                          )}
+                          {index === 0 && !editData && (
+                            <span className="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded-full">
+                              User's Address
+                            </span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td
-                      colSpan="8"
+                      colSpan="9"
                       className="text-center px-2 py-4 text-gray-400"
                     >
                       No saved addresses found.
@@ -519,23 +747,21 @@ const Address = () => {
         <div className="grid place-items-center">
           <button
             onClick={() => setAddressModalOpen(true)}
-            className="flex flex-col items-center w-96 justify-center px-12 py-6 bg-card-background border-thin border-custom-border  rounded-lg hover:border-hover-border hover:shadow-bright transition-all group relative"
+            className="flex flex-col items-center w-96 justify-center px-12 py-6 bg-card-background border-thin border-custom-border rounded-lg hover:border-hover-border hover:shadow-bright transition-all group relative"
           >
             <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
             <FiSend className="w-12 h-12 text-blue-500 mb-6" />
             <h2 className="text-2xl font-semibold text-white mb-3">
-              {" "}
               Add Address
             </h2>
             <p className="text-gray-400 text-lg text-center">
-              Enter the Your address details
+              Enter your address details
             </p>
           </button>
         </div>
 
         {isAddressModalOpen && (
           <AddressForm
-            type="sender"
             onClose={() => setAddressModalOpen(false)}
             onSubmit={handleSubmit}
             initialData={{ ...initialAddressState, type: "sender" }}
