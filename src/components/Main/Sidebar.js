@@ -52,16 +52,15 @@ const menuItems = [
     icon: <FaAddressCard className="mr-2" />,
     label: "Address",
   },
-
-  {
-    path: "/admin/dashboard",
-    icon: <FaUserShield className="mr-2" />,
-    label: "Admin Panel",
-  },
   {
     path: "/main/sku",
     icon: <MdFindInPage className="mr-2" />,
     label: "SKU Management",
+  },
+  {
+    path: "/admin/dashboard",
+    icon: <FaUserShield className="mr-2" />,
+    label: "Admin Panel",
   },
 ];
 
