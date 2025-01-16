@@ -7,11 +7,6 @@ import logo from "../../assets/logo.png"; // Update the path to your logo
 
 const adminMenuItems = [
   {
-    path: "/main/dashboard",
-    icon: <FaUser className="mr-2" />,
-    label: "User Panel",
-  },
-  {
     path: "/admin/dashboard",
     icon: <FaTachometerAlt className="mr-2" />,
     label: "Dashboard",
@@ -30,6 +25,11 @@ const adminMenuItems = [
     path: "/admin/service-prices",
     icon: <BsCurrencyDollar className="mr-2" />,
     label: "Service Prices ",
+  },
+  {
+    path: "/main/dashboard",
+    icon: <FaUser className="mr-2" />,
+    label: "User Panel",
   },
 ];
 
