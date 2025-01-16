@@ -325,10 +325,21 @@ const BulkOrder = () => {
       }, 2000);
       return;
     }
+    if (user.balance <= 0) {
+      setNotification({
+        visible: true,
+        message: "Inssuficient Balance",
+        type: "error",
+      });
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
+      return;
+    }
     if (uploadedData.length === 0) {
       setNotification({
         visible: true,
-        message: "Please upload a CSV file",
+        message: "Please upload a  file",
         type: "error",
       });
       setTimeout(() => {
@@ -392,7 +403,6 @@ const BulkOrder = () => {
           };
         });
         try {
-          console.log("Shipments", shipments);
           const response = await axios.post(
             "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
             user._id,
@@ -401,6 +411,17 @@ const BulkOrder = () => {
               headers: { "Content-Type": "application/json" },
             }
           );
+          if(response.status!=200){
+            setNotification({
+              visible:true,
+              message: response.data.message,
+              type:"error"
+            })
+            setTimeout(() => {
+              setNotification({...notification,visible:false})
+            }, 2000);
+            return;
+          }
           const result = await response.data;
           if (result.fileName) {
             // Assume the response contains a download Id
