@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 const Dashboard = () => {
-  
+
   // Placeholder data for demonstration
   const mockData = {
     balance: 5000,
@@ -24,25 +24,25 @@ const Dashboard = () => {
     ],
   };
 
-  const [orders,setOrders] = useState([]);
+  const [orders, setOrders] = useState([]);
   // Get the user 
-  const user = useSelector((state)=>state.auth.user); 
-  
+  const user = useSelector((state) => state.auth.user);
+
   // Fetch the Order 
-  useEffect(()=>{
-    
-      if(user){
-        const fetchOrders = async () =>{
-        try{
-            const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/${user._id}`);
-            setOrders(response.data.orders);
-        }catch(e){
-          console.log("The Error",e);
+  useEffect(() => {
+
+    if (user) {
+      const fetchOrders = async () => {
+        try {
+          const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/${user._id}`);
+          setOrders(response.data.orders);
+        } catch (e) {
+          console.log("The Error", e);
         }
       }
       fetchOrders();
     }
-  },[user,user?.balance])
+  }, [user, user?.balance])
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
 
@@ -54,7 +54,7 @@ const Dashboard = () => {
             <FaDollarSign className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Balance</h3>
-              <p className={`${$GS.textNormal_1}`}>${user?.balance?.toFixed(2) ||user.balance }</p>
+              <p className={`${$GS.textNormal_1}`}>${user?.balance?.toFixed(2) || user.balance}</p>
             </div>
           </div>
         </Card>
@@ -64,7 +64,7 @@ const Dashboard = () => {
             <FaArrowUp className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Total Deposited</h3>
-              <p className={`${$GS.textNormal_1}`}>{user?.totalDeposit? "$"+user?.totalDeposit?.toFixed(2):"-----" }</p>
+              <p className={`${$GS.textNormal_1}`}>{user?.totalDeposit ? "$" + user?.totalDeposit?.toFixed(2) : "-----"}</p>
             </div>
           </div>
         </Card>
@@ -84,7 +84,7 @@ const Dashboard = () => {
             <FaFileAlt className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
               <h3 className={`${$GS.textHeading_3}`}>Total Spent</h3>
-              <p className={`${$GS.textNormal_1}`}>{user?.totalSpent? "$"+user?.totalSpent?.toFixed(2): "-----"}</p>
+              <p className={`${$GS.textNormal_1}`}>{user?.totalSpent ? "$" + user?.totalSpent?.toFixed(2) : "-----"}</p>
             </div>
           </div>
         </Card>
@@ -107,7 +107,7 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-              {orders?.map((order, index) => (
+                {orders?.map((order, index) => (
                   <tr key={index} className="hover:border-hover-border">
                     <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.courier}</td>
                     <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{order?.sender.sender_name}</td>
@@ -135,7 +135,7 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 {mockData.recentDeposits.map((deposit, index) => (
-                  <tr key={index} className="hover:bborder-hover-border">
+                  <tr key={index} className="hover:border-hover-border">
                     <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>${deposit.amount}</td>
                     <td className={`border-b border-custom-border px-4 py-2 ${$GS.textNormal_1}`}>{deposit.date}</td>
                   </tr>
