@@ -231,7 +231,7 @@ const OrderLabel = () => {
       );
       setSavedAddress(response.data.savedAddress);
     } catch (e) {
-      console.log("Error Occured");
+      console.log("Error Occurred");
     }
   };
 

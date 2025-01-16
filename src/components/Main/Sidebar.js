@@ -42,11 +42,11 @@ const menuItems = [
     icon: <FaBoxes className="mr-2" />,
     label: "Batch Orders",
   },
-  {
-    path: "/main/deposit",
-    icon: <FaDollarSign className="mr-2" />, // Using FaDollarSign as the new deposit icon
-    label: "Deposit",
-  },
+  // {
+  //   path: "/main/deposit",
+  //   icon: <FaDollarSign className="mr-2" />, // Using FaDollarSign as the new deposit icon
+  //   label: "Deposit",
+  // },
   {
     path: "/main/address",
     icon: <FaAddressCard className="mr-2" />,
@@ -61,7 +61,7 @@ const menuItems = [
   {
     path: "/main/sku",
     icon: <MdFindInPage className="mr-2" />,
-    label: "SKU Mangement",
+    label: "SKU Management",
   },
 ];
 
