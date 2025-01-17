@@ -76,11 +76,9 @@ const BulkOrder = () => {
   const validateRow = (row) => {
     const requiredFields = [
       "FromSenderName",
-      "FromPhone",
       "FromStreet1",
       "FromCity",
       "ToRecipientName",
-      "ToPhone",
       "ToStreet1",
       "ToCity",
       "PackageWeight",
@@ -279,7 +277,7 @@ const BulkOrder = () => {
       FromCountry: senderAddress?.country || "",
 
       ToRecipientName: row["recipient-name"] || "",
-      ToPhone: row["buyer-phone-number"] || "",
+      ToPhone: row["buyer-phone-number"].split('ext')[0] || "",
       ToCompany: row["buyer-company"] || "",
       ToStreet1: row["ship-address-1"] || "",
       ToStreet2: row["ship-address-2"] || "",
