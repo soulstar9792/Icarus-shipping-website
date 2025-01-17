@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "../Utils/Card";
 import $GS from "../../styles/constants";
-import { FaCheck, FaEdit, FaTimes, FaUpload } from "react-icons/fa";
+import { FaCheck, FaEdit, FaTimes, FaUpload, FaDownload } from "react-icons/fa";
 import Papa from "papaparse";
 import axios from "axios";
 import Loading from "../Loading";
@@ -1028,8 +1028,19 @@ const BulkOrder = () => {
             </Card>
           ) : (
             <Card>
-              <p className={`${$GS.textHeading_2}  `}>
-                Please Upload a CSV/Amazon file ...
+              <p className={`${$GS.textNormal_1} text-center`}>
+              <a
+                href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/template`}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="text-blue-600 underline text-md hover:text-blue-500"
+              >
+                <span>
+                <FaDownload className="mx-auto mb-2 text-blue-600" size={40} />
+                  Download Bulk Template CSV
+                </span>
+              </a>
               </p>
             </Card>
           )}
