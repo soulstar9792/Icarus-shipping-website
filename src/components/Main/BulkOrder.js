@@ -29,6 +29,7 @@ const BulkOrder = () => {
   const [senderAddress, setSenderAddress] = useState(null);
   const [availableServices, setAvailableServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
+  const [selectedProvider, setSelectedProvider] = useState(null);
   const [SkuData, setSkuData] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
   const [editedData, setEditedData] = useState({});
@@ -262,7 +263,7 @@ const BulkOrder = () => {
     return data.map((row) => ({
       courier: "selectedCourier",
       service_name: row.ServiceName
-        ? row.service_name
+        ? row.Service_name
         : selectedService || "N/A",
       manifested: false,
 
@@ -288,6 +289,7 @@ const BulkOrder = () => {
 
       sku_number: row["sku"] || "",
       order_item_id: row["order-item-id"] || "",
+      provider: row["provider"] || selectedProvider ,
       package_length: String(row.PackageLength) || "",
       package_width: String(row.PackageWidth) || "",
       package_height: String(row.PackageHeight) || "",
@@ -323,6 +325,17 @@ const BulkOrder = () => {
       }, 2000);
       return;
     }
+    if (!selectedProvider && txtFile && courierType==="USPS") {
+      setNotification({
+        visible: true,
+        message: "Please Select a Provider",
+        type: "error",
+      });
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
+      return;
+    }
     if (user.balance <= 0) {
       setNotification({
         visible: true,
@@ -337,7 +350,7 @@ const BulkOrder = () => {
     if (uploadedData.length === 0) {
       setNotification({
         visible: true,
-        message: "Please upload a  file",
+        message: "Please upload a file",
         type: "error",
       });
       setTimeout(() => {
@@ -380,6 +393,7 @@ const BulkOrder = () => {
             package: {
               sku_number: txtFile ? row.sku_number : null,
               order_item_id: txtFile ? row.order_item_id : null,
+              provider: txtFile ? selectedProvider: null,
               package_length: csvFile
                 ? row.PackageLength
                 : String(row.PackageLength),
@@ -709,6 +723,28 @@ const BulkOrder = () => {
                   ))}
                 </select>
               </div>
+          {courierType==="USPS"&& (  <div className="content-end">
+                <label htmlFor="Provider" className={`${$GS.textNormal_1}`}>
+                  Provider
+                </label>
+                <select
+                  id="Provider"
+                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+                  disabled={!selectedService} 
+                  onChange={(e) => {
+                    setSelectedProvider(e.target.value); 
+                  }}
+                >
+                  <option value="" className="text-gray-500">
+                    Select a Provider...
+                  </option>
+                  {["USPSveVS","USPSvShippo","USPSvStore","USPSvUnbranded"].map((provider, index) => (
+                    <option key={index} value={provider}>
+                      {provider}
+                    </option>
+                  ))}
+                </select>
+              </div>)}
             </div>
           )}
           {/* Data Table Section */}
@@ -748,6 +784,11 @@ const BulkOrder = () => {
                             <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
                               Type *
                             </th>
+                            {(txtFile && courierType==="USPS") && (
+                              <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                                Provider
+                              </th>
+                            )}
                             {txtFile && (
                               <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
                                 SKU Number
@@ -835,6 +876,11 @@ const BulkOrder = () => {
                                       row.ServiceName
                                     )}
                               </td>
+                              {(txtFile && courierType==="USPS" ) && (
+                                <td className="border border-custom-border p-4 break-words">
+                                  {selectedProvider? selectedProvider: "N/A"}
+                                </td>
+                              )}
                               {txtFile && (
                                 <td className="border border-custom-border p-4 break-words">
                                   {renderTableCell(
@@ -844,6 +890,7 @@ const BulkOrder = () => {
                                   )}
                                 </td>
                               )}
+                          
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
@@ -1028,7 +1075,7 @@ const BulkOrder = () => {
             <Card>
               <p className={`${$GS.textNormal_1} text-center`}>
               <a
-                href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/template`}
+                href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/file/template`}
                 target="_blank"
                 rel="noopener noreferrer"
                 download

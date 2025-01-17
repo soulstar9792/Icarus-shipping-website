@@ -95,9 +95,9 @@ const OrderLabel = () => {
     { id: 1, name: "UPS" },
     { id: 2, name: "USPS" },
   ];
-
   const [modalVisible, setModalVisible] = useState(false); // for modal visibility
   const [labelImage, setLabelImage] = useState(""); // hold label image base64
+  const [selectedProvider ,setSelectedProvider] = useState(null);
 
   const handleCourierChange = (e) => {
     const selected = e.target.value;
@@ -123,6 +123,9 @@ const OrderLabel = () => {
         message: "Please select a courier",
         type: "error",
       });
+      setTimeout(()=>{
+        setNotification({...notification,visible:false}); 
+      },2000)
       return;
     }
     if (service === "") {
@@ -131,12 +134,28 @@ const OrderLabel = () => {
         message: "Please select a service",
         type: "error",
       });
+      setTimeout(()=>{
+        setNotification({...notification,visible:false}); 
+      },2000)
       return;
     }
+    if (!selectedProvider) {
+      setNotification({
+        visible: true,
+        message: "Please select a Provider",
+        type: "error",
+      });
+      setTimeout(()=>{
+        setNotification({...notification,visible:false}); 
+      },2000)
+      return;
+    }
+    
     const shipmentData = {
       user_id: user._id,
       courier: selectedCourier,
       service_name: service,
+     ...(selectedCourier==="USPS" &&  {version : selectedProvider}),
       manifested: false,
       sender: {
         sender_name: sender.name,
@@ -318,7 +337,7 @@ const OrderLabel = () => {
                 ))}
               </select>
             </div>
-
+           
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="content-end">
                 <label htmlFor="serviceType" className={`${$GS.textNormal_1}`}>
@@ -343,6 +362,28 @@ const OrderLabel = () => {
                   ))}
                 </select>
               </div>
+              {selectedCourier==="USPS"&& (  <div className="content-end">
+                            <label htmlFor="Provider" className={`${$GS.textNormal_1}`}>
+                              Provider
+                            </label>
+                            <select
+                              id="Provider"
+                              className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+                              disabled={!selectedCourier} 
+                              onChange={(e) => {
+                                setSelectedProvider(e.target.value); 
+                              }}
+                            >
+                              <option value="" className="text-gray-500">
+                                Select a Provider...
+                              </option>
+                              {["USPSveVS","USPSvShippo","USPSvStore","USPSvUnbranded"].map((provider, index) => (
+                                <option key={index} value={provider}>
+                                  {provider}
+                                </option>
+                              ))}
+                            </select>
+                          </div>)}
 
               <div>
                 <label
@@ -525,7 +566,7 @@ const OrderLabel = () => {
                     return (
                       <option key={i} value={optionData} className="font-bold">
                         {" "}
-                        ${ad.address_id}...
+                        {ad.address_id}...
                       </option>
                     );
                   })}
@@ -712,7 +753,7 @@ const OrderLabel = () => {
                     });
                     return (
                       <option key={i} value={optionData}>
-                        {ad.street},{ad.city}
+                               {ad.address_id}...
                       </option>
                     );
                   })}
