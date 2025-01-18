@@ -108,12 +108,8 @@ const BulkOrder = () => {
       if (user) {
         try {
           const [addressResponse, skuResponse] = await Promise.all([
-            axios.get(
-              `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`
-            ),
-            axios.get(
-              `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`
-            ),
+            axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`),
+            axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`),
           ]);
           setSenderAddress(addressResponse.data?.savedAddress[0]);
           setSkuData(skuResponse.data.SkuData);
@@ -166,6 +162,7 @@ const BulkOrder = () => {
       }
       if (fileType === "csv") {
         if (file) {
+          setSelectedProvider(null)
           Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
@@ -183,6 +180,10 @@ const BulkOrder = () => {
                   });
                 } else {
                   validData.push(row);
+                  if(row.ServiceName){
+                    const CSVCourier = row.ServiceName?.split(' ')[0]; 
+                    setCourierType(CSVCourier);
+                  }
                 }
               });
 
@@ -221,6 +222,7 @@ const BulkOrder = () => {
         }
       } else if (fileType === "txt") {
         if (file) {
+          setSelectedProvider(null)
           Papa.parse(file, {
             header: true,
             delimiter: "\t",
@@ -278,7 +280,7 @@ const BulkOrder = () => {
       FromCountry: senderAddress?.country || "",
 
       ToRecipientName: row["recipient-name"] || "",
-      ToPhone: row["buyer-phone-number"].split('ext')[0] || "",
+      ToPhone: row["buyer-phone-number"].split("ext")[0] || "",
       ToCompany: row["buyer-company"] || "",
       ToStreet1: row["ship-address-1"] || "",
       ToStreet2: row["ship-address-2"] || "",
@@ -289,7 +291,7 @@ const BulkOrder = () => {
 
       sku_number: row["sku"] || "",
       order_item_id: row["order-item-id"] || "",
-      provider: row["provider"] || selectedProvider ,
+      provider: row["provider"] || selectedProvider,
       package_length: String(row.PackageLength) || "",
       package_width: String(row.PackageWidth) || "",
       package_height: String(row.PackageHeight) || "",
@@ -325,7 +327,7 @@ const BulkOrder = () => {
       }, 2000);
       return;
     }
-    if (!selectedProvider && txtFile && courierType==="USPS") {
+    if (!selectedProvider && courierType === "USPS") {
       setNotification({
         visible: true,
         message: "Please Select a Provider",
@@ -366,6 +368,11 @@ const BulkOrder = () => {
           return {
             courier: selectedCourier || row.ServiceName.split(" ")[0],
             service_name: row.ServiceName ? row.ServiceName : selectedService, // Assuming you want to use `ServiceName` from the CSV
+            provider: csvFile
+              ? row.ServiceName.split(" ")[0] === "USPS"
+                ? selectedProvider
+                : null
+              : selectedProvider,
             manifested: false,
             sender: {
               ...(txtFile ? { order_id: row.sku_number } : {}),
@@ -393,7 +400,6 @@ const BulkOrder = () => {
             package: {
               sku_number: txtFile ? row.sku_number : null,
               order_item_id: txtFile ? row.order_item_id : null,
-              provider: txtFile ? selectedProvider: null,
               package_length: csvFile
                 ? row.PackageLength
                 : String(row.PackageLength),
@@ -416,21 +422,20 @@ const BulkOrder = () => {
         });
         try {
           const response = await axios.post(
-            "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
-              user._id,
+            "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" + user._id,
             shipments,
             {
               headers: { "Content-Type": "application/json" },
             }
           );
-          if(response.status!=200){
+          if (response.status != 200) {
             setNotification({
-              visible:true,
+              visible: true,
               message: response.data.message,
-              type:"error"
-            })
+              type: "error",
+            });
             setTimeout(() => {
-              setNotification({...notification,visible:false})
+              setNotification({ ...notification, visible: false });
             }, 2000);
             return;
           }
@@ -723,28 +728,39 @@ const BulkOrder = () => {
                   ))}
                 </select>
               </div>
-          {courierType==="USPS"&& (  <div className="content-end">
-                <label htmlFor="Provider" className={`${$GS.textNormal_1}`}>
-                  Provider
-                </label>
-                <select
-                  id="Provider"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
-                  disabled={!selectedService} 
-                  onChange={(e) => {
-                    setSelectedProvider(e.target.value); 
-                  }}
-                >
-                  <option value="" className="text-gray-500">
-                    Select a Provider...
+            </div>
+          )}
+          {(courierType === "USPS" ||
+            (csvFile &&
+              uploadedData.some((row) =>
+                row.ServiceName?.startsWith("USPS")
+              ))) && (
+            <div className="content-end mb-4">
+              <label htmlFor="Provider" className={`${$GS.textNormal_1}`}>
+                Provider
+              </label>
+              <select
+                id="Provider"
+                className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+                disabled={txtFile && !selectedService}
+                onChange={(e) => {
+                  setSelectedProvider(e.target.value);
+                }}
+              >
+                <option value=""  className="text-gray-500">
+                  Select a Provider...
+                </option>
+                {[
+                  "USPSveVS",
+                  "USPSvShippo",
+                  "USPSvStore",
+                  "USPSvUnbranded",
+                ].map((provider, index) => (
+                  <option key={index} value={provider}>
+                    {provider}
                   </option>
-                  {["USPSveVS","USPSvShippo","USPSvStore","USPSvUnbranded"].map((provider, index) => (
-                    <option key={index} value={provider}>
-                      {provider}
-                    </option>
-                  ))}
-                </select>
-              </div>)}
+                ))}
+              </select>
             </div>
           )}
           {/* Data Table Section */}
@@ -784,7 +800,8 @@ const BulkOrder = () => {
                             <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
                               Type *
                             </th>
-                            {(txtFile && courierType==="USPS") && (
+                            {(txtFile ||
+                              (csvFile && courierType === "USPS")) && (
                               <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
                                 Provider
                               </th>
@@ -876,9 +893,10 @@ const BulkOrder = () => {
                                       row.ServiceName
                                     )}
                               </td>
-                              {(txtFile && courierType==="USPS" ) && (
+                              {(txtFile ||
+                                (csvFile && courierType === "USPS")) && (
                                 <td className="border border-custom-border p-4 break-words">
-                                  {selectedProvider? selectedProvider: "N/A"}
+                                  {selectedProvider || "Select Provider"}
                                 </td>
                               )}
                               {txtFile && (
@@ -890,7 +908,7 @@ const BulkOrder = () => {
                                   )}
                                 </td>
                               )}
-                          
+
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
@@ -1074,18 +1092,21 @@ const BulkOrder = () => {
           ) : (
             <Card>
               <p className={`${$GS.textNormal_1} text-center`}>
-              <a
-                href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/file/template`}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
-                className="text-blue-600 underline text-md hover:text-blue-500"
-              >
-                <span>
-                <FaDownload className="mx-auto mb-2 text-blue-600" size={40} />
-                  Download Bulk Template CSV
-                </span>
-              </a>
+                <a
+                  href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/file/template`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="text-blue-600 underline text-md hover:text-blue-500"
+                >
+                  <span>
+                    <FaDownload
+                      className="mx-auto mb-2 text-blue-600"
+                      size={40}
+                    />
+                    Download Bulk Template CSV
+                  </span>
+                </a>
               </p>
             </Card>
           )}

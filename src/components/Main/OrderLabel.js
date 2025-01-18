@@ -303,27 +303,27 @@ const OrderLabel = () => {
   };
 
   return (
-    <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
+    <div className="px-4 md:px-10 py-10 md:py-4 bg-custom-background">
       <form onSubmit={handleSubmit}>
         {/* Responsive grid for cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           <Notification
             {...notification}
             onClose={() => setNotification({ ...notification, visible: false })}
           />
           {/* Package Information Card */}
-          <Card className="col-span-1">
-            <h2 className={`${$GS.textHeading_2} mb-4`}>Package Information</h2>
-            <div className="mb-4">
+          <Card className="col-span-1 min-h-[38vw] w-[27vw]">
+            <h2 className={`${$GS.textHeading_2} -mb-2  p-2 -mt-4 `}>Package Information</h2>
+            <div className="mb-2">
               <label
                 htmlFor="courier"
-                className={`${$GS.textNormal_1} pt-2 block`}
+                className={`${$GS.textNormal_1}   `}
               >
                 Select Courier *
               </label>
               <select
                 id="courier"
-                className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+                className="border border-custom-border p-1 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
                 value={selectedCourier}
                 onChange={handleCourierChange}
               >
@@ -338,7 +338,7 @@ const OrderLabel = () => {
               </select>
             </div>
            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className={`grid grid-cols-1 ${selectedCourier==="USPS"  ?"md:grid-cols-3": "md:grid-cols-2"} gap-4`}>
               <div className="content-end">
                 <label htmlFor="serviceType" className={`${$GS.textNormal_1}`}>
                   Type
@@ -410,7 +410,7 @@ const OrderLabel = () => {
             </div>
 
             {/* Dimensions */}
-            <h3 className={`${$GS.textHeading_3} mt-4 mb-2`}>
+            <h3 className={`${$GS.textHeading_3} mt-2 mb-2`}>
               Dimensions (optional)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -421,7 +421,7 @@ const OrderLabel = () => {
                 <input
                   id="length"
                   type="number"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className="border border-custom-border  w-full bg-transparent text-custom-text"
                   placeholder="0 in"
                   value={packageDetails.length}
                   onChange={(e) =>
@@ -440,7 +440,7 @@ const OrderLabel = () => {
                 <input
                   id="width"
                   type="number"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className="border border-custom-border  w-full bg-transparent text-custom-text"
                   placeholder="0 in"
                   value={packageDetails.width}
                   onChange={(e) =>
@@ -459,7 +459,7 @@ const OrderLabel = () => {
                 <input
                   id="height"
                   type="number"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className="border border-custom-border  w-full bg-transparent text-custom-text"
                   placeholder="0 in"
                   value={packageDetails.height}
                   onChange={(e) =>
@@ -490,8 +490,8 @@ const OrderLabel = () => {
             />
 
             {/* References */}
-            <div className="flex justify-between mt-4">
-              <div className="w-1/2 pr-2">
+            <div className="flex  justify-between mt-2">
+              <div className="w-13 pr-2">
                 <label htmlFor="reference1" className={`${$GS.textNormal_1}`}>
                   Reference 1 (optional)
                 </label>
@@ -509,7 +509,7 @@ const OrderLabel = () => {
                   }
                 />
               </div>
-              <div className="w-1/2 pl-2">
+              <div className="w-13 pl-2">
                 <label htmlFor="reference2" className={`${$GS.textNormal_1}`}>
                   Reference 2 (optional)
                 </label>
@@ -530,20 +530,20 @@ const OrderLabel = () => {
             </div>
 
             {/* Require Signature Checkboxes */}
-            <h3 className={`${$GS.textHeading_3} mt-6 mb-2`}>
+            <h3 className={`${$GS.textHeading_3} mt-1 mb-1`}>
               Require Signature
             </h3>
             <label className="flex items-center text-custom-text">
               <input type="checkbox" className="mr-2" /> Require a signature on
               delivery
             </label>
-            <label className="flex items-center text-custom-text mt-1">
+            <label className="flex items-center text-custom-text mt-[3px]">
               <input type="checkbox" className="mr-2" /> Saturday Delivery
             </label>
           </Card>
 
           {/* From Address Card */}
-          <Card className="col-span-1">
+          <Card className="col-span-1  w-[25vw] ml-6 ">
             <h2 className={`${$GS.textHeading_2} mb-4`}>From Address</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="content-end">
@@ -731,7 +731,7 @@ const OrderLabel = () => {
           </Card>
 
           {/* To Address Card */}
-          <Card className="col-span-1">
+          <Card className="col-span-1 w-[23vw] ml-8 ">
             <h2 className={`${$GS.textHeading_2} mb-4`}>To Address</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -922,18 +922,18 @@ const OrderLabel = () => {
           </Card>
         </div>
         {/* Price And Submit Section */}-
-        <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
-          <p className={`${$GS.textHeading_2} m-8`}>Price: ${price}</p>
+        <div className="flex lg:flex-row justify-between items-center  flex-col">
+          <p className={`${$GS.textHeading_4} -mt-3 `}>Price: ${price}</p>
           <div className="flex justify-center">
             <button
               type="submit"
-              className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
+              className={`${$GS.textHeading_4} -mt-3 cursor-pointer rounded-small p-6 md:p-3 border-thin border-custom-border transition-shadow duration-300 
                     bg-card-background group hover:border-hover-border hover:shadow-bright`}
             >
               Order Label
             </button>
           </div>
-          <div className="text-center text-sm text-gray-400">
+          <div className="text-center  text-sm text-gray-400">
             <p>
               © {new Date().getFullYear()} Icarus Ships. All rights reserved.
             </p>
