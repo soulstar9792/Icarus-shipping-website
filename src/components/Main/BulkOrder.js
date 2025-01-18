@@ -639,7 +639,7 @@ const BulkOrder = () => {
         <Loading />
       ) : (
         <div>
-          {/* CSV Upload Section */}z
+          {/* CSV Upload Section */}
           <Card className="mb-6 p-6">
             <h2 className={`${$GS.textHeading_2} mb-4`}>
               Upload CSV/Amazon File{" "}

@@ -82,7 +82,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
       <div
         className={`${
           isSidebarOpen ? "block top-0 left-0 z-50" : "hidden"
-        } lg:block w-[250px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${
+        } lg:block w-[200px] bg-custom-background border-thin border-custom-border text-white h-full p-0 ${
           $GS.cardContainer
         } `}
       >

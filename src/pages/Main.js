@@ -42,7 +42,7 @@ const Main = () => {
         toggleSidebar={toggleSidebar}
       />{" "}
       {/* Static Sidebar on the left */}
-      <div className="flex flex-col lg:w-[calc(100%-250px)] w-full ">
+      <div className="flex flex-col w-[calc(100%-200px)] w-full ">
         <MainHeader
           toggleSidebar={toggleSidebar}
           isSidebarOpen={isSidebarOpen}

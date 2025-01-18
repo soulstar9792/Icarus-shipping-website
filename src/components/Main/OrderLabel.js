@@ -97,7 +97,7 @@ const OrderLabel = () => {
   ];
   const [modalVisible, setModalVisible] = useState(false); // for modal visibility
   const [labelImage, setLabelImage] = useState(""); // hold label image base64
-  const [selectedProvider ,setSelectedProvider] = useState(null);
+  const [selectedProvider, setSelectedProvider] = useState(null);
 
   const handleCourierChange = (e) => {
     const selected = e.target.value;
@@ -123,9 +123,9 @@ const OrderLabel = () => {
         message: "Please select a courier",
         type: "error",
       });
-      setTimeout(()=>{
-        setNotification({...notification,visible:false}); 
-      },2000)
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000)
       return;
     }
     if (service === "") {
@@ -134,9 +134,9 @@ const OrderLabel = () => {
         message: "Please select a service",
         type: "error",
       });
-      setTimeout(()=>{
-        setNotification({...notification,visible:false}); 
-      },2000)
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000)
       return;
     }
     if (!selectedProvider) {
@@ -145,17 +145,17 @@ const OrderLabel = () => {
         message: "Please select a Provider",
         type: "error",
       });
-      setTimeout(()=>{
-        setNotification({...notification,visible:false}); 
-      },2000)
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000)
       return;
     }
-    
+
     const shipmentData = {
       user_id: user._id,
       courier: selectedCourier,
       service_name: service,
-     ...(selectedCourier==="USPS" &&  {version : selectedProvider}),
+      ...(selectedCourier === "USPS" && { version: selectedProvider }),
       manifested: false,
       sender: {
         sender_name: sender.name,
@@ -214,7 +214,7 @@ const OrderLabel = () => {
     } catch (error) {
       // Formatted error message
       const errorMsg =
-        error.response?.data?.message || "An Unknown Error Occured";
+        error.response?.data?.message || "An Unknown Error Occurred";
       const formattedMsg = errorMsg.split(":")[1]?.trim() || errorMsg;
       const FinalMsg =
         formattedMsg?.charAt(0).toUpperCase() + formattedMsg?.slice(1) ||
@@ -303,7 +303,7 @@ const OrderLabel = () => {
   };
 
   return (
-    <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
+    <div className="px-4 md:px-10 py-4 md:pt-10 bg-custom-background">
       <form onSubmit={handleSubmit}>
         {/* Responsive grid for cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -313,39 +313,43 @@ const OrderLabel = () => {
           />
           {/* Package Information Card */}
           <Card className="col-span-1">
-            <h2 className={`${$GS.textHeading_2} mb-4`}>Package Information</h2>
-            <div className="mb-4">
-              <label
-                htmlFor="courier"
-                className={`${$GS.textNormal_1} pt-2 block`}
-              >
-                Select Courier *
-              </label>
-              <select
-                id="courier"
-                className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
-                value={selectedCourier}
-                onChange={handleCourierChange}
-              >
-                <option value="" className="text-gray-500">
-                  Select a courier...
-                </option>
-                {couriers.map((courier) => (
-                  <option key={courier.id} value={courier.name}>
-                    {courier.name}
-                  </option>
-                ))}
-              </select>
+            <h2 className={`${$GS.textFormHeading_1} mb-4`}>Package Information</h2>
+            <div className="mb-1">
+              <div className="flex content-center">
+                <label
+                  htmlFor="courier"
+                  className={`${$GS.textBase} pt-2`}
+                >
+                  Courier * &nbsp;
+                </label>
+                <div className="inline-block grow mt-1">
+                  <select
+                    id="courier"
+                    className={`${$GS.inputForm_1}`}
+                    value={selectedCourier}
+                    onChange={handleCourierChange}
+                  >
+                    <option value="" className="text-gray-500">
+                      Select a courier...
+                    </option>
+                    {couriers.map((courier) => (
+                      <option key={courier.id} value={courier.name}>
+                        {courier.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
-           
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="content-end">
-                <label htmlFor="serviceType" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="serviceType" className={`${$GS.textBase}`}>
                   Type
                 </label>
                 <select
                   id="serviceType"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+                  className={`${$GS.inputForm_1}`}
                   disabled={!availableServices.length} // Disable if no services available
                   onChange={(e) => {
                     setService(e.target.value);
@@ -362,40 +366,40 @@ const OrderLabel = () => {
                   ))}
                 </select>
               </div>
-              {selectedCourier==="USPS"&& (  <div className="content-end">
-                            <label htmlFor="Provider" className={`${$GS.textNormal_1}`}>
-                              Provider
-                            </label>
-                            <select
-                              id="Provider"
-                              className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
-                              disabled={!selectedCourier} 
-                              onChange={(e) => {
-                                setSelectedProvider(e.target.value); 
-                              }}
-                            >
-                              <option value="" className="text-gray-500">
-                                Select a Provider...
-                              </option>
-                              {["USPSveVS","USPSvShippo","USPSvStore","USPSvUnbranded"].map((provider, index) => (
-                                <option key={index} value={provider}>
-                                  {provider}
-                                </option>
-                              ))}
-                            </select>
-                          </div>)}
+              {selectedCourier === "USPS" && (<div className="content-end">
+                <label htmlFor="Provider" className={`${$GS.textBase}`}>
+                  Provider
+                </label>
+                <select
+                  id="Provider"
+                  className={`${$GS.inputForm_1}`}
+                  disabled={!selectedCourier}
+                  onChange={(e) => {
+                    setSelectedProvider(e.target.value);
+                  }}
+                >
+                  <option value="" className="text-gray-500">
+                    Select a Provider...
+                  </option>
+                  {["USPSveVS", "USPSvShippo", "USPSvStore", "USPSvUnbranded"].map((provider, index) => (
+                    <option key={index} value={provider}>
+                      {provider}
+                    </option>
+                  ))}
+                </select>
+              </div>)}
 
               <div>
                 <label
                   htmlFor="packageWeight"
-                  className={`${$GS.textNormal_1}`}
+                  className={`${$GS.textBase}`}
                 >
                   Package Weight
                 </label>
                 <input
                   id="packageWeight"
                   type="number"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="0 lbs"
                   value={packageDetails.weight}
                   onChange={(e) =>
@@ -410,18 +414,18 @@ const OrderLabel = () => {
             </div>
 
             {/* Dimensions */}
-            <h3 className={`${$GS.textHeading_3} mt-4 mb-2`}>
+            <h3 className={`${$GS.textBase} mt-4 text-center`}>
               Dimensions (optional)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label htmlFor="length" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="length" className={`${$GS.textBase}`}>
                   Length * (in)
                 </label>
                 <input
                   id="length"
                   type="number"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="0 in"
                   value={packageDetails.length}
                   onChange={(e) =>
@@ -434,13 +438,13 @@ const OrderLabel = () => {
                 />
               </div>
               <div>
-                <label htmlFor="width" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="width" className={`${$GS.textBase}`}>
                   Width * (in)
                 </label>
                 <input
                   id="width"
                   type="number"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="0 in"
                   value={packageDetails.width}
                   onChange={(e) =>
@@ -453,13 +457,13 @@ const OrderLabel = () => {
                 />
               </div>
               <div>
-                <label htmlFor="height" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="height" className={`${$GS.textBase}`}>
                   Height * (in)
                 </label>
                 <input
                   id="height"
                   type="number"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="0 in"
                   value={packageDetails.height}
                   onChange={(e) =>
@@ -473,12 +477,12 @@ const OrderLabel = () => {
               </div>
             </div>
 
-            <label htmlFor="description" className={`${$GS.textNormal_1} mt-4`}>
+            <label htmlFor="description" className={`${$GS.textBase} mt-3`}>
               Description (optional)
             </label>
             <textarea
               id="description"
-              className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+              className={$GS.inputForm_1}
               placeholder="Enter package information"
               value={packageDetails.description}
               onChange={(e) =>
@@ -492,13 +496,13 @@ const OrderLabel = () => {
             {/* References */}
             <div className="flex justify-between mt-4">
               <div className="w-1/2 pr-2">
-                <label htmlFor="reference1" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="reference1" className={`${$GS.textBase}`}>
                   Reference 1 (optional)
                 </label>
                 <input
                   id="reference1"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Enter first reference number"
                   value={packageDetails.reference1}
                   onChange={(e) =>
@@ -510,13 +514,13 @@ const OrderLabel = () => {
                 />
               </div>
               <div className="w-1/2 pl-2">
-                <label htmlFor="reference2" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="reference2" className={`${$GS.textBase}`}>
                   Reference 2 (optional)
                 </label>
                 <input
                   id="reference2"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Enter second reference number"
                   value={packageDetails.reference2}
                   onChange={(e) =>
@@ -530,31 +534,33 @@ const OrderLabel = () => {
             </div>
 
             {/* Require Signature Checkboxes */}
-            <h3 className={`${$GS.textHeading_3} mt-6 mb-2`}>
+            <h3 className={`${$GS.textBase} mt-4`}>
               Require Signature
             </h3>
-            <label className="flex items-center text-custom-text">
+            <div className="flex items-center">
+            <label className="flex items-center text-s1 text-text-normal">
               <input type="checkbox" className="mr-2" /> Require a signature on
               delivery
-            </label>
-            <label className="flex items-center text-custom-text mt-1">
+            </label>&nbsp;&nbsp;&nbsp;
+            <label className="flex items-center text-s1 text-text-normal">
               <input type="checkbox" className="mr-2" /> Saturday Delivery
             </label>
+            </div>
           </Card>
 
           {/* From Address Card */}
           <Card className="col-span-1">
-            <h2 className={`${$GS.textHeading_2} mb-4`}>From Address</h2>
+            <h2 className={`${$GS.textFormHeading_1} mb-4`}>From Address</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="content-end">
-                <label htmlFor="fromAddress" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="fromAddress" className={`${$GS.textBase}`}>
                   Saved Address
                 </label>
                 <select
                   onClick={getSavedAddress}
                   onChange={HandleSelectChangeSender}
                   id="fromAddress"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                 >
                   <option value={""}>Select a saved address...</option>
 
@@ -573,13 +579,13 @@ const OrderLabel = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="fromCountry" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="fromCountry" className={`${$GS.textBase}`}>
                   Country *
                 </label>
                 <input
                   id="fromCountry"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   defaultValue="United States"
                   readOnly
                 />
@@ -588,13 +594,13 @@ const OrderLabel = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="content-end">
-                <label htmlFor="nameFrom" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="nameFrom" className={`${$GS.textBase}`}>
                   Name *
                 </label>
                 <input
                   id="nameFrom"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Name"
                   value={sender.name}
                   onChange={(e) =>
@@ -604,13 +610,13 @@ const OrderLabel = () => {
                 />
               </div>
               <div>
-                <label htmlFor="companyFrom" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="companyFrom" className={`${$GS.textBase}`}>
                   Company / Reference Number (optional)
                 </label>
                 <input
                   id="companyFrom"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Company"
                   value={sender.company}
                   onChange={(e) =>
@@ -622,13 +628,13 @@ const OrderLabel = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="content-end">
-                <label htmlFor="phoneFrom" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="phoneFrom" className={`${$GS.textBase}`}>
                   Phone *
                 </label>
                 <input
                   id="phoneFrom"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Phone"
                   value={sender.phone}
                   onChange={(e) =>
@@ -638,13 +644,13 @@ const OrderLabel = () => {
                 />
               </div>
               <div>
-                <label htmlFor="streetFrom" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="streetFrom" className={`${$GS.textBase}`}>
                   Street *
                 </label>
                 <input
                   id="streetFrom"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Street"
                   value={sender.address1}
                   onChange={(e) =>
@@ -657,13 +663,13 @@ const OrderLabel = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="content-end">
-                <label htmlFor="street2From" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="street2From" className={`${$GS.textBase}`}>
                   Street 2 (optional)
                 </label>
                 <input
                   id="street2From"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Street 2"
                   value={sender.address2}
                   onChange={(e) =>
@@ -672,13 +678,13 @@ const OrderLabel = () => {
                 />
               </div>
               <div>
-                <label htmlFor="cityFrom" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="cityFrom" className={`${$GS.textBase}`}>
                   City *
                 </label>
                 <input
                   id="cityFrom"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="City"
                   value={sender.city}
                   onChange={(e) =>
@@ -691,12 +697,12 @@ const OrderLabel = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="content-end">
-                <label htmlFor="stateFrom" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="stateFrom" className={`${$GS.textBase}`}>
                   State
                 </label>
                 <select
                   id="stateFrom"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   value={sender.state}
                   onChange={(e) =>
                     setSender({ ...sender, state: e.target.value })
@@ -712,13 +718,13 @@ const OrderLabel = () => {
               </div>
 
               <div>
-                <label htmlFor="zipFrom" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="zipFrom" className={`${$GS.textBase}`}>
                   Zip *
                 </label>
                 <input
                   id="zipFrom"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Zip"
                   value={sender.zip}
                   onChange={(e) =>
@@ -732,18 +738,18 @@ const OrderLabel = () => {
 
           {/* To Address Card */}
           <Card className="col-span-1">
-            <h2 className={`${$GS.textHeading_2} mb-4`}>To Address</h2>
+            <h2 className={`${$GS.textFormHeading_1} mb-4`}>To Address</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="content-end">
-                <label htmlFor="toAddress" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="toAddress" className={`${$GS.textBase}`}>
                   Saved Address
                 </label>
                 <select
                   onClick={getSavedAddress}
                   onChange={HandleSelectChangeReceiver}
                   id="fromAddress"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                 >
                   <option value={""}>Select a saved address...</option>
                   {savedAddress.map((ad, i) => {
@@ -753,7 +759,7 @@ const OrderLabel = () => {
                     });
                     return (
                       <option key={i} value={optionData}>
-                               {ad.address_id}...
+                        {ad.address_id}...
                       </option>
                     );
                   })}
@@ -761,13 +767,13 @@ const OrderLabel = () => {
               </div>
 
               <div>
-                <label htmlFor="toCountry" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="toCountry" className={`${$GS.textBase}`}>
                   Country *
                 </label>
                 <input
                   id="toCountry"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   defaultValue="United States"
                   readOnly
                 />
@@ -776,13 +782,13 @@ const OrderLabel = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="content-end">
-                <label htmlFor="nameTo" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="nameTo" className={`${$GS.textBase}`}>
                   Name *
                 </label>
                 <input
                   id="nameTo"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Name"
                   value={receiver.name}
                   onChange={(e) =>
@@ -793,13 +799,13 @@ const OrderLabel = () => {
               </div>
 
               <div>
-                <label htmlFor="companyTo" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="companyTo" className={`${$GS.textBase}`}>
                   Company / Reference Number (optional)
                 </label>
                 <input
                   id="companyTo"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Company"
                   value={receiver.company}
                   onChange={(e) =>
@@ -811,13 +817,13 @@ const OrderLabel = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="content-end">
-                <label htmlFor="phoneTo" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="phoneTo" className={`${$GS.textBase}`}>
                   Phone *
                 </label>
                 <input
                   id="phoneTo"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Phone"
                   value={receiver.phone}
                   onChange={(e) =>
@@ -828,13 +834,13 @@ const OrderLabel = () => {
               </div>
 
               <div>
-                <label htmlFor="streetTo" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="streetTo" className={`${$GS.textBase}`}>
                   Street *
                 </label>
                 <input
                   id="streetTo"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Street"
                   value={receiver.address1}
                   onChange={(e) =>
@@ -847,13 +853,13 @@ const OrderLabel = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="content-end">
-                <label htmlFor="street2To" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="street2To" className={`${$GS.textBase}`}>
                   Street 2 (optional)
                 </label>
                 <input
                   id="street2To"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Street 2"
                   value={receiver.address2}
                   onChange={(e) =>
@@ -863,13 +869,13 @@ const OrderLabel = () => {
               </div>
 
               <div>
-                <label htmlFor="cityTo" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="cityTo" className={`${$GS.textBase}`}>
                   City *
                 </label>
                 <input
                   id="cityTo"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="City"
                   value={receiver.city}
                   onChange={(e) =>
@@ -882,12 +888,12 @@ const OrderLabel = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="content-end">
-                <label htmlFor="stateTo" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="stateTo" className={`${$GS.textBase}`}>
                   State
                 </label>
                 <select
                   id="stateTo"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   value={receiver.state}
                   onChange={(e) =>
                     setReceiver({ ...receiver, state: e.target.value })
@@ -903,13 +909,13 @@ const OrderLabel = () => {
               </div>
 
               <div>
-                <label htmlFor="zipTo" className={`${$GS.textNormal_1}`}>
+                <label htmlFor="zipTo" className={`${$GS.textBase}`}>
                   Zip *
                 </label>
                 <input
                   id="zipTo"
                   type="text"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
+                  className={$GS.inputForm_1}
                   placeholder="Zip"
                   value={receiver.zip}
                   onChange={(e) =>
@@ -922,18 +928,16 @@ const OrderLabel = () => {
           </Card>
         </div>
         {/* Price And Submit Section */}-
-        <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
-          <p className={`${$GS.textHeading_2} m-8`}>Price: ${price}</p>
-          <div className="flex justify-center">
-            <button
+        
+        <div className="flex lg:flex-row justify-between items-center flex-col">
+          <p className={`${$GS.textFormHeading_1} mt-4 w-[300px]`}>Price: ${price}</p><button
               type="submit"
-              className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
+              className={`${$GS.textFormHeading_2} cursor-pointer rounded-small p-4 px-12 border-thin border-custom-border transition-shadow duration-300
                     bg-card-background group hover:border-hover-border hover:shadow-bright`}
             >
               Order Label
             </button>
-          </div>
-          <div className="text-center text-sm text-gray-400">
+          <div className="text-center text-sm text-gray-400 w-[300px]">
             <p>
               © {new Date().getFullYear()} Icarus Ships. All rights reserved.
             </p>

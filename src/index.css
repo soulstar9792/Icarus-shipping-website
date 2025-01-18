@@ -10,13 +10,22 @@ body {
   user-select: none; /* Similar for all modern browsers */
 }
 
+.zoom-out {
+  transform: scale(0.8); /* Adjust the scaling as necessary */
+  transform-origin: center center;
+  width: 100vw; /* Set full width for the view */
+  height: 100vh; /* Set full height for the view */
+  overflow: hidden; /* Hide overflow if needed */
+}
 * {
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none;    /* Firefox */
   -ms-user-select: none;     /* Internet Explorer/Edge */
   user-select: none;         /* Non-prefixed version for modern browsers */
 }
-
+.grid {
+  align-items: end;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
