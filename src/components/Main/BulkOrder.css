@@ -51,3 +51,13 @@
   .overflow-x-auto {
     border: 1px solid #31363d; /* Set solid border for the scrollable area */
   }
+
+  .hide-scroll-bar {
+    overflow-y: auto; /* Enable vertical scrolling */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .hide-scroll-bar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
+  }

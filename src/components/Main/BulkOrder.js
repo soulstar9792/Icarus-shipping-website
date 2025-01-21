@@ -33,7 +33,6 @@ const BulkOrder = () => {
   const [SkuData, setSkuData] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
   const [editedData, setEditedData] = useState({});
-
   const handleEdit = (index) => {
     setEditingRow(index);
     setEditedData(uploadedData[index]);
@@ -67,7 +66,7 @@ const BulkOrder = () => {
           type="text"
           value={editedData[field] || ""}
           onChange={(e) => handleFieldChange(field, e.target.value)}
-          className="w-[300px] p-1 border border-blue-400 bg-slate-600 rounded"
+          className="w-full p-1 border border-blue-400 bg-slate-600 rounded"
         />
       );
     }
@@ -99,7 +98,6 @@ const BulkOrder = () => {
     ) {
       errors.push("PackageWeight must be a positive number.");
     }
-
     return errors.length ? { isValid: false, errors } : { isValid: true };
   };
 
@@ -136,130 +134,117 @@ const BulkOrder = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      try {        
-    const fileType = file.name.split(".")[1];
-      if (fileType === "csv") {
-        setCsvFile(file);
-        setTxtFile(null);
-      } else if (fileType === "txt") {
-        if (!senderAddress) {
-          setNotification({
-            visible: true,
-            message: "Please Add a  Address on the Address Tab",
-            type: "error",
-          });
-          return;
+      try {
+        const fileType = file.name.split(".")[1];
+        if (fileType === "csv") {
+          setCsvFile(file);
+          setTxtFile(null);
+        } else if (fileType === "txt") {
+          if (!senderAddress) {
+            setNotification({
+              visible: true,
+              message: "Please Add a  Address on the Address Tab",
+              type: "error",
+            });
+            return;
+          }
+          setTxtFile(file);
+          setCsvFile(null);
         }
-        if (!SkuData.length) {
-          console.log("NO SKU DATA");
-          setNotification({
-            visible: true,
-            message: "Please Add a SKU on the SKU Tab",
-            type: "error",
-          });
-          setTimeout(() => {
-            setNotification({ ...notification, visible: false });
-          }, 2000);
-          return;
-        }
-        setTxtFile(file);
-        setCsvFile(null);
-      }
-      if (fileType === "csv") {
-        if (file) {
-          Papa.parse(file, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-              const { data } = results;
-              const invalidRows = [];
-              const validData = [];
+        if (fileType === "csv") {
+          if (file) {
+            Papa.parse(file, {
+              header: true,
+              skipEmptyLines: true,
+              complete: (results) => {
+                const { data } = results;
+                const invalidRows = [];
+                const validData = [];
 
-              data.forEach((row, index) => {
-                const validation = validateRow(row);
-                if (!validation.isValid) {
-                  invalidRows.push({
-                    rowIndex: index + 1,
-                    errors: validation.errors,
+                data.forEach((row, index) => {
+                  const validation = validateRow(row);
+                  if (!validation.isValid) {
+                    invalidRows.push({
+                      rowIndex: index + 1,
+                      errors: validation.errors,
+                    });
+                  } else {
+                    validData.push(row);
+                  }
+                });
+
+                if (invalidRows.length) {
+                  setNotification({
+                    visible: true,
+                    message: `Some Fields Are Missing`,
+                    type: "warning",
                   });
+                  setTimeout(() => {
+                    setNotification({ ...notification, visible: false });
+                  }, 2000);
                 } else {
-                  validData.push(row);
+                  setNotification({
+                    visible: true,
+                    message: "CSV file uploaded successfully!",
+                    type: "success",
+                  });
+                  setTimeout(() => {
+                    setNotification({ ...notification, visible: false });
+                  }, 2000);
                 }
-              });
 
-              if (invalidRows.length) {
-                // console.error("Invalid rows:", invalidRows);
+                setUploadedData(validData);
+              },
+              error: (error) => {
+                console.error("Error parsing CSV:", error);
                 setNotification({
                   visible: true,
-                  message: `Some Fields are missing`,
+                  message: "Error parsing CSV file.",
                   type: "error",
                 });
-                setTimeout(() => {
-                  setNotification({ ...notification, visible: false });
-                }, 2000);
-              } else {
+              },
+            });
+          }
+        } else if (fileType === "txt") {
+          if (file) {
+            Papa.parse(file, {
+              header: true,
+              delimiter: "\t",
+              skipEmptyLines: true,
+              transformHeader: (header) => header.trim(),
+              complete: (results) => {
+                const { data } = results;
+
+                const labelData = extractTxtLabelData(data);
+                const splitData = splitDataByMaxQty(labelData);
                 setNotification({
                   visible: true,
-                  message: "CSV file uploaded successfully!",
+                  message: "File uploaded  successfully!",
                   type: "success",
                 });
                 setTimeout(() => {
                   setNotification({ ...notification, visible: false });
                 }, 2000);
-              }
 
-              setUploadedData(validData);
-            },
-            error: (error) => {
-              console.error("Error parsing CSV:", error);
-              setNotification({
-                visible: true,
-                message: "Error parsing CSV file.",
-                type: "error",
-              });
-            },
-          });
+                setUploadedData(splitData);
+              },
+              error: (error) => {
+                setNotification({
+                  visible: true,
+                  message: "Error Parsing file",
+                  type: "error",
+                });
+                setTimeout(() => {
+                  setNotification({ ...notification, visible: false });
+                }, 2000);
+                console.log("Error Parsing file", error);
+              },
+            });
+          }
         }
-      } else if (fileType === "txt") {
-        if (file) {
-          Papa.parse(file, {
-            header: true,
-            delimiter: "\t",
-            skipEmptyLines: true,
-            transformHeader: (header) => header.trim(),
-            complete: (results) => {
-              const { data } = results;
-
-              const labelData = extractTxtLabelData(data);
-              const splitData = splitDataByMaxQty(labelData);
-              setNotification({
-                visible: true,
-                message: "File uploaded  successfully!",
-                type: "success",
-              });
-              setTimeout(() => {
-                setNotification({ ...notification, visible: false });
-              }, 2000);
-
-              setUploadedData(splitData);
-            },
-            error: (error) => {
-              setNotification({
-                visible: true,
-                message: "Error Parsing file",
-                type: "error",
-              });
-              setTimeout(() => {
-                setNotification({ ...notification, visible: false });
-              }, 2000);
-              console.log("Error Parsing file", error);
-            },
-          });
-        }
+      } catch (error) {
+        console.log("Error Occured ", error);
       }
-    } catch (error) {
-     console.log("Error Occured ",error) ; 
-    }
     }
   };
 
@@ -282,7 +267,7 @@ const BulkOrder = () => {
       FromCountry: senderAddress?.country || "",
 
       ToRecipientName: row["recipient-name"] || "",
-      ToPhone: row["buyer-phone-number"].split('ext')[0] || "",
+      ToPhone: row["buyer-phone-number"].split("ext")[0] || "",
       ToCompany: row["buyer-company"] || "",
       ToStreet1: row["ship-address-1"] || "",
       ToStreet2: row["ship-address-2"] || "",
@@ -293,7 +278,7 @@ const BulkOrder = () => {
 
       sku_number: row["sku"] || "",
       order_item_id: row["order-item-id"] || "",
-      provider: row["provider"] || selectedProvider ,
+      provider: row["provider"] || selectedProvider,
       package_length: String(row.PackageLength) || "",
       package_width: String(row.PackageWidth) || "",
       package_height: String(row.PackageHeight) || "",
@@ -329,7 +314,7 @@ const BulkOrder = () => {
       }, 2000);
       return;
     }
-    if (!selectedProvider && txtFile && courierType==="USPS") {
+    if (!selectedProvider && txtFile && courierType === "USPS") {
       setNotification({
         visible: true,
         message: "Please Select a Provider",
@@ -361,6 +346,28 @@ const BulkOrder = () => {
         setNotification({ ...notification, visible: false });
       }, 2000);
       return;
+    }
+    if (txtFile) {
+      const missingFields = uploadedData.filter(
+        (row) =>
+          !row.PackageLength ||
+          !row.PackageHeight ||
+          !row.sku_number ||
+          !row.PackageWidth ||
+          !row.quantity
+      );
+
+      if (missingFields.length > 0) {
+        setNotification({
+          visible: true,
+          message: `Missing fields detected in ${missingFields.length} rows. Ensure all rows have length,weight, height, width and SKU.`,
+          type: "error",
+        });
+        setTimeout(() => {
+          setNotification({ ...notification, visible: false });
+        }, 3000);
+        return;
+      }
     }
     setLoading(true);
     if (csvFile || txtFile) {
@@ -397,7 +404,7 @@ const BulkOrder = () => {
             package: {
               sku_number: txtFile ? row.sku_number : null,
               order_item_id: txtFile ? row.order_item_id : null,
-              provider: txtFile ? selectedProvider: null,
+              provider: txtFile ? selectedProvider : null,
               package_length: csvFile
                 ? row.PackageLength
                 : String(row.PackageLength),
@@ -427,14 +434,14 @@ const BulkOrder = () => {
               headers: { "Content-Type": "application/json" },
             }
           );
-          if(response.status!=200){
+          if (response.status != 200) {
             setNotification({
-              visible:true,
+              visible: true,
               message: response.data.message,
-              type:"error"
-            })
+              type: "error",
+            });
             setTimeout(() => {
-              setNotification({...notification,visible:false})
+              setNotification({ ...notification, visible: false });
             }, 2000);
             return;
           }
@@ -612,7 +619,6 @@ const BulkOrder = () => {
       };
     });
 
-    // Update state only if data changes to avoid redundant updates
     if (JSON.stringify(enrichedData) !== JSON.stringify(uploadedData)) {
       setUploadedData(enrichedData);
     }
@@ -638,13 +644,13 @@ const BulkOrder = () => {
   }, [txtFile, uploadedData, SkuData]);
 
   return (
-    <div className="px-4 max-w-[86vw] md:px-10 py-10 md:py-20 bg-custom-background">
+    <div className="px-4 max-w-[86vw] hide-scroll-bar h-[90vh] bg-custom-background  md:px-10 py-10 md:py-10 ">
       {loading ? (
         <Loading />
       ) : (
         <div>
           {/* CSV Upload Section */}
-          <Card className="mb-6 p-6">
+          <Card className="mb-6 p-6 ">
             <h2 className={`${$GS.textHeading_2} mb-4`}>
               Upload CSV/Amazon File{" "}
             </h2>
@@ -727,28 +733,35 @@ const BulkOrder = () => {
                   ))}
                 </select>
               </div>
-          {courierType==="USPS"&& (  <div className="content-end">
-                <label htmlFor="Provider" className={`${$GS.textNormal_1}`}>
-                  Provider
-                </label>
-                <select
-                  id="Provider"
-                  className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
-                  disabled={!selectedService} 
-                  onChange={(e) => {
-                    setSelectedProvider(e.target.value); 
-                  }}
-                >
-                  <option value="" className="text-gray-500">
-                    Select a Provider...
-                  </option>
-                  {["USPSveVS","USPSvShippo","USPSvStore","USPSvUnbranded"].map((provider, index) => (
-                    <option key={index} value={provider}>
-                      {provider}
+              {courierType === "USPS" && (
+                <div className="content-end">
+                  <label htmlFor="Provider" className={`${$GS.textNormal_1}`}>
+                    Provider
+                  </label>
+                  <select
+                    id="Provider"
+                    className="border border-custom-border p-2 w-full bg-transparent text-custom-text rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-400"
+                    disabled={!selectedService}
+                    onChange={(e) => {
+                      setSelectedProvider(e.target.value);
+                    }}
+                  >
+                    <option value="" className="text-gray-500">
+                      Select a Provider...
                     </option>
-                  ))}
-                </select>
-              </div>)}
+                    {[
+                      "USPSveVS",
+                      "USPSvShippo",
+                      "USPSvStore",
+                      "USPSvUnbranded",
+                    ].map((provider, index) => (
+                      <option key={index} value={provider}>
+                        {provider}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           )}
           {/* Data Table Section */}
@@ -759,7 +772,7 @@ const BulkOrder = () => {
                 className="relative overflow-x-auto"
                 style={{ maxHeight: "70vh" }}
               >
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto ">
                   <div className="inline-block min-w-full align-middle">
                     <div className="overflow-hidden">
                       <table className="min-w-full border-separate border-spacing-0 border-custom-border">
@@ -788,7 +801,7 @@ const BulkOrder = () => {
                             <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
                               Type *
                             </th>
-                            {(txtFile && courierType==="USPS") && (
+                            {txtFile && courierType === "USPS" && (
                               <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
                                 Provider
                               </th>
@@ -880,21 +893,25 @@ const BulkOrder = () => {
                                       row.ServiceName
                                     )}
                               </td>
-                              {(txtFile && courierType==="USPS" ) && (
+                              {txtFile && courierType === "USPS" && (
                                 <td className="border border-custom-border p-4 break-words">
-                                  {selectedProvider? selectedProvider: "N/A"}
+                                  {selectedProvider ? selectedProvider : "N/A"}
                                 </td>
                               )}
                               {txtFile && (
                                 <td className="border border-custom-border p-4 break-words">
-                                  {renderTableCell(
-                                    index,
-                                    "sku_number",
-                                    row.sku_number
+                                  {row.sku_number ? (
+                                    renderTableCell(
+                                      index,
+                                      "sku_number",
+                                      row.sku_number
+                                    )
+                                  ) : (
+                                    <p className="text-red-500">Missing</p>
                                   )}
                                 </td>
                               )}
-                          
+
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
@@ -998,36 +1015,44 @@ const BulkOrder = () => {
                                 {renderTableCell(
                                   index,
                                   "PackageWeight",
-                                  row.PackageWeight
-                                    ? `${row.PackageWeight} lbs`
-                                    : "N/A"
+                                  row.PackageWeight ? (
+                                    `${row.PackageWeight} lbs`
+                                  ) : (
+                                    <p className="text-red-500">Missing</p>
+                                  )
                                 )}
                               </td>
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
                                   "PackageLength",
-                                  row.PackageLength
-                                    ? `${row.PackageLength} in`
-                                    : "N/A"
+                                  row.PackageLength ? (
+                                    `${row.PackageLength} in`
+                                  ) : (
+                                    <p className="text-red-500">Missing</p>
+                                  )
                                 )}
                               </td>
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
                                   "PackageWidth",
-                                  row.PackageWidth
-                                    ? `${row.PackageWidth} in`
-                                    : "N/A"
+                                  row.PackageWidth ? (
+                                    `${row.PackageWidth} in`
+                                  ) : (
+                                    <p className="text-red-500">Missing</p>
+                                  )
                                 )}
                               </td>
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
                                   "PackageHeight",
-                                  row.PackageHeight
-                                    ? `${row.PackageHeight} in`
-                                    : "N/A"
+                                  row.PackageHeight ? (
+                                    `${row.PackageHeight} in`
+                                  ) : (
+                                    <p className="text-red-500">Missing</p>
+                                  )
                                 )}
                               </td>
                               <td className="border border-custom-border p-4 break-words">
@@ -1075,24 +1100,27 @@ const BulkOrder = () => {
           ) : (
             <Card>
               <p className={`${$GS.textNormal_1} text-center`}>
-              <a
-                href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/file/template`}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
-                className="text-blue-600 underline text-md hover:text-blue-500"
-              >
-                <span>
-                <FaDownload className="mx-auto mb-2 text-blue-600" size={40} />
-                  Download Bulk Template CSV
-                </span>
-              </a>
+                <a
+                  href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/file/template`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="text-blue-600 underline text-md hover:text-blue-500"
+                >
+                  <span>
+                    <FaDownload
+                      className="mx-auto mb-2 text-blue-600"
+                      size={40}
+                    />
+                    Download Bulk Template CSV
+                  </span>
+                </a>
               </p>
             </Card>
           )}
           <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
             <p className={`${$GS.textHeading_2} m-8`}>
-              Total Price: ${totalPrice}
+              Total Price: ${totalPrice.toFixed(2)}
             </p>
             <div className="flex justify-center">
               <button
