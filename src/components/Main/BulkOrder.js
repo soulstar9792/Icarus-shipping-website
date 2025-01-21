@@ -136,7 +136,8 @@ const BulkOrder = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const fileType = file.name.split(".")[1];
+      try {        
+    const fileType = file.name.split(".")[1];
       if (fileType === "csv") {
         setCsvFile(file);
         setTxtFile(null);
@@ -256,6 +257,9 @@ const BulkOrder = () => {
           });
         }
       }
+    } catch (error) {
+     console.log("Error Occured ",error) ; 
+    }
     }
   };
 
@@ -634,7 +638,7 @@ const BulkOrder = () => {
   }, [txtFile, uploadedData, SkuData]);
 
   return (
-    <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
+    <div className="px-4 max-w-[86vw] md:px-10 py-10 md:py-20 bg-custom-background">
       {loading ? (
         <Loading />
       ) : (
@@ -990,9 +994,6 @@ const BulkOrder = () => {
                                   )}
                                 </td>
                               )}
-                              <td className="border border-custom-border p-4 text-center">
-                                1
-                              </td>
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
