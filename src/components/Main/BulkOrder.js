@@ -109,10 +109,10 @@ const BulkOrder = () => {
         try {
           const [addressResponse, skuResponse] = await Promise.all([
             axios.get(
-              `http://localhost:5000/api/auth/get-address/${user._id}`
+              `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`
             ),
             axios.get(
-              `http://localhost:5000/api/auth/get-sku/${user._id}`
+              `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`
             ),
           ]);
           setSenderAddress(addressResponse.data?.savedAddress[0]);
@@ -416,7 +416,7 @@ const BulkOrder = () => {
         });
         try {
           const response = await axios.post(
-            "http://localhost:5000/api/orders/bulk/" +
+            "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
               user._id,
             shipments,
             {
@@ -452,7 +452,7 @@ const BulkOrder = () => {
   const handleDownload = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/orders/download/${fileName}`,
+        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`,
         {
           responseType: "blob",
         }
@@ -525,7 +525,7 @@ const BulkOrder = () => {
         });
 
         const response = await axios.post(
-          "http://localhost:5000/api/orders/price/bulk",
+          "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/price/bulk",
           { userId: user._id, shipments: shipments },
           {
             headers: { "Content-Type": "application/json" },
@@ -1072,7 +1072,7 @@ const BulkOrder = () => {
             <Card>
               <p className={`${$GS.textNormal_1} text-center`}>
               <a
-                href={`http://localhost:5000/api/orders/file/template`}
+                href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/file/template`}
                 target="_blank"
                 rel="noopener noreferrer"
                 download
