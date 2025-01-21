@@ -136,7 +136,8 @@ const BulkOrder = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const fileType = file.name.split(".")[1];
+      try {        
+    const fileType = file.name.split(".")[1];
       if (fileType === "csv") {
         setCsvFile(file);
         setTxtFile(null);
@@ -256,6 +257,9 @@ const BulkOrder = () => {
           });
         }
       }
+    } catch (error) {
+     console.log("Error Occured ",error) ; 
+    }
     }
   };
 
