@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FaTachometerAlt, FaUserCog, FaTag, FaUser } from "react-icons/fa";
 import { BsCurrencyDollar } from "react-icons/bs";
 import $GS from "../../styles/constants"; // Import styles
-import logo from "../../assets/logo.png"; // Update the path to your logo
+import Sapphirelogo from "../../assets/Sapphirelogo.jpg"; // Update the path to your logo
 
 const adminMenuItems = [
   {
@@ -57,7 +57,7 @@ const AdminSidebar = ({ isSidebarOpen, toggleSidebar }) => {
           to="/main/dashboard"
           className={`${$GS.textHeading_2} mt-10 flex justify-center items-center`}
         >
-          <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
+          <img src={Sapphirelogo} alt="Sapphire Labels Logo" className="h-10 mr-2" />
           <h1 className={`text-xl transition-colors duration-300`}>
             Icarus Admin
           </h1>

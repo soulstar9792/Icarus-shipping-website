@@ -33,12 +33,12 @@ const BulkOrder = () => {
   const [SkuData, setSkuData] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
   const [editedData, setEditedData] = useState({});
+  
   const handleEdit = (index) => {
     setEditingRow(index);
     setEditedData(uploadedData[index]);
   };
 
-  // Add function to handle field changes
   const handleFieldChange = (field, value) => {
     setEditedData((prev) => ({
       ...prev,
@@ -46,13 +46,100 @@ const BulkOrder = () => {
     }));
   };
 
-  const handleSave = (index) => {
+  const handleSave = async (index) => {
     const newData = [...uploadedData];
-    newData[index] = editedData;
+    const dimensionFields = ['package_weight', 'package_length', 'package_width', 'package_height'];
+
+    dimensionFields.forEach(field => {
+      if (editedData[field] !== '') {
+        editedData[field] = parseFloat(editedData[field]) || null;  
+      }
+    });
+  
+   newData[index] = {...editedData};
+    if (editedData.sku_number) {
+      const rowsWithSameSku = uploadedData.filter((row, idx) => 
+        idx !== index && row.sku_number === editedData.sku_number
+      );
+  
+      rowsWithSameSku.forEach(row => {
+        const rowIndex = newData.findIndex(item => item === row);
+        if (rowIndex > -1) {
+          dimensionFields.forEach(field => {
+            if (editedData[field] !== '') {
+              newData[rowIndex][field] = editedData[field];
+            }
+          });
+        }
+      });
+      let existingSku  = null; 
+      try {
+        const response = await axios.get(
+          `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`,
+          { headers: { "Content-Type": "application/json" } }
+        );
+        
+        const SKUPresent = response.data.SkuData;
+       existingSku = SKUPresent.find(sku=>    sku.sku===editedData.sku_number);
+
+
+      } catch (error) {
+        console.error("Error fetching SKUs:", error);
+      }
+
+
+      const parsedData = {
+        sku: editedData.sku_number,
+        maxQty: editedData.quantity || 1,
+        weight: parseFloat(editedData.package_weight) || null,  
+        length: parseFloat(editedData.package_length) || null,        
+        width: parseFloat(editedData.package_width) || null,          
+        height: parseFloat(editedData.package_height) || null,        
+      };
+  
+      try {
+        if (existingSku) {
+          const response = await axios.post(
+            `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/update-sku/${user._id}/${existingSku._id}`,
+            {skuData:  parsedData },
+            { headers: { "Content-Type": "application/json" } }
+          );
+          
+          if (response.status === 200) {
+            setSkuData(response.data.updatedUserSKU)
+          } else {
+            console.error("Failed to update SKU:", response);
+          }
+        } else {
+          const response = await axios.post(
+            `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/add-sku/${user._id}`,
+            { parsedData: [parsedData] },
+            { headers: { "Content-Type": "application/json" } }
+          );
+  
+          if (response.status === 200) {
+            setSkuData(prev => [...prev, { number: editedData.sku }]);
+          } else {
+            console.error("Failed to add SKU:", response);
+          }
+        }
+      } catch (error) {
+        console.error("Error with SKU operation:", error);
+      }
+    }
     setUploadedData(newData);
+    setNotification({
+      visible:true,
+      message:"SKU Data automatically updated",
+      type:"success"
+    })
+    setTimeout(() => {
+      setNotification({...notification,visible:false})
+    }, 2000);
     setEditingRow(null);
     setEditedData({});
   };
+  
 
   const handleCancel = () => {
     setEditingRow(null);
@@ -64,7 +151,7 @@ const BulkOrder = () => {
       return (
         <input
           type="text"
-          value={editedData[field] || ""}
+          value={editedData[field]!=="undefined" && editedData[field]!==null ? editedData[field] :  ""}
           onChange={(e) => handleFieldChange(field, e.target.value)}
           className="w-full p-1 border border-blue-400 bg-slate-600 rounded"
         />
@@ -143,7 +230,7 @@ const BulkOrder = () => {
           if (!senderAddress) {
             setNotification({
               visible: true,
-              message: "Please Add a  Address on the Address Tab",
+              message: "Please Add a Address on the Address Tab",
               type: "error",
             });
             return;
@@ -192,8 +279,8 @@ const BulkOrder = () => {
                     setNotification({ ...notification, visible: false });
                   }, 2000);
                 }
-
                 setUploadedData(validData);
+
               },
               error: (error) => {
                 console.error("Error parsing CSV:", error);
@@ -279,10 +366,10 @@ const BulkOrder = () => {
       sku_number: row["sku"] || "",
       order_item_id: row["order-item-id"] || "",
       provider: row["provider"] || selectedProvider,
-      package_length: String(row.PackageLength) || "",
-      package_width: String(row.PackageWidth) || "",
-      package_height: String(row.PackageHeight) || "",
-      package_weight: String(row.PackageWeight) || "",
+      package_length: String(row.PackageLength) || null,
+      package_width: String(row.PackageWidth) || null,
+      package_height: String(row.PackageHeight) || null,
+      package_weight: String(row.PackageWeight) || null,
       package_weight_unit: "LB",
       package_description: String(row.PackageDescription) || "",
       package_reference1: String(row.PackageReference1) || "",
@@ -350,10 +437,10 @@ const BulkOrder = () => {
     if (txtFile) {
       const missingFields = uploadedData.filter(
         (row) =>
-          !row.PackageLength ||
-          !row.PackageHeight ||
+          !row.package_length ||
+          !row.package_height ||
           !row.sku_number ||
-          !row.PackageWidth ||
+          !row.package_width ||
           !row.quantity
       );
 
@@ -406,17 +493,17 @@ const BulkOrder = () => {
               order_item_id: txtFile ? row.order_item_id : null,
               provider: txtFile ? selectedProvider : null,
               package_length: csvFile
-                ? row.PackageLength
-                : String(row.PackageLength),
+                ? row.package_length
+                : String(row.package_length),
               package_width: csvFile
-                ? row.PackageWidth
-                : String(row.PackageWidth),
+                ? row.package_width
+                : String(row.package_width),
               package_height: csvFile
-                ? row.PackageHeight
-                : String(row.PackageHeight),
+                ? row.package_height
+                : String(row.package_height),
               package_weight: csvFile
-                ? row.PackageWeight
-                : String(row.PackageWeight),
+                ? row.package_weight
+                : String(row.package_weight),
               package_weight_unit: "LB", // Assuming weight is in pounds
               package_description: row.PackageDescription,
               package_reference1: row.PackageReference1 || "", // Handling missing fields
@@ -523,10 +610,10 @@ const BulkOrder = () => {
               receiver_country: row.ToCountry,
             },
             package: {
-              package_length: row.PackageLength,
-              package_width: row.PackageWidth,
-              package_height: row.PackageHeight,
-              package_weight: row.PackageWeight,
+              package_length: row.package_length,
+              package_width: row.package_width,
+              package_height: row.package_height,
+              package_weight: row.package_weight,
               package_weight_unit: "LB", // Assuming weight is in pounds
               package_description: row.PackageDescription,
               package_reference1: row.PackageReference1 || "", // Handling missing fields
@@ -584,7 +671,7 @@ const BulkOrder = () => {
 
         splitData.push({
           ...row,
-          quantity: currentQty,
+          quantity: currentQty || 1,
           maxQty: maxQty,
           totalQty: totalQty,
           PackageDescription: `${row.PackageDescription || "Package"} (Batch ${
@@ -596,26 +683,25 @@ const BulkOrder = () => {
 
     return splitData;
   };
+
   const HandleSkuData = () => {
     if (!uploadedData.length || !SkuData.length) return;
 
     const skuMap = new Map(SkuData.map((item) => [item.sku, item]));
-    const unmatchedSkus = new Set();
 
     const enrichedData = uploadedData.map((row) => {
       const skuDetails = skuMap.get(row.sku_number);
 
       if (!skuDetails && row.sku_number) {
-        unmatchedSkus.add(row.sku_number);
       }
 
       return {
         ...row,
-        PackageLength: skuDetails?.length ?? row.PackageLength,
-        PackageWidth: skuDetails?.width ?? row.PackageWidth,
-        PackageHeight: skuDetails?.height ?? row.PackageHeight,
-        PackageWeight: skuDetails?.weight ?? row.PackageWeight,
-        quantity: skuDetails?.maxQty ?? null,
+        package_length: skuDetails?.length ?? row.package_length ?? null,
+        package_width: skuDetails?.width ?? row.package_width ?? null,
+        package_height: skuDetails?.height ?? row.package_height ?? null,
+        package_weight: skuDetails?.weight ?? row.package_weight ?? null,
+        quantity: skuDetails?.maxQty ?? 1,
       };
     });
 
@@ -623,18 +709,6 @@ const BulkOrder = () => {
       setUploadedData(enrichedData);
     }
 
-    if (unmatchedSkus.size > 0) {
-      setNotification({
-        visible: true,
-        message: `Missing SKUs: ${Array.from(unmatchedSkus).join(
-          ", "
-        )}. Please update SKU data.`,
-        type: "error",
-      });
-      setTimeout(() => {
-        setNotification({ ...notification, visible: false });
-      }, 2000);
-    }
   };
 
   useEffect(() => {
@@ -1006,17 +1080,33 @@ const BulkOrder = () => {
                                 <td className="border border-custom-border p-4 break-words">
                                   {renderTableCell(
                                     index,
-                                    "FromCity",
-                                    row.quantity
+                                    "quantity",
+                                    row.quantity? row.quantity: 1
                                   )}
                                 </td>
                               )}
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
-                                  "PackageWeight",
-                                  row.PackageWeight ? (
-                                    `${row.PackageWeight} lbs`
+                                  row.package_weight !== null && row.package_weight !== undefined
+                                  ? "package_weight"
+                                  : "PackageWeight",
+                                  row.package_weight!=="undefined" && row.package_weight!==null? (
+                                    `${row.package_weight || row.PackageWeight} lbs`
+                                  ) : (
+                                    <p className="text-red-500">Missing</p>
+                                  )
+                                )}
+                              </td>
+                              
+                              <td className="border border-custom-border p-4 break-words">
+                                {renderTableCell(
+                                  index,
+                                  row.package_length !== null && row.package_length !== undefined
+      ? "package_length"
+      : "PackageLength",
+                                  (row.package_length!=="undefined"&&row.package_length!=null) || row.PackageLength!==undefined && row.PackageLength!=null? (
+                                    `${row.package_length || row.PackageLength} in`
                                   ) : (
                                     <p className="text-red-500">Missing</p>
                                   )
@@ -1025,9 +1115,11 @@ const BulkOrder = () => {
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
-                                  "PackageLength",
-                                  row.PackageLength ? (
-                                    `${row.PackageLength} in`
+                                  row.package_width !== null && row.package_width !== undefined
+                                  ? "package_width"
+                                  : "PackageWidth",
+                                  (row.package_width!=="undefined" && row.package_width!==null) ||  (row.PackageWidth!==undefined && row.PackageWidth!==null)? (
+                                    `${row.package_width || row.PackageWidth} in`
                                   ) : (
                                     <p className="text-red-500">Missing</p>
                                   )
@@ -1036,20 +1128,11 @@ const BulkOrder = () => {
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
-                                  "PackageWidth",
-                                  row.PackageWidth ? (
-                                    `${row.PackageWidth} in`
-                                  ) : (
-                                    <p className="text-red-500">Missing</p>
-                                  )
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-4 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "PackageHeight",
-                                  row.PackageHeight ? (
-                                    `${row.PackageHeight} in`
+                                  row.package_height !== null && row.package_height !== undefined
+                                  ? "package_height"
+                                  : "PackageHeight",
+                                  (row.package_height!=="undefined"&& row.package_height!=null) || (row.PackageWidth!=undefined && row.PackageHeight!=null)? (
+                                    `${row.package_height || row.PackageHeight} in`
                                   ) : (
                                     <p className="text-red-500">Missing</p>
                                   )
@@ -1134,7 +1217,7 @@ const BulkOrder = () => {
             </div>
             <div className="text-center text-sm text-gray-400">
               <p>
-                © {new Date().getFullYear()} Icarus Ships. All rights reserved.
+                © {new Date().getFullYear()} Sapphire Labels. All rights reserved.
               </p>
             </div>
           </div>
@@ -1157,7 +1240,7 @@ const BulkOrder = () => {
 
 export default BulkOrder;
 
-const Modal = ({ isVisible, message, onClose, onDownload, file }) => {
+const Modal = ({ isVisible, message, onClose, onDownload }) => {
   if (!isVisible) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

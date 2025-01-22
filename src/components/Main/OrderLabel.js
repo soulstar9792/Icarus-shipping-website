@@ -939,7 +939,7 @@ const OrderLabel = () => {
             </button>
           <div className="text-center text-sm text-gray-400 w-[300px]">
             <p>
-              © {new Date().getFullYear()} Icarus Ships. All rights reserved.
+              © {new Date().getFullYear()} Sapphire Labels. All rights reserved.
             </p>
           </div>
         </div>
