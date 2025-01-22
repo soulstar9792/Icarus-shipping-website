@@ -21,7 +21,7 @@ const Register = () => {
     if (name && email && password && confirmPassword) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/register",
+          "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/register",
           { name, email, password, confirmPassword }
         );
         if (response.data.ok) {
