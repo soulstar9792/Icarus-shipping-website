@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import landingBackground from "../../assets/landing.webp";
 import sapphireLanding from "../../assets/sapphireLanding.webp";
 import "./LandingView.css"; 
 import {  useNavigate } from "react-router-dom";
@@ -36,15 +35,17 @@ const LandingView = () => {
       style={{
         backgroundImage: `url(${sapphireLanding})`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "top center",
       }}
     >
       <div className="overlay absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 p-4 md:p-8 lg:p-12">
-        <h1 className="text-4xl md:text-5xl font-bold lg:text-6xl mb-4 text-primary animate__animated animate__zoomIn animate__delay-1s">
+        <h1 className="text-4xl md:text-5xl font-bold lg:text-6xl mb-[50%] text-primary animate__animated animate__zoomIn animate__delay-1s" style={{
+          textShadow: "4px 4px 3px darkblue"
+        }}>
           Welcome to Sapphire Labels!
         </h1>
-        <p className="text-md md:text-xl lg:text-2xl mb-8 text-secondary animate__animated animate__fadeInUp animate__delay-1.5s">
+        <p className="text-md md:text-xl lg:text-2xl mt-8 text-secondary animate__animated animate__fadeInUp animate__delay-1.5s">
           Your gateway to swift and reliable shipping solutions.
         </p>
         <button
@@ -61,8 +62,8 @@ const LandingView = () => {
               "animate__animated",
               "animate__wobble"
             );
+            navigate('/register');
           }}
-          onClick={()=>navigate('/register')}
         >
           Get Started
         </button>
