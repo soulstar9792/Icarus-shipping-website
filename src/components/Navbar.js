@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSectionContext } from "../context/SectionContext";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/logo.png";
+import Sapphirelogo from "../assets/Sapphirelogo.jpg";
 import { FaBars, FaTimes } from "react-icons/fa";
 import "animate.css";
 
@@ -27,9 +27,9 @@ const Navbar = () => {
       className={`flex justify-between items-center p-4 fixed w-full z-20 animate__animated animate__fadeInDown bg-custom-background shadow-lg border-thin border-gray-600`}
     >
       <Link to="/" className="flex items-center" onClick={scrollToTop}>
-        <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
+        <img src={Sapphirelogo} alt="Sapphire Labels Logo" className="h-10 mr-2" />
         <h1 className={`text-xl transition-colors duration-300 text-white`}>
-          Icarus Ships
+          Sapphire Labels
         </h1>
       </Link>
 

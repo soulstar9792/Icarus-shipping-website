@@ -42,9 +42,9 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-custom-background">
+    <div className="flex items-center py-20 justify-center min-h-screen bg-custom-background">
       <div
-        className="flex flex-col items-center bg-card-background rounded-lg p-10 md:p-12 border border-custom-border shadow-xl transition-all duration-300 
+        className="flex mt-5  flex-col  h-[46vw] items-center bg-card-background rounded-lg p-10 md:p-8 border border-custom-border shadow-xl transition-all duration-300 
                       hover:shadow-bright w-full max-w-md"
       >
         <h2 className="text-3xl sm:text-4xl font-bold text-center text-text-emphasizing mb-4">
@@ -62,7 +62,7 @@ const Register = () => {
             <input
               type="text"
               id="name"
-              className="w-full p-4 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-3 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -78,7 +78,7 @@ const Register = () => {
             <input
               type="email"
               id="email"
-              className="w-full p-4 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-3 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -94,7 +94,7 @@ const Register = () => {
             <input
               type="password"
               id="password"
-              className="w-full p-4 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-3 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -110,7 +110,7 @@ const Register = () => {
             <input
               type="password"
               id="confirmPassword"
-              className="w-full p-4 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-3 border border-custom-border bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required

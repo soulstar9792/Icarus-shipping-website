@@ -18,7 +18,7 @@ const Footer = () => {
 
         <div className="text-center text-sm text-gray-400">
           <p>
-            &copy; {new Date().getFullYear()} Icarus Ships. All rights reserved.
+            &copy; {new Date().getFullYear()} Sapphire Labels. All rights reserved.
           </p>
         </div>
       </div>

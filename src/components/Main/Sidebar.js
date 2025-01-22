@@ -12,7 +12,7 @@ import {
   FaUserShield,
 } from "react-icons/fa"; // Importing FaDollarSign
 import $GS from "../../styles/constants"; // Import styles
-import logo from "../../assets/logo.png"; // Update this path to where your logo is stored
+import Sapphirelogo from "../../assets/Sapphirelogo.jpg"; // Update this path to where your logo is stored
 import { useSelector } from "react-redux";
 import { MdFindInPage } from "react-icons/md";
 
@@ -91,9 +91,9 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           to="/main/dashboard"
           className={`${$GS.textHeading_2} mt-10 flex justify-center mx-auto items-center`}
         >
-          <img src={logo} alt="Icarus Ships Logo" className="h-10 mr-2" />
-          <h1 className={`text-xl transition-colors duration-300`}>
-            Icarus Ships
+          <img src={Sapphirelogo} alt="Sapphire Labels Logo" className="h-10 " />
+          <h1 className={`text-xl tracking-tighter truncate transition-colors mr-2 duration-300`}>
+            Sapphire Labels
           </h1>
         </Link>
         <ul className="w-full">
