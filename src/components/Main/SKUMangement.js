@@ -66,7 +66,7 @@ function SKUManagement() {
           const parsedData = result.data;
 
           const response = await axios.post(
-            `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/add-sku/${user._id}`,
+            `http://localhost:5000/api/auth/add-sku/${user._id}`,
             { parsedData },
             { headers: { "Content-Type": "application/json" } }
           );
@@ -108,7 +108,7 @@ function SKUManagement() {
 
     try {
       await axios.post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/update-sku/${user._id}/${editForm._id}`,
+        `http://localhost:5000/api/auth/update-sku/${user._id}/${editForm._id}`,
         { skuData: editForm },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -125,7 +125,7 @@ function SKUManagement() {
   const handleDelete = async (id) => {
     try {
       await axios.post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/delete-sku/${id}`,
+        `http://localhost:5000/api/auth/delete-sku/${id}`,
         {},
         { headers: { "Content-Type": "application/json" } }
       );
@@ -146,7 +146,7 @@ function SKUManagement() {
   const getSKU = async () => {
     try {
       const response = await axios.get(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`,
+        `http://localhost:5000/api/auth/get-sku/${user._id}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -173,7 +173,7 @@ function SKUManagement() {
     try {
       console.log("Sending new SKU data:", newSku);
       const response = await axios.post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/add-sku/${user._id}`,
+        `http://localhost:5000/api/auth/add-sku/${user._id}`,
         { parsedData: [newSku] },
         { headers: { "Content-Type": "application/json" } }
       );

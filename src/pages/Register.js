@@ -21,10 +21,9 @@ const Register = () => {
     if (name && email && password && confirmPassword) {
       try {
         const response = await axios.post(
-          "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/register",
+          "http://localhost:5000/api/auth/register",
           { name, email, password, confirmPassword }
         );
-        // console.log(response);
         if (response.data.ok) {
           console.log("Registration successful");
           navigate("/login");
@@ -42,17 +41,14 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center py-20 justify-center min-h-screen bg-custom-background">
-      <div
-        className="flex mt-5  flex-col  h-[46vw] items-center bg-card-background rounded-lg p-10 md:p-8 border border-custom-border shadow-xl transition-all duration-300 
-                      hover:shadow-bright w-full max-w-md"
-      >
-        <h2 className="text-3xl sm:text-4xl font-bold text-center text-text-emphasizing mb-4">
+    <div className="flex  items-center justify-center min-h-screen bg-custom-background p-4">
+      <div className="flex mt-20 flex-col items-center bg-card-background rounded-lg p-8 border border-custom-border shadow-xl transition-all duration-300 hover:shadow-bright h-fit w-[450px]">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center text-text-emphasizing mb-6">
           Create an Account
         </h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        <form className="w-full" onSubmit={handleSubmit}>
-          <div className="mb-6">
+        <form className="w-full space-y-4" onSubmit={handleSubmit}>
+          <div>
             <label
               className="block text-text-normal font-semibold mb-2"
               htmlFor="name"
@@ -68,7 +64,7 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-6">
+          <div>
             <label
               className="block text-text-normal font-semibold mb-2"
               htmlFor="email"
@@ -84,7 +80,7 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-6">
+          <div>
             <label
               className="block text-text-normal font-semibold mb-2"
               htmlFor="password"
@@ -100,7 +96,7 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-8">
+          <div>
             <label
               className="block text-text-normal font-semibold mb-2"
               htmlFor="confirmPassword"
@@ -118,13 +114,13 @@ const Register = () => {
           </div>
           <button
             type="submit"
-            className="w-full p-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            className="w-full p-4 mt-6 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
           >
             Register
           </button>
         </form>
         <div className="text-center mt-6">
-          <p className="text-text-normal text-sm md:text-base">
+          <p className="text-text-normal text-base">
             Already have an account?{" "}
             <Link to="/login" className="text-purple-600 font-semibold">
               Login

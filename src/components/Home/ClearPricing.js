@@ -105,74 +105,82 @@ const ClearPricing = () => {
         >
           Service Pricing
         </h3>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-          {/* USPS and UPS International in same column */}
-          <div className="grid grid-cols-1 gap-6">
-            {/* USPS Pricing */}
-            <Card
-              className={`${
-                isVisible
-                  ? "animate__animated animate__slideInLeft animate__delay-1s"
-                  : ""
-              }`}
-            >
-              <h4 className={$GS.listHeading_1}>USPS</h4>
-              <ul className={$GS.listBullet}>
-                <li>
-                  Express: <strong>Starting from affordable rates</strong>
-                </li>
-                <li>
-                  Priority: <strong>Get competitive pricing options</strong>
-                </li>
-                <li>
-                  Ground Advantage: <strong>Options that fit your needs</strong>
-                </li>
-              </ul>
-            </Card>
+       {/* Pricing Information Section */}
+<div className="mt-12">
+  <h3 className={`${$GS.textHeading_2} ${
+    isVisible ? "animate__animated animate__fadeInDown animate__delay-0-5s" : ""
+  }`}>
+    Service Pricing
+  </h3>
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+    {/* Left Column - USPS and UPS International */}
+    <div className="grid grid-cols-1 gap-6">
+      {/* USPS Pricing */}
+      <Card className={`${
+        isVisible ? "animate__animated animate__slideInLeft animate__delay-1s" : ""
+      }`}>
+        <h4 className={$GS.listHeading_1}>USPS</h4>
+        <ul className={$GS.listBullet}>
+          <li>
+            Express: <strong>Starting from affordable rates</strong>
+          </li>
+          <li>
+            Priority: <strong>Get competitive pricing options</strong>
+          </li>
+          <li>
+            Ground Advantage: <strong>Options that fit your needs</strong>
+          </li>
+        </ul>
+      </Card>
 
-            {/* UPS International Pricing */}
-            <Card
-              className={`${
-                isVisible
-                  ? "animate__animated animate__slideInLeft animate__delay-1s"
-                  : ""
-              }`}
-            >
-              <h4 className={$GS.listHeading_1}>UPS International</h4>
-              <ul className={$GS.listBullet}>
-                <li>Options available for various needs</li>
-                <li>Competitive pricing based on service type</li>
-                <li>Choose from expedited to standard delivery</li>
-              </ul>
-            </Card>
-          </div>
+      {/* UPS International Pricing */}
+      <Card className={`${
+        isVisible ? "animate__animated animate__slideInLeft animate__delay-1s" : ""
+      }`}>
+        <h4 className={$GS.listHeading_1}>UPS International</h4>
+        <ul className={$GS.listBullet}>
+          <li>Options available for various needs</li>
+          <li>Competitive pricing based on service type</li>
+          <li>Choose from expedited to standard delivery</li>
+        </ul>
+      </Card>
+    </div>
 
-          {/* UPS USA Pricing in own column */}
-          <Card
-            className={`${
-              isVisible
-                ? "animate__animated animate__slideInRight animate__delay-1s"
-                : ""
-            }`}
-          >
-            <h4 className={$GS.listHeading_1}>UPS USA</h4>
+    {/* Right Column - UPS USA */}
+    <div className="grid grid-cols-1 gap-6">
+      <Card className={`${
+        isVisible ? "animate__animated animate__slideInRight animate__delay-1s" : ""
+      }`}>
+        <h4 className={$GS.listHeading_1}>UPS USA</h4>
+        <div className="space-y-6">
+          <div>
             <h5 className={$GS.listHeading_2}>Next Day Services:</h5>
             <ul className={$GS.listBullet}>
               <li>Options available, starting from competitive rates</li>
               <li>Check our flexible pricing options</li>
             </ul>
+          </div>
+          
+          <div>
             <h5 className={$GS.listHeading_2}>2nd Day Services:</h5>
             <ul className={$GS.listBullet}>
               <li>Variety of services tailored to your needs</li>
               <li>Transparent pricing structure</li>
             </ul>
+          </div>
+          
+          <div>
             <h5 className={$GS.listHeading_2}>Manifested Services:</h5>
             <ul className={$GS.listBullet}>
               <li>Packages designed to offer flexibility</li>
               <li>Customize your shipping based on your requirements</li>
             </ul>
-          </Card>
+          </div>
         </div>
+      </Card>
+    </div>
+  </div>
+</div>
       </div>
     </section>
   );

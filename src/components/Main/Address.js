@@ -376,7 +376,7 @@ const Address = () => {
     }
     try {
       const response = await axios.get(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`,
+        `http://localhost:5000/api/auth/get-address/${user._id}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -400,7 +400,7 @@ const Address = () => {
   const handleSubmit = async (formData) => {
     try {
       const response = await axios.post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/save-address/${user._id}`,
+        `http://localhost:5000/api/auth/save-address/${user._id}`,
         { formData },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -417,7 +417,7 @@ const Address = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/delete-address/${user._id}`,
+        `http://localhost:5000/api/auth/delete-address/${user._id}`,
         { id },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -452,7 +452,7 @@ const Address = () => {
 
     try {
       const response = await axios.post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/update-address/${user._id}/${editData._id}`,
+        `http://localhost:5000/api/auth/update-address/${user._id}/${editData._id}`,
         { formData: editData },
         { headers: { "Content-Type": "application/json" } }
       );

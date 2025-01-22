@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const getUser = () => {
     return axios.get(
-      "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users",
+      "http://localhost:5000/api/auth/users",
       {
         headers: { token: localStorage.getItem("token") },
       }
