@@ -115,7 +115,7 @@ const BatchOrders = () => {
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center gap-4 mt-4">
           <button
             onClick={() =>
               handlePageChange(currentPage > 1 ? currentPage - 1 : 1)

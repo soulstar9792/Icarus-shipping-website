@@ -37,51 +37,50 @@ const feedbackData = [
 const CustomerFeedback = () => {
   return (
     <section className="py-10 md:py-20 px-4 bg-custom-background text-text-emphasizing">
-      <h2 className={`${$GS.textHeading_1} mb-4 md:mb-8`}>
-        What Our Customers Say
-      </h2>
-
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {feedbackData.map((feedback, index) => (
-            <Card key={index}>
-              <div className="flex items-center mb-4">
-                <img
-                  src={feedback.image}
-                  alt={feedback.name}
-                  className="w-16 h-16 rounded-full mr-4 object-cover"
+    <h2 className={`${$GS.textHeading_1} mb-4 md:mb-8`}>
+      What Our Customers Say
+    </h2>
+     <div className="max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {feedbackData.map((feedback, index) => (
+          <Card key={index} className="flex flex-col h-full">
+            <div className="flex items-center mb-4">
+              <img
+                src={feedback.image}
+                alt={feedback.name}
+                className="w-16 h-16 rounded-full mr-4 object-cover"
+              />
+              <div>
+                <h3
+                  className={`text-lg md:text-xl font-semibold text-text-normal group-hover:text-hover-text`}
+                >
+                  {feedback.name}
+                </h3>
+                <h4 className="text-sm md:text-md text-text-normal group-hover:text-hover-text">
+                  {feedback.designation}
+                </h4>
+              </div>
+            </div>
+            <div className="flex mb-2">
+              {[...Array(5)].map((_, starIndex) => (
+                <FaStar
+                  key={starIndex}
+                  className={
+                    starIndex < feedback.rating
+                      ? "text-yellow-500"
+                      : "text-gray-300"
+                  }
                 />
-                <div>
-                  <h3
-                    className={`text-lg md:text-xl font-semibold text-text-normal group-hover:text-hover-text`}
-                  >
-                    {feedback.name}
-                  </h3>
-                  <h4 className="text-sm md:text-md text-text-normal group-hover:text-hover-text">
-                    {feedback.designation}
-                  </h4>
-                </div>
-              </div>
-              <div className="flex mb-2">
-                {[...Array(5)].map((_, starIndex) => (
-                  <FaStar
-                    key={starIndex}
-                    className={
-                      starIndex < feedback.rating
-                        ? "text-yellow-500"
-                        : "text-gray-300"
-                    }
-                  />
-                ))}
-              </div>
-              <p className="text-sm md:text-base text-text-normal group-hover:text-hover-text">
-                {feedback.feedback}
-              </p>
-            </Card>
-          ))}
-        </div>
+              ))}
+            </div>
+            <p className="text-sm md:text-base text-text-normal group-hover:text-hover-text flex-grow">
+              {feedback.feedback}
+            </p>
+          </Card>
+        ))}
       </div>
-    </section>
+    </div>
+  </section>
   );
 };
 
