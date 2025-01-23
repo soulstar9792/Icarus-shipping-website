@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSectionContext } from "../context/SectionContext";
 import { Link, useLocation } from "react-router-dom";
-import Sapphirelogo from "../assets/Sapphirelogo.jpg";
+import Sapphirelogo from "../assets/logo_1.webp";
 import { FaBars, FaTimes } from "react-icons/fa";
 import "animate.css";
 

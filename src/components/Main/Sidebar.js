@@ -12,7 +12,7 @@ import {
   FaUserShield,
 } from "react-icons/fa"; // Importing FaDollarSign
 import $GS from "../../styles/constants"; // Import styles
-import Sapphirelogo from "../../assets/Sapphirelogo.jpg"; // Update this path to where your logo is stored
+import Sapphirelogo from "../../assets/logo_1.webp";
 import { useSelector } from "react-redux";
 import { MdFindInPage } from "react-icons/md";
 

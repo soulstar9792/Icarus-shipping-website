@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FaTachometerAlt, FaUserCog, FaTag, FaUser } from "react-icons/fa";
 import { BsCurrencyDollar } from "react-icons/bs";
 import $GS from "../../styles/constants"; // Import styles
-import Sapphirelogo from "../../assets/Sapphirelogo.jpg"; // Update the path to your logo
+import Sapphirelogo from "../../assets/logo_1.webp";
 
 const adminMenuItems = [
   {
