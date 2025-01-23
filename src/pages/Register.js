@@ -114,7 +114,7 @@ const Register = () => {
           </div>
           <button
             type="submit"
-            className="w-full p-4 mt-6 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            className="w-full p-4 mt-6 bg-sapphire text-white rounded-md hover:bg-sapphire-hover transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
           >
             Register
           </button>
@@ -122,7 +122,7 @@ const Register = () => {
         <div className="text-center mt-6">
           <p className="text-text-normal text-base">
             Already have an account?{" "}
-            <Link to="/login" className="text-purple-600 font-semibold">
+            <Link to="/login" className="text-sapphire font-semibold">
               Login
             </Link>
           </p>

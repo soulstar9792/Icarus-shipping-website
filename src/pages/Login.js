@@ -69,7 +69,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full p-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            className="w-full p-4 bg-sapphire text-white rounded-md hover:bg-sapphire-hover transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
@@ -80,7 +80,7 @@ const Login = () => {
             Don't have an account?{" "}
             <Link
               to="/register"
-              className="text-purple-600 font-semibold hover:text-purple-700"
+              className="text-sapphire border-sapphire-hover font-semibold hover:text-sapphire-hover"
             >
               Register
             </Link>
@@ -89,7 +89,7 @@ const Login = () => {
         <div className="text-center mt-4">
           <Link
             to="/forgot-password"
-            className="text-purple-600 hover:underline hover:text-purple-700 text-sm md:text-base"
+            className="text-sapphire border-sapphire-hover hover:underline hover:text-sapphire-hover text-sm md:text-base"
           >
             Forgot Password?
           </Link>

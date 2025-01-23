@@ -16,6 +16,8 @@ module.exports = {
         'hover-border': '#4b5b71', // New hover border color
         'hover-text': '#efefef', // Emphasizing text on hover
         'hover-underline': '#76bbf9', // Underline color on hover
+        'sapphire': '#006bff', // Sapphire button color
+        'sapphire-hover': '#4443f5', // Sapphire button hover color
       },
       borderWidth: {
         'thin': '1px',
