@@ -75,7 +75,7 @@ const Dashboard = () => {
           <div className="flex items-center">
             <FaCog className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
-              <h3 className={`${$GS.textHeading_3}`}>Pending Orders</h3>
+              <h3 className={`${$GS.textHeading_3} truncate`}>Pending Orders</h3>
               <p className={`${$GS.textNormal_1}`}>
                 {mockData.totalPendingOrders}
               </p>
@@ -89,7 +89,7 @@ const Dashboard = () => {
         {/* Admin actions or recent activities can be added here */}
         <Card className="col-span-full bg-custom-background">
           <h2 className={`${$GS.textHeading_2} mb-4`}>Admin Actions</h2>
-          <p className={`${$GS.textNormal_1}`}>
+          <p className={`${$GS.textNormal_1} text-center`}>
             Manage users, oversee orders, and adjust settings.
           </p>
           {/* Insert any functional components / links here */}

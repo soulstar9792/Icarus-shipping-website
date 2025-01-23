@@ -549,7 +549,7 @@ const OrderLabel = () => {
           </Card>
 
           {/* From Address Card */}
-          <Card className="col-span-1">
+          <Card className="col-span-1 h-full">
             <h2 className={`${$GS.textFormHeading_1} mb-4`}>From Address</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="content-end">
@@ -737,7 +737,7 @@ const OrderLabel = () => {
           </Card>
 
           {/* To Address Card */}
-          <Card className="col-span-1">
+          <Card className="col-span-1 h-full">
             <h2 className={`${$GS.textFormHeading_1} mb-4`}>To Address</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

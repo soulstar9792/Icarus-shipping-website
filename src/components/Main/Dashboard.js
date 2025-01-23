@@ -66,11 +66,11 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        <Card>
+        <Card >
           <div className="flex items-center">
             <FaArrowUp className={`${$GS.iconSize} text-custom-border mr-2`} />
             <div>
-              <h3 className={`${$GS.textHeading_3}`}>Total Deposited</h3>
+              <h3 className={`${$GS.textHeading_3} truncate`}>Total Deposited</h3>
               <p className={`${$GS.textNormal_1}`}>
                 {user?.totalDeposit
                   ? "$" + user?.totalDeposit?.toFixed(2)
