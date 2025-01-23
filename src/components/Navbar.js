@@ -24,17 +24,17 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`flex justify-between items-center p-4 fixed w-full z-20 animate__animated animate__fadeInDown bg-custom-background shadow-lg border-thin border-gray-600`}
+      className={`flex justify-between items-center p-4 fixed w-full z-20 animate__animated animate__fadeInDown bg-custom-background shadow-lg border-b border-blue-900`}
     >
       <Link to="/" className="flex items-center" onClick={scrollToTop}>
         <img src={Sapphirelogo} alt="Sapphire Labels Logo" className="h-10 mr-2" />
-        <h1 className={`text-xl transition-colors duration-300 text-white`}>
+        <h1 className={`text-xl transition-colors duration-300 text-sapphire hover:text-sapphire-hover`}>
           Sapphire Labels
         </h1>
       </Link>
 
       <div
-        className="md:hidden cursor-pointer text-white"
+        className="md:hidden cursor-pointer  text-sapphire hover:text-sapphire-hover"
         onClick={toggleMobileMenu}
       >
         {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -45,19 +45,19 @@ const Navbar = () => {
         {location.pathname === "/" && (
           <>
             <button
-              className={`text-white inline-flex items-center justify-center border border-transparent hover:border-gray-300 hover:shadow-lg h-full transition px-4`}
+              className={` text-sapphire hover:text-sapphire-hover inline-flex items-center justify-center border border-transparent hover:border-sapphire-hover hover:shadow-lg h-full transition px-4`}
               onClick={() => scrollToSection(refs.howItWorksRef)}
             >
               How It Works
             </button>
             <button
-              className={`text-white inline-flex items-center justify-center border border-transparent hover:border-gray-300 hover:shadow-lg h-full transition px-4`}
+              className={` text-sapphire hover:text-sapphire-hover inline-flex items-center justify-center border border-transparent hover:border-sapphire-hover hover:shadow-lg h-full transition px-4`}
               onClick={() => scrollToSection(refs.clearPricingRef)}
             >
               Pricing
             </button>
             <button
-              className={`text-white inline-flex items-center justify-center border border-transparent hover:border-gray-300 hover:shadow-lg h-full transition px-4`}
+              className={` text-sapphire hover:text-sapphire-hover inline-flex items-center justify-center border border-transparent hover:border-sapphire-hover hover:shadow-lg h-full transition px-4`}
               onClick={() => scrollToSection(refs.faqRef)}
             >
               FAQ
@@ -67,13 +67,13 @@ const Navbar = () => {
 
         <Link
           to="/login"
-          className={`text-white inline-flex items-center justify-center border border-transparent hover:border-gray-300 hover:shadow-lg h-full transition px-4`}
+          className={` text-sapphire hover:text-sapphire-hover inline-flex items-center justify-center border border-transparent hover:border-sapphire-hover hover:shadow-lg h-full transition px-4`}
         >
           Login
         </Link>
         <Link
           to="/register"
-          className={`text-white inline-flex items-center justify-center border border-transparent hover:border-gray-300 hover:shadow-lg h-full transition px-4`}
+          className={` text-sapphire hover:text-sapphire-hover inline-flex items-center justify-center border border-transparent hover:border-sapphire-hover hover:shadow-lg h-full transition px-4`}
         >
           Register
         </Link>
@@ -91,7 +91,7 @@ const Navbar = () => {
           {location.pathname === "/" && (
             <>
               <button
-                className={`w-full text-center p-4 text-white hover:bg-hover-background transition`}
+                className={`w-full text-center p-4  text-sapphire hover:text-sapphire-hover hover:bg-hover-background transition`}
                 onClick={() => {
                   scrollToSection(refs.howItWorksRef);
                   setMobileMenuOpen(false);
@@ -100,7 +100,7 @@ const Navbar = () => {
                 How It Works
               </button>
               <button
-                className={`w-full text-center p-4 text-white hover:bg-hover-background transition`}
+                className={`w-full text-center p-4  text-sapphire hover:text-sapphire-hover hover:bg-hover-background transition`}
                 onClick={() => {
                   scrollToSection(refs.clearPricingRef);
                   setMobileMenuOpen(false);
@@ -109,7 +109,7 @@ const Navbar = () => {
                 Pricing
               </button>
               <button
-                className={`w-full text-center p-4 text-white hover:bg-hover-background transition`}
+                className={`w-full text-center p-4  text-sapphire hover:text-sapphire-hover hover:bg-hover-background transition`}
                 onClick={() => {
                   scrollToSection(refs.faqRef);
                   setMobileMenuOpen(false);
@@ -121,14 +121,14 @@ const Navbar = () => {
           )}
           <Link
             to="/login"
-            className="w-full text-center p-4 text-white hover:bg-hover-background transition"
+            className="w-full text-center p-4  text-sapphire hover:text-sapphire-hover hover:bg-hover-background transition"
             onClick={() => setMobileMenuOpen(false)}
           >
             Login
           </Link>
           <Link
             to="/register"
-            className="w-full text-center p-4 text-white hover:bg-hover-background transition"
+            className="w-full text-center p-4  text-sapphire hover:text-sapphire-hover hover:bg-hover-background transition"
             onClick={() => setMobileMenuOpen(false)}
           >
             Register
