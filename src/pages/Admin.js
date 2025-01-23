@@ -26,7 +26,7 @@ const Admin = () => {
         toggleSidebar={toggleSidebar}
       />{" "}
       {/* Static Sidebar on the left */}
-      <div className="flex flex-col w-[calc(100%-200px)] w-full">
+      <div className="flex flex-col w-[calc(100%-200px)]">
         <div className="bg-custom-background text-white p-4 border-b border-custom-border flex justify-between items-center">
           <button
             className="lg:hidden flex items-center focus:outline-none"

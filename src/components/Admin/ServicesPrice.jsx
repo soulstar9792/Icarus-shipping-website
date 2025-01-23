@@ -72,9 +72,9 @@ function App() {
         <div>
           <div className="overflow-x-auto">
             <h2 className="text-2xl font-bold p-2 ">UPS Services </h2>
-            <table className="w-full border-collapse bg-black">
+            <table className="w-full border-collapse bg-custom-background">
               <thead>
-                <tr className="bg-black">
+                <tr className="bg-custom-background">
                   <th className="px-6 py-3 text-left border border-gray-600">
                     User
                   </th>
@@ -92,7 +92,7 @@ function App() {
                     )}
                 </tr>
 
-                <tr className="bg-black">
+                <tr className="bg-custom-background">
                   <th className="px-6 py-3 text-left border border-gray-600"></th>
                   {users[0]?.services[0]?.services &&
                     Object.keys(users[0].services[0].services).map(
@@ -137,7 +137,7 @@ function App() {
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user._id} className="hover:bg-black">
+                  <tr key={user._id} className="hover:bg-custom-background">
                     <td className="px-6 py-4 border border-black">
                       {user.name}
                     </td>
@@ -189,14 +189,14 @@ function App() {
 
           <div className="mt-12 overflow-x-auto">
             <h2 className="text-2xl font-bold p-2 ">USPS Services </h2>
-            <table className="w-full border-collapse bg-black">
+            <table className="w-full border-collapse bg-custom-background">
               <thead>
-                <tr className="bg-black">
+                <tr className="bg-custom-background">
                   <th className="px-6 py-3 text-left border border-gray-600">
                     User
                   </th>
-                  {users[1]?.services[1]?.services &&
-                    Object.keys(users[1].services[1].services).map(
+                  {users[0]?.services[1]?.services &&
+                    Object.keys(users[0].services[1].services).map(
                       (service) => (
                         <th
                           key={service}
@@ -208,10 +208,10 @@ function App() {
                       )
                     )}
                 </tr>
-                <tr className="bg-black">
+                <tr className="bg-custom-background">
                   <th className="px-6 py-3 text-left border border-gray-600"></th>
-                  {users[1]?.services[1]?.services &&
-                    Object.keys(users[1].services[1].services).map(
+                  {users[0]?.services[1]?.services &&
+                    Object.keys(users[0].services[1].services).map(
                       (service) => [
                         <th
                           key={`${service}-standard`}
@@ -228,10 +228,10 @@ function App() {
                       ]
                     )}
                 </tr>
-                <tr className="bg-black">
+                <tr className="bg-custom-background">
                   <th className="px-6 py-3 text-left border border-gray-600"></th>
-                  {users[1]?.services[1]?.services &&
-                    Object.keys(users[1].services[1].services).map(
+                  {users[0]?.services[1]?.services &&
+                    Object.keys(users[0].services[1].services).map(
                       (service) => [
                         <th
                           key={`${service}-standard`}
@@ -252,8 +252,8 @@ function App() {
                   <th className="px-6 py-3 text-left border border-gray-600">
                     Standard Prices
                   </th>
-                  {users[1]?.services[1]?.services &&
-                    Object.keys(users[1].services[1].services).map(
+                  {users[0]?.services[1]?.services &&
+                    Object.keys(users[0].services[1].services).map(
                       (service) => [
                         <td
                           key={`${service}-static-standard`}
@@ -273,7 +273,7 @@ function App() {
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user._id} className="hover:bg-black">
+                  <tr key={user._id} className="hover:bg-custom-background">
                     <td className="px-6 py-4 border border-black">
                       {user.name}
                     </td>
