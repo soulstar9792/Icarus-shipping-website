@@ -4,10 +4,12 @@ import { FaShippingFast, FaBox } from "react-icons/fa";
 import "animate.css";
 import Card from "../Utils/Card"; // Make sure the path to Card is correct
 import $GS from "../../styles/constants";
+import {  useNavigate } from "react-router-dom";
 
 const ReadyToShip = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -69,13 +71,13 @@ const ReadyToShip = () => {
             </Card>
           ))}
         </div>
-        <a
-          href="#"
-          className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded shadow-lg transition ease-in-out duration-200"
+        <button
+          className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow-lg transition ease-in-out duration-200"
           aria-label="Start Shipping Today"
+          onClick={()=>navigate('/register')}
         >
           Start Shipping Today
-        </a>
+        </button>
       </div>
     </section>
   );
