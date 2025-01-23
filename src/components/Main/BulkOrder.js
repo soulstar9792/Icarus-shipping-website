@@ -33,7 +33,7 @@ const BulkOrder = () => {
   const [SkuData, setSkuData] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
   const [editedData, setEditedData] = useState({});
-  
+
   const handleEdit = (index) => {
     setEditingRow(index);
     setEditedData(uploadedData[index]);
@@ -52,16 +52,16 @@ const BulkOrder = () => {
 
     dimensionFields.forEach(field => {
       if (editedData[field] !== '') {
-        editedData[field] = parseFloat(editedData[field]) || null;  
+        editedData[field] = parseFloat(editedData[field]) || null;
       }
     });
-  
-   newData[index] = {...editedData};
+
+    newData[index] = { ...editedData };
     if (editedData.sku_number) {
-      const rowsWithSameSku = uploadedData.filter((row, idx) => 
+      const rowsWithSameSku = uploadedData.filter((row, idx) =>
         idx !== index && row.sku_number === editedData.sku_number
       );
-  
+
       rowsWithSameSku.forEach(row => {
         const rowIndex = newData.findIndex(item => item === row);
         if (rowIndex > -1) {
@@ -72,15 +72,15 @@ const BulkOrder = () => {
           });
         }
       });
-      let existingSku  = null; 
+      let existingSku = null;
       try {
         const response = await axios.get(
           `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`,
           { headers: { "Content-Type": "application/json" } }
         );
-        
+
         const SKUPresent = response.data.SkuData;
-       existingSku = SKUPresent.find(sku=>    sku.sku===editedData.sku_number);
+        existingSku = SKUPresent.find(sku => sku.sku === editedData.sku_number);
 
 
       } catch (error) {
@@ -91,20 +91,20 @@ const BulkOrder = () => {
       const parsedData = {
         sku: editedData.sku_number,
         maxQty: editedData.quantity || 1,
-        weight: parseFloat(editedData.package_weight) || null,  
-        length: parseFloat(editedData.package_length) || null,        
-        width: parseFloat(editedData.package_width) || null,          
-        height: parseFloat(editedData.package_height) || null,        
+        weight: parseFloat(editedData.package_weight) || null,
+        length: parseFloat(editedData.package_length) || null,
+        width: parseFloat(editedData.package_width) || null,
+        height: parseFloat(editedData.package_height) || null,
       };
-  
+
       try {
         if (existingSku) {
           const response = await axios.post(
             `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/update-sku/${user._id}/${existingSku._id}`,
-            {skuData:  parsedData },
+            { skuData: parsedData },
             { headers: { "Content-Type": "application/json" } }
           );
-          
+
           if (response.status === 200) {
             setSkuData(response.data.updatedUserSKU)
           } else {
@@ -116,7 +116,7 @@ const BulkOrder = () => {
             { parsedData: [parsedData] },
             { headers: { "Content-Type": "application/json" } }
           );
-  
+
           if (response.status === 200) {
             setSkuData(prev => [...prev, { number: editedData.sku }]);
           } else {
@@ -129,17 +129,17 @@ const BulkOrder = () => {
     }
     setUploadedData(newData);
     setNotification({
-      visible:true,
-      message:"SKU Data automatically updated",
-      type:"success"
+      visible: true,
+      message: "SKU Data automatically updated",
+      type: "success"
     })
     setTimeout(() => {
-      setNotification({...notification,visible:false})
+      setNotification({ ...notification, visible: false })
     }, 2000);
     setEditingRow(null);
     setEditedData({});
   };
-  
+
 
   const handleCancel = () => {
     setEditingRow(null);
@@ -151,7 +151,7 @@ const BulkOrder = () => {
       return (
         <input
           type="text"
-          value={editedData[field]!=="undefined" && editedData[field]!==null ? editedData[field] :  ""}
+          value={editedData[field] !== "undefined" && editedData[field] !== null ? editedData[field] : ""}
           onChange={(e) => handleFieldChange(field, e.target.value)}
           className="w-full p-1 border border-blue-400 bg-slate-600 rounded"
         />
@@ -515,7 +515,7 @@ const BulkOrder = () => {
         try {
           const response = await axios.post(
             "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
-              user._id,
+            user._id,
             shipments,
             {
               headers: { "Content-Type": "application/json" },
@@ -674,9 +674,8 @@ const BulkOrder = () => {
           quantity: currentQty || 1,
           maxQty: maxQty,
           totalQty: totalQty,
-          PackageDescription: `${row.PackageDescription || "Package"} (Batch ${
-            i + 1
-          } of ${numberOfLabels})`,
+          PackageDescription: `${row.PackageDescription || "Package"} (Batch ${i + 1
+            } of ${numberOfLabels})`,
         });
       }
     });
@@ -725,9 +724,6 @@ const BulkOrder = () => {
         <div>
           {/* CSV Upload Section */}
           <Card className="mb-6 p-6 ">
-            <h2 className={`${$GS.textHeading_2} mb-4`}>
-              Upload CSV/Amazon File{" "}
-            </h2>
             <div
               className="border-2 border-dashed border-blue-400 p-6 text-center rounded-md cursor-pointer"
               onDragOver={(e) => e.preventDefault()}
@@ -749,13 +745,14 @@ const BulkOrder = () => {
               }}
               onClick={() => document.getElementById("file-upload").click()} // Trigger file input on click
             >
-              <FaUpload className="mx-auto mb-2 text-blue-600" size={40} />
+
               <p className="text-blue-600">
-                Drag & drop your CSV or Amazon file here
+                <FaUpload className="mx-auto mb-2 text-blue-600 inline-block" size={32} />
+                &nbsp;Drag & drop CSV / Amazon files&nbsp;
+                <span className="inline-block mt-2 text-blue-600">
+                  or <span className="underline">select a file</span>
+                </span>
               </p>
-              <span className="inline-block mt-2 text-blue-600">
-                or <span className="underline">choose a file</span>
-              </span>
               <input
                 id="file-upload"
                 type="file"
@@ -840,16 +837,14 @@ const BulkOrder = () => {
           )}
           {/* Data Table Section */}
           {txtFile || csvFile ? (
-            <Card>
-              <h2 className={`${$GS.textHeading_2} mb-4`}>Uploaded Data</h2>
               <div
                 className="relative overflow-x-auto"
-                style={{ maxHeight: "70vh" }}
+                style={{ maxHeight: "40vh" }}
               >
                 <div className="overflow-x-auto ">
                   <div className="inline-block min-w-full align-middle">
                     <div className="overflow-hidden">
-                      <table className="min-w-full border-separate border-spacing-0 border-custom-border">
+                      <table className="min-w-full border-separate border-spacing-0 border-custom-border text-sm">
                         <thead className="bg-custom-background text-custom-text">
                           <tr>
                             <th
@@ -876,78 +871,78 @@ const BulkOrder = () => {
                               Type *
                             </th>
                             {txtFile && courierType === "USPS" && (
-                              <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                              <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                                 Provider
                               </th>
                             )}
                             {txtFile && (
-                              <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                              <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                                 SKU Number
                               </th>
                             )}
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Name *
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Company
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               State
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Phone
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Street *
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Street 2
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               City
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Name *
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               State
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Company
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Phone
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Street *
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Street 2
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               City
                             </th>
                             {txtFile && (
-                              <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                              <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                                 Quantity
                               </th>
                             )}
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Weight *
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Length
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Width
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Height
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Description
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
                               Actions
                             </th>
                           </tr>
@@ -958,22 +953,22 @@ const BulkOrder = () => {
                               key={index}
                               className="bg-custom-background text-custom-text"
                             >
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {txtFile && selectedService
                                   ? selectedService
                                   : renderTableCell(
-                                      index,
-                                      "ServiceName",
-                                      row.ServiceName
-                                    )}
+                                    index,
+                                    "ServiceName",
+                                    row.ServiceName
+                                  )}
                               </td>
                               {txtFile && courierType === "USPS" && (
-                                <td className="border border-custom-border p-4 break-words">
+                                <td className="border border-custom-border p-2 break-words">
                                   {selectedProvider ? selectedProvider : "N/A"}
                                 </td>
                               )}
                               {txtFile && (
-                                <td className="border border-custom-border p-4 break-words">
+                                <td className="border border-custom-border p-2 break-words">
                                   {row.sku_number ? (
                                     renderTableCell(
                                       index,
@@ -986,102 +981,102 @@ const BulkOrder = () => {
                                 </td>
                               )}
 
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "FromSenderName",
                                   row.FromSenderName
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "FromCompany",
                                   row.FromCompany
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "FromStateProvince",
                                   row.FromStateProvince
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "FromPhone",
                                   row.FromPhone
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "FromStreet1",
                                   row.FromStreet1
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "FromStreet2",
                                   row.FromStreet2
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "FromCity",
                                   row.FromCity
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "ToRecipientName",
                                   row.ToRecipientName
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "ToStateProvince",
                                   row.ToStateProvince
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "ToCompany",
                                   row.ToCompany
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(index, "ToPhone", row.ToPhone)}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "ToStreet1",
                                   row.ToStreet1
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
                                   "ToStreet2",
                                   row.ToStreet2
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(index, "ToCity", row.ToCity)}
                               </td>
                               {txtFile && (
-                                <td className="border border-custom-border p-4 break-words">
+                                <td className="border border-custom-border p-2 break-words">
                                   {renderTableCell(
                                     index,
                                     "quantity",
-                                    row.quantity? row.quantity: 1
+                                    row.quantity ? row.quantity : 1
                                   )}
                                 </td>
                               )}
@@ -1089,23 +1084,23 @@ const BulkOrder = () => {
                                 {renderTableCell(
                                   index,
                                   row.package_weight !== null && row.package_weight !== undefined
-                                  ? "package_weight"
-                                  : "PackageWeight",
-                                  row.package_weight!=="undefined" && row.package_weight!==null? (
+                                    ? "package_weight"
+                                    : "PackageWeight",
+                                  row.package_weight !== "undefined" && row.package_weight !== null ? (
                                     `${row.package_weight || row.PackageWeight} lbs`
                                   ) : (
                                     <p className="text-red-500">Missing</p>
                                   )
                                 )}
                               </td>
-                              
+
                               <td className="border border-custom-border p-4 break-words">
                                 {renderTableCell(
                                   index,
                                   row.package_length !== null && row.package_length !== undefined
-      ? "package_length"
-      : "PackageLength",
-                                  (row.package_length!=="undefined"&&row.package_length!=null) || row.PackageLength!==undefined && row.PackageLength!=null? (
+                                    ? "package_length"
+                                    : "PackageLength",
+                                  (row.package_length !== "undefined" && row.package_length != null) || row.PackageLength !== undefined && row.PackageLength != null ? (
                                     `${row.package_length || row.PackageLength} in`
                                   ) : (
                                     <p className="text-red-500">Missing</p>
@@ -1116,9 +1111,9 @@ const BulkOrder = () => {
                                 {renderTableCell(
                                   index,
                                   row.package_width !== null && row.package_width !== undefined
-                                  ? "package_width"
-                                  : "PackageWidth",
-                                  (row.package_width!=="undefined" && row.package_width!==null) ||  (row.PackageWidth!==undefined && row.PackageWidth!==null)? (
+                                    ? "package_width"
+                                    : "PackageWidth",
+                                  (row.package_width !== "undefined" && row.package_width !== null) || (row.PackageWidth !== undefined && row.PackageWidth !== null) ? (
                                     `${row.package_width || row.PackageWidth} in`
                                   ) : (
                                     <p className="text-red-500">Missing</p>
@@ -1129,9 +1124,9 @@ const BulkOrder = () => {
                                 {renderTableCell(
                                   index,
                                   row.package_height !== null && row.package_height !== undefined
-                                  ? "package_height"
-                                  : "PackageHeight",
-                                  (row.package_height!=="undefined"&& row.package_height!=null) || (row.PackageWidth!=undefined && row.PackageHeight!=null)? (
+                                    ? "package_height"
+                                    : "PackageHeight",
+                                  (row.package_height !== "undefined" && row.package_height != null) || (row.PackageWidth != undefined && row.PackageHeight != null) ? (
                                     `${row.package_height || row.PackageHeight} in`
                                   ) : (
                                     <p className="text-red-500">Missing</p>
@@ -1179,7 +1174,6 @@ const BulkOrder = () => {
                   </div>
                 </div>
               </div>
-            </Card>
           ) : (
             <Card>
               <p className={`${$GS.textNormal_1} text-center`}>
@@ -1215,7 +1209,7 @@ const BulkOrder = () => {
                 Submit Bulk Order
               </button>
             </div>
-            <div className="text-center text-sm text-gray-400">
+            <div className="text-center text-xs text-gray-400">
               <p>
                 © {new Date().getFullYear()} Sapphire Labels. All rights reserved.
               </p>
