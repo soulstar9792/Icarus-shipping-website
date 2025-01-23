@@ -725,7 +725,7 @@ const BulkOrder = () => {
           {/* CSV Upload Section */}
           <Card className="mb-6 p-6 ">
             <div
-              className="border-2 border-dashed border-blue-400 p-6 text-center rounded-md cursor-pointer"
+              className="border-2 border-dashed border-blue-400 p-4 text-center rounded-md cursor-pointer"
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
                 e.preventDefault();
@@ -744,15 +744,13 @@ const BulkOrder = () => {
                 }
               }}
               onClick={() => document.getElementById("file-upload").click()} // Trigger file input on click
-            >
-
-              <p className="text-blue-600">
-                <FaUpload className="mx-auto mb-2 text-blue-600 inline-block" size={32} />
-                &nbsp;Drag & drop CSV / Amazon files&nbsp;
-                <span className="inline-block mt-2 text-blue-600">
-                  or <span className="underline">select a file</span>
-                </span>
-              </p>
+            ><FaUpload className="mx-auto text-blue-600" size={40} />
+            <p className="text-blue-600">
+              Drag & drop your CSV or Amazon file here
+            </p>
+            <span className="inline-block text-blue-600">
+              or <span className="underline">choose a file</span>
+            </span>
               <input
                 id="file-upload"
                 type="file"
@@ -762,7 +760,7 @@ const BulkOrder = () => {
               />
             </div>
             {csvFile || txtFile ? (
-              <p className={`${$GS.textNormal_1} mt-2`}>
+              <p className={` text-sm text-gray-500 mt-2`}>  
                 Uploaded File: {csvFile ? csvFile?.name : txtFile?.name}
               </p>
             ) : null}
@@ -1196,14 +1194,14 @@ const BulkOrder = () => {
             </Card>
           )}
           <div className="flex lg:flex-row justify-between items-center mt-8 flex-col">
-            <p className={`${$GS.textHeading_2} m-8`}>
+            <p className={`${$GS.textHeading_3} m-8`}>
               Total Price: ${totalPrice.toFixed(2)}
             </p>
             <div className="flex justify-center">
               <button
                 type="submit"
                 onClick={handleSubmit}
-                className={`${$GS.textHeading_2} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
+                className={`${$GS.textHeading_3} cursor-pointer rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 
                     bg-card-background group hover:border-hover-border hover:shadow-bright`}
               >
                 Submit Bulk Order
