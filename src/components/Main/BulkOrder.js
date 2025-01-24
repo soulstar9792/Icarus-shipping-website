@@ -33,7 +33,6 @@ const BulkOrder = () => {
   const [SkuData, setSkuData] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
   const [editedData, setEditedData] = useState({});
-
   const handleEdit = (index) => {
     setEditingRow(index);
     setEditedData(uploadedData[index]);
@@ -48,25 +47,30 @@ const BulkOrder = () => {
 
   const handleSave = async (index) => {
     const newData = [...uploadedData];
-    const dimensionFields = ['package_weight', 'package_length', 'package_width', 'package_height'];
+    const dimensionFields = [
+      "package_weight",
+      "package_length",
+      "package_width",
+      "package_height",
+    ];
 
-    dimensionFields.forEach(field => {
-      if (editedData[field] !== '') {
+    dimensionFields.forEach((field) => {
+      if (editedData[field] !== "") {
         editedData[field] = parseFloat(editedData[field]) || null;
       }
     });
 
     newData[index] = { ...editedData };
     if (editedData.sku_number) {
-      const rowsWithSameSku = uploadedData.filter((row, idx) =>
-        idx !== index && row.sku_number === editedData.sku_number
+      const rowsWithSameSku = uploadedData.filter(
+        (row, idx) => idx !== index && row.sku_number === editedData.sku_number
       );
 
-      rowsWithSameSku.forEach(row => {
-        const rowIndex = newData.findIndex(item => item === row);
+      rowsWithSameSku.forEach((row) => {
+        const rowIndex = newData.findIndex((item) => item === row);
         if (rowIndex > -1) {
-          dimensionFields.forEach(field => {
-            if (editedData[field] !== '') {
+          dimensionFields.forEach((field) => {
+            if (editedData[field] !== "") {
               newData[rowIndex][field] = editedData[field];
             }
           });
@@ -80,13 +84,12 @@ const BulkOrder = () => {
         );
 
         const SKUPresent = response.data.SkuData;
-        existingSku = SKUPresent.find(sku => sku.sku === editedData.sku_number);
-
-
+        existingSku = SKUPresent.find(
+          (sku) => sku.sku === editedData.sku_number
+        );
       } catch (error) {
         console.error("Error fetching SKUs:", error);
       }
-
 
       const parsedData = {
         sku: editedData.sku_number,
@@ -106,7 +109,7 @@ const BulkOrder = () => {
           );
 
           if (response.status === 200) {
-            setSkuData(response.data.updatedUserSKU)
+            setSkuData(response.data.updatedUserSKU);
           } else {
             console.error("Failed to update SKU:", response);
           }
@@ -118,7 +121,7 @@ const BulkOrder = () => {
           );
 
           if (response.status === 200) {
-            setSkuData(prev => [...prev, { number: editedData.sku }]);
+            setSkuData((prev) => [...prev, { number: editedData.sku }]);
           } else {
             console.error("Failed to add SKU:", response);
           }
@@ -128,18 +131,19 @@ const BulkOrder = () => {
       }
     }
     setUploadedData(newData);
+    if(txtFile){
     setNotification({
       visible: true,
       message: "SKU Data automatically updated",
-      type: "success"
-    })
+      type: "success",
+    });
     setTimeout(() => {
-      setNotification({ ...notification, visible: false })
+      setNotification({ ...notification, visible: false });
     }, 2000);
+  }
     setEditingRow(null);
     setEditedData({});
   };
-
 
   const handleCancel = () => {
     setEditingRow(null);
@@ -151,7 +155,11 @@ const BulkOrder = () => {
       return (
         <input
           type="text"
-          value={editedData[field] !== "undefined" && editedData[field] !== null ? editedData[field] : ""}
+          value={
+            editedData[field] !== "undefined" && editedData[field] !== null
+              ? editedData[field]
+              : ""
+          }
           onChange={(e) => handleFieldChange(field, e.target.value)}
           className="w-full p-1 border border-blue-400 bg-slate-600 rounded"
         />
@@ -250,14 +258,16 @@ const BulkOrder = () => {
 
                 data.forEach((row, index) => {
                   const validation = validateRow(row);
+                  const rowWithErrors = { ...row, errors: validation.errors };
+
                   if (!validation.isValid) {
                     invalidRows.push({
                       rowIndex: index + 1,
                       errors: validation.errors,
                     });
-                  } else {
-                    validData.push(row);
                   }
+
+                  validData.push(rowWithErrors);
                 });
 
                 if (invalidRows.length) {
@@ -279,8 +289,8 @@ const BulkOrder = () => {
                     setNotification({ ...notification, visible: false });
                   }, 2000);
                 }
-                setUploadedData(validData);
 
+                setUploadedData(validData);
               },
               error: (error) => {
                 console.error("Error parsing CSV:", error);
@@ -379,6 +389,18 @@ const BulkOrder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (uploadedData.length === 0) {
+      setNotification({
+        visible: true,
+        message: "Please upload a file",
+        type: "error",
+      });
+      setTimeout(() => {
+        setNotification({ ...notification, visible: false });
+      }, 2000);
+      return;
+    }
+ 
     if (courierType === "" && txtFile) {
       setNotification({
         visible: true,
@@ -423,28 +445,47 @@ const BulkOrder = () => {
       }, 2000);
       return;
     }
-    if (uploadedData.length === 0) {
-      setNotification({
-        visible: true,
-        message: "Please upload a file",
-        type: "error",
+    if(csvFile){
+      const invalidRows = [];
+      uploadedData.forEach((row, index) => {
+        const validation = validateRow(row);
+        
+        if (!validation.isValid) {
+          invalidRows.push({
+            rowIndex: index + 1,
+            errors: validation.errors,
+          });
+        }
+        
       });
-      setTimeout(() => {
-        setNotification({ ...notification, visible: false });
-      }, 2000);
-      return;
+      if (invalidRows.length) {
+        setNotification({
+          visible: true,
+          message: `Please fill the mising fields`,
+          type: "warning",
+        });
+        setTimeout(() => {
+          setNotification({ ...notification, visible: false });
+        }, 2000);
+
+      return; 
+      }
+
     }
-    if (txtFile) {
+  
+    if (txtFile) {  
       const missingFields = uploadedData.filter(
         (row) =>
-          !row.package_length ||
-          !row.package_height ||
-          !row.sku_number ||
-          !row.package_width ||
-          !row.quantity
+          (!row.package_length || row.package_length === 'undefined') ||
+          (!row.package_height || row.package_height === 'undefined') ||
+          (!row.package_width || row.package_width === 'undefined') ||
+          (!row.package_weight || row.package_weight === 'undefined') ||
+          (!row.sku_number)
       );
 
+      console.log("Missing fields: ",missingFields); 
       if (missingFields.length > 0) {
+        console.log("missing")
         setNotification({
           visible: true,
           message: `Missing fields detected in ${missingFields.length} rows. Ensure all rows have length,weight, height, width and SKU.`,
@@ -515,7 +556,7 @@ const BulkOrder = () => {
         try {
           const response = await axios.post(
             "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
-            user._id,
+              user._id,
             shipments,
             {
               headers: { "Content-Type": "application/json" },
@@ -674,8 +715,9 @@ const BulkOrder = () => {
           quantity: currentQty || 1,
           maxQty: maxQty,
           totalQty: totalQty,
-          PackageDescription: `${row.PackageDescription || "Package"} (Batch ${i + 1
-            } of ${numberOfLabels})`,
+          PackageDescription: `${row.PackageDescription || "Package"} (Batch ${
+            i + 1
+          } of ${numberOfLabels})`,
         });
       }
     });
@@ -707,7 +749,6 @@ const BulkOrder = () => {
     if (JSON.stringify(enrichedData) !== JSON.stringify(uploadedData)) {
       setUploadedData(enrichedData);
     }
-
   };
 
   useEffect(() => {
@@ -737,19 +778,20 @@ const BulkOrder = () => {
                 if (files.length > 0) {
                   const file = files[0];
                   const event = {
-                    target: { files: [file] }
+                    target: { files: [file] },
                   };
                   handleFileChange(event);
                 }
               }}
               onClick={() => document.getElementById("file-upload").click()} // Trigger file input on click
-            ><FaUpload className="mx-auto text-blue-600" size={40} />
-            <p className="text-blue-600">
-              Drag & drop your CSV or Amazon file here
-            </p>
-            <span className="inline-block text-blue-600">
-              or <span className="underline">choose a file</span>
-            </span>
+            >
+              <FaUpload className="mx-auto text-blue-600" size={40} />
+              <p className="text-blue-600">
+                Drag & drop your CSV or Amazon file here
+              </p>
+              <span className="inline-block text-blue-600">
+                or <span className="underline">choose a file</span>
+              </span>
               <input
                 id="file-upload"
                 type="file"
@@ -759,7 +801,7 @@ const BulkOrder = () => {
               />
             </div>
             {csvFile || txtFile ? (
-              <p className={` text-sm text-gray-500 mt-2`}>  
+              <p className={` text-sm text-gray-500 mt-2`}>
                 Uploaded File: {csvFile ? csvFile?.name : txtFile?.name}
               </p>
             ) : null}
@@ -834,343 +876,420 @@ const BulkOrder = () => {
           )}
           {/* Data Table Section */}
           {txtFile || csvFile ? (
-              <div
-                className="relative overflow-x-auto"
-    
-              >
-                <div className="overflow-x-auto " >
-                  <div className="inline-block min-w-full align-middle" >
-                    <div className="overflow-y-auto"  style={{ maxHeight: "40vh" }}>
-                      <table className="min-w-full border-separate border-spacing-0 border-custom-border text-sm">
-                        <thead className="bg-custom-background text-custom-text">
-                          <tr>
-                            <th
-                              colSpan="6"
-                              className="sticky top-0 z-10 border border-custom-border p-4 text-left bg-custom-background h-14 whitespace-nowrap"
-                            >
-                              From
+            <div className="relative overflow-x-auto">
+              <div className="overflow-x-auto ">
+                <div className="inline-block min-w-full align-middle">
+                  <div
+                    className="overflow-y-auto"
+                    style={{ maxHeight: "40vh" }}
+                  >
+                    <table className="min-w-full border-separate border-spacing-0 border-custom-border text-sm">
+                      <thead className="bg-custom-background text-custom-text">
+                        <tr>
+                          <th
+                            colSpan="6"
+                            className="sticky top-0 z-10 border border-custom-border p-4 text-left bg-custom-background h-14 whitespace-nowrap"
+                          >
+                            From
+                          </th>
+                          <th
+                            colSpan="6"
+                            className="sticky top-0 z-10 border border-custom-border p-4 text-left bg-custom-background h-14 whitespace-nowrap"
+                          >
+                            To
+                          </th>
+                          <th
+                            colSpan="12"
+                            className="sticky top-0 z-10 border border-custom-border p-4 text-left bg-custom-background h-14 whitespace-nowrap"
+                          >
+                            Package Info
+                          </th>
+                        </tr>
+                        <tr className="bg-custom-background text-custom-text">
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
+                            Type *
+                          </th>
+                          {txtFile && courierType === "USPS" && (
+                            <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                              Provider
                             </th>
-                            <th
-                              colSpan="6"
-                              className="sticky top-0 z-10 border border-custom-border p-4 text-left bg-custom-background h-14 whitespace-nowrap"
-                            >
-                              To
+                          )}
+                          {txtFile && (
+                            <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                              SKU Number
                             </th>
-                            <th
-                              colSpan="12"
-                              className="sticky top-0 z-10 border border-custom-border p-4 text-left bg-custom-background h-14 whitespace-nowrap"
-                            >
-                              Package Info
-                            </th>
-                          </tr>
-                          <tr className="bg-custom-background text-custom-text">
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-4 bg-custom-background h-14 whitespace-nowrap">
-                              Type *
-                            </th>
-                            {txtFile && courierType === "USPS" && (
-                              <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                                Provider
-                              </th>
-                            )}
-                            {txtFile && (
-                              <th className="sticky min-w-[200px] top-14 z-10 border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                                SKU Number
-                              </th>
-                            )}
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Name *
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Company
-                            </th>
+                          )}
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Name *
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Company
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            State
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Phone
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Street *
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Street 2
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            City
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Name *
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            State
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Company
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Phone
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Street *
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Street 2
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            City
+                          </th>
+                          {txtFile && (
                             <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              State
+                              Quantity
                             </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Phone
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Street *
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Street 2
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              City
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Name *
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              State
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Company
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Phone
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Street *
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Street 2
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[200px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              City
-                            </th>
-                            {txtFile && (
-                              <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                                Quantity
-                              </th>
-                            )}
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Weight *
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Length
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Width
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Height
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Description
-                            </th>
-                            <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
-                              Actions
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {uploadedData.map((row, index) => (
-                            <tr
-                              key={index}
-                              className="bg-custom-background text-custom-text"
-                            >
-                              <td className="border border-custom-border p-2 break-words">
-                                {txtFile && selectedService
-                                  ? selectedService
-                                  : renderTableCell(
+                          )}
+                          <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Weight *
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Length
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Width
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Height
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[250px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Description
+                          </th>
+                          <th className="sticky top-14 z-10 min-w-[120px] border border-custom-border p-2 bg-custom-background h-14 whitespace-nowrap">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {console.log(uploadedData)}
+                        {uploadedData.map((row, index) => (
+                          <tr
+                            key={index}
+                            className="bg-custom-background text-custom-text"
+                          >
+                            <td className="border border-custom-border p-2 break-words">
+                              {txtFile && selectedService
+                                ? selectedService
+                                : renderTableCell(
                                     index,
                                     "ServiceName",
                                     row.ServiceName
                                   )}
-                              </td>
-                              {txtFile && courierType === "USPS" && (
-                                <td className="border border-custom-border p-2 break-words">
-                                  {selectedProvider ? selectedProvider : "N/A"}
-                                </td>
-                              )}
-                              {txtFile && (
-                                <td className="border border-custom-border p-2 break-words">
-                                  {row.sku_number ? (
-                                    renderTableCell(
-                                      index,
-                                      "sku_number",
-                                      row.sku_number
-                                    )
-                                  ) : (
-                                    <p className="text-red-500">Missing</p>
-                                  )}
-                                </td>
-                              )}
-
+                            </td>
+                            {txtFile && courierType === "USPS" && (
                               <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
+                                {selectedProvider ? selectedProvider : "N/A"}
+                              </td>
+                            )}
+                            {txtFile && (
+                              <td className="border border-custom-border p-2 break-words">
+                                {row.sku_number ? (
+                                  renderTableCell(
+                                    index,
+                                    "sku_number",
+                                    row.sku_number
+                                  )
+                                ) : (
+                                  <p className="text-red-500">Missing</p>
+                                )}
+                              </td>
+                            )}
+
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.FromSenderName ? (
+                                renderTableCell(
                                   index,
                                   "FromSenderName",
                                   row.FromSenderName
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "FromCompany",
-                                  row.FromCompany
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "FromStateProvince",
-                                  row.FromStateProvince
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "FromPhone",
-                                  row.FromPhone
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
+                                )
+                              ) : (
+                                <p className="text-red-500">Missing</p>
+                              )}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.FromCompany
+                                ? renderTableCell(
+                                    index,
+                                    "FromCompany",
+                                    row.FromCompany
+                                  )
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.FromStateProvince
+                                ? renderTableCell(
+                                    index,
+                                    "FromStateProvince",
+                                    row.FromStateProvince
+                                  )
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.FromPhone
+                                ? renderTableCell(
+                                    index,
+                                    "FromPhone",
+                                    row.FromPhone
+                                  )
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.FromStreet1 ? (
+                                renderTableCell(
                                   index,
                                   "FromStreet1",
                                   row.FromStreet1
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "FromStreet2",
-                                  row.FromStreet2
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "FromCity",
-                                  row.FromCity
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
+                                )
+                              ) : (
+                                <p className="text-red-500">Missing</p>
+                              )}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.ToStreet2
+                                ? renderTableCell(
+                                    index,
+                                    "FromStreet2",
+                                    row.FromStreet2
+                                  )
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.FromCity
+                                ? renderTableCell(
+                                    index,
+                                    "FromCity",
+                                    row.FromCity
+                                  )
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.ToRecipientName ? (
+                                renderTableCell(
                                   index,
                                   "ToRecipientName",
                                   row.ToRecipientName
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "ToStateProvince",
-                                  row.ToStateProvince
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "ToCompany",
-                                  row.ToCompany
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(index, "ToPhone", row.ToPhone)}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
+                                )
+                              ) : (
+                                <p className="text-red-500">Missing</p>
+                              )}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.ToStateProvince
+                                ? renderTableCell(
+                                    index,
+                                    "ToStateProvince",
+                                    row.ToStateProvince
+                                  )
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.ToCompany
+                                ? renderTableCell(
+                                    index,
+                                    "ToCompany",
+                                    row.ToCompany
+                                  )
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.ToPhone
+                                ? renderTableCell(index, "ToPhone", row.ToPhone)
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.ToStreet1 ? (
+                                renderTableCell(
                                   index,
                                   "ToStreet1",
                                   row.ToStreet1
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "ToStreet2",
-                                  row.ToStreet2
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-2 break-words">
-                                {renderTableCell(index, "ToCity", row.ToCity)}
-                              </td>
-                              {txtFile && (
-                                <td className="border border-custom-border p-2 break-words">
-                                  {renderTableCell(
-                                    index,
-                                    "quantity",
-                                    row.quantity ? row.quantity : 1
-                                  )}
-                                </td>
+                                )
+                              ) : (
+                                <p className="text-red-500">Missing</p>
                               )}
-                              <td className="border border-custom-border p-4 break-words">
-                                {renderTableCell(
-                                  index,
-                                  row.package_weight !== null && row.package_weight !== undefined
-                                    ? "package_weight"
-                                    : "PackageWeight",
-                                  row.package_weight !== "undefined" && row.package_weight !== null ? (
-                                    `${row.package_weight || row.PackageWeight} lbs`
-                                  ) : (
-                                    <p className="text-red-500">Missing</p>
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {row.ToStreet2
+                                ? renderTableCell(
+                                    index,
+                                    "ToStreet2",
+                                    row.ToStreet2
                                   )
-                                )}
-                              </td>
-
-                              <td className="border border-custom-border p-4 break-words">
+                                : "N/A"}
+                            </td>
+                            <td className="border border-custom-border p-2 break-words">
+                              {renderTableCell(index, "ToCity", row.ToCity)}
+                            </td>
+                            {txtFile && (
+                              <td className="border border-custom-border p-2 break-words">
                                 {renderTableCell(
                                   index,
-                                  row.package_length !== null && row.package_length !== undefined
-                                    ? "package_length"
-                                    : "PackageLength",
-                                  (row.package_length !== "undefined" && row.package_length != null) || row.PackageLength !== undefined && row.PackageLength != null ? (
-                                    `${row.package_length || row.PackageLength} in`
-                                  ) : (
-                                    <p className="text-red-500">Missing</p>
-                                  )
+                                  "quantity",
+                                  row.quantity ? row.quantity : 1
                                 )}
                               </td>
-                              <td className="border border-custom-border p-4 break-words">
-                                {renderTableCell(
-                                  index,
-                                  row.package_width !== null && row.package_width !== undefined
-                                    ? "package_width"
-                                    : "PackageWidth",
-                                  (row.package_width !== "undefined" && row.package_width !== null) || (row.PackageWidth !== undefined && row.PackageWidth !== null) ? (
-                                    `${row.package_width || row.PackageWidth} in`
-                                  ) : (
-                                    <p className="text-red-500">Missing</p>
-                                  )
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-4 break-words">
-                                {renderTableCell(
-                                  index,
-                                  row.package_height !== null && row.package_height !== undefined
-                                    ? "package_height"
-                                    : "PackageHeight",
-                                  (row.package_height !== "undefined" && row.package_height != null) || (row.PackageWidth != undefined && row.PackageHeight != null) ? (
-                                    `${row.package_height || row.PackageHeight} in`
-                                  ) : (
-                                    <p className="text-red-500">Missing</p>
-                                  )
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-4 break-words">
-                                {renderTableCell(
-                                  index,
-                                  "PackageDescription",
-                                  row.PackageDescription || "N/A"
-                                )}
-                              </td>
-                              <td className="border border-custom-border p-4">
-                                {editingRow === index ? (
-                                  <div className="flex space-x-2 justify-center">
-                                    <button
-                                      onClick={() => handleSave(index)}
-                                      className="text-green-500 p-2"
-                                    >
-                                      <FaCheck />
-                                    </button>
-                                    <button
-                                      onClick={handleCancel}
-                                      className="text-red-500 p-2"
-                                    >
-                                      <FaTimes />
-                                    </button>
-                                  </div>
+                            )}
+                            <td className="border border-custom-border p-4 break-words">
+                              {renderTableCell(
+                                index,
+                                row.package_weight &&
+                                  row.package_weight !== "undefined" &&
+                                  row.package_weight !== ""
+                                  ? "package_weight"
+                                  : "PackageWeight",
+                                row.package_weight &&
+                                  row.package_weight !== "undefined" &&
+                                  row.package_weight !== "" ? (
+                                  `${row.package_weight} lbs`
+                                ) : row.PackageWeight &&
+                                  row.PackageWeight !== "undefined" &&
+                                  row.PackageWeight !== "" ? (
+                                  `${row.PackageWeight} lbs`
                                 ) : (
+                                  <p className="text-red-500">Missing</p>
+                                )
+                              )}
+                            </td>
+
+                            <td className="border border-custom-border p-4 break-words">
+                              {renderTableCell(
+                                index,
+                                row.package_length &&
+                                  row.package_length !== "undefined" &&
+                                  row.package_length !== ""
+                                  ? "package_length"
+                                  : "PackageLength",
+                                row.package_length &&
+                                  row.package_length !== "undefined" &&
+                                  row.package_length !== "" ? (
+                                  `${row.package_length} in`
+                                ) : row.PackageLength &&
+                                  row.PackageLength !== "undefined" &&
+                                  row.PackageLength !== "" ? (
+                                  `${row.PackageLength} in`
+                                ) : (
+                                  <p className="text-red-500">Missing</p>
+                                )
+                              )}
+                            </td>
+
+                            <td className="border border-custom-border p-4 break-words">
+                              {renderTableCell(
+                                index,
+                                row.package_width &&
+                                  row.package_width !== "undefined" &&
+                                  row.package_width !== ""
+                                  ? "package_width"
+                                  : "PackageWidth",
+                                row.package_width &&
+                                  row.package_width !== "undefined" &&
+                                  row.package_width !== "" ? (
+                                  `${row.package_width} in`
+                                ) : row.PackageWidth &&
+                                  row.PackageWidth !== "undefined" &&
+                                  row.PackageWidth !== "" ? (
+                                  `${row.PackageWidth} in`
+                                ) : (
+                                  <p className="text-red-500">Missing</p>
+                                )
+                              )}
+                            </td>
+
+                            <td className="border border-custom-border p-4 break-words">
+                              {renderTableCell(
+                                index,
+                                row.package_height &&
+                                  row.package_height !== "undefined" &&
+                                  row.package_height !== ""
+                                  ? "package_height"
+                                  : "PackageHeight",
+                                row.package_height &&
+                                  row.package_height !== "undefined" &&
+                                  row.package_height !== "" ? (
+                                  `${row.package_height} in`
+                                ) : row.PackageHeight &&
+                                  row.PackageHeight !== "undefined" &&
+                                  row.PackageHeight !== "" ? (
+                                  `${row.PackageHeight} in`
+                                ) : (
+                                  <p className="text-red-500">Missing</p>
+                                )
+                              )}
+                            </td>
+
+                            <td className="border border-custom-border p-4 break-words">
+                              {renderTableCell(
+                                index,
+                                "PackageDescription",
+                                row.PackageDescription &&
+                                  row.PackageDescription !== "undefined" &&
+                                  row.PackageDescription !== "" ? (
+                                  row.PackageDescription
+                                ) : (
+                                  <p className="text-red-500">N/A</p>
+                                )
+                              )}
+                            </td>
+
+                            <td className="border border-custom-border p-4">
+                              {editingRow === index ? (
+                                <div className="flex space-x-2 justify-center">
                                   <button
-                                    onClick={() => handleEdit(index)}
-                                    className="text-blue-500 bg-custom-background border border-gray-800 rounded-xl flex items-center gap-2 px-4 py-2 mx-auto"
+                                    onClick={() => handleSave(index)}
+                                    className="text-green-500 p-2"
                                   >
-                                    <FaEdit />
-                                    <span className="font-semibold">Edit</span>
+                                    <FaCheck />
                                   </button>
-                                )}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                                  <button
+                                    onClick={handleCancel}
+                                    className="text-red-500 p-2"
+                                  >
+                                    <FaTimes />
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() => handleEdit(index)}
+                                  className="text-blue-500 bg-custom-background border border-gray-800 rounded-xl flex items-center gap-2 px-4 py-2 mx-auto"
+                                >
+                                  <FaEdit />
+                                  <span className="font-semibold">Edit</span>
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
+            </div>
           ) : (
             <Card>
               <p className={`${$GS.textNormal_1} text-center`}>
@@ -1208,7 +1327,8 @@ const BulkOrder = () => {
             </div>
             <div className="text-center text-xs text-gray-400">
               <p>
-                © {new Date().getFullYear()} Sapphire Labels. All rights reserved.
+                © {new Date().getFullYear()} Sapphire Labels. All rights
+                reserved.
               </p>
             </div>
           </div>
