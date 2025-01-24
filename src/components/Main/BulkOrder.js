@@ -726,21 +726,20 @@ const BulkOrder = () => {
           <Card className="mb-6 p-6 ">
             <div
               className="border-2 border-dashed border-blue-400 p-4 text-center rounded-md cursor-pointer"
-              onDragOver={(e) => e.preventDefault()}
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               onDrop={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 const files = e.dataTransfer.files;
-                if (files.length) {
+                if (files.length > 0) {
                   const file = files[0];
-                  setCsvFile(file);
-                  // Parse CV file
-                  Papa.parse(file, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (results) => {
-                      setUploadedData(results.data);
-                    },
-                  });
+                  const event = {
+                    target: { files: [file] }
+                  };
+                  handleFileChange(event);
                 }
               }}
               onClick={() => document.getElementById("file-upload").click()} // Trigger file input on click
@@ -837,11 +836,11 @@ const BulkOrder = () => {
           {txtFile || csvFile ? (
               <div
                 className="relative overflow-x-auto"
-                style={{ maxHeight: "40vh" }}
+    
               >
-                <div className="overflow-x-auto ">
-                  <div className="inline-block min-w-full align-middle">
-                    <div className="overflow-hidden">
+                <div className="overflow-x-auto " >
+                  <div className="inline-block min-w-full align-middle" >
+                    <div className="overflow-y-auto"  style={{ maxHeight: "40vh" }}>
                       <table className="min-w-full border-separate border-spacing-0 border-custom-border text-sm">
                         <thead className="bg-custom-background text-custom-text">
                           <tr>
@@ -858,7 +857,7 @@ const BulkOrder = () => {
                               To
                             </th>
                             <th
-                              colSpan="6"
+                              colSpan="12"
                               className="sticky top-0 z-10 border border-custom-border p-4 text-left bg-custom-background h-14 whitespace-nowrap"
                             >
                               Package Info
