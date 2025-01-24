@@ -40,7 +40,7 @@ const LandingView = () => {
     >
       <div className="overlay absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 p-4 md:p-8 lg:p-12">
-        <h1 className="text-4xl md:text-5xl font-bold lg:text-6xl mb-[50%] text-primary animate__animated animate__zoomIn animate__delay-1s" style={{
+        <h1 className="text-4xl md:text-5xl font-bold lg:text-6xl mb-[30%] text-primary animate__animated animate__zoomIn animate__delay-1s" style={{
           textShadow: "4px 4px 3px darkblue"
         }}>
           Welcome to Sapphire Labels!
