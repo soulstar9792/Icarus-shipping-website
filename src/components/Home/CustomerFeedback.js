@@ -9,7 +9,7 @@ import $GS from "../../styles/constants";
 // Sample Customer Feedback Data with images and ratings
 const feedbackData = [
   {
-    name: "Maya Horton",
+    name: "Nathan Melon",
     designation: "Customer",
     feedback:
       "I run a small business that requires me to ship my products out daily, and even with variable sizes and weights of my parcel, a 120lb label costs the same as a 20lb label, which is nice. It has literally saved me so much money.",
@@ -17,7 +17,7 @@ const feedbackData = [
     rating: 4.5,
   },
   {
-    name: "Nathan Melon",
+    name: "Maya Horton",
     designation: "Customer",
     feedback:
       "I can't believe how quick the service is. It is fully automated, and when I have important items that need to be shipped quickly, I always use the overnight labels that can get them shipped ASAP.",
