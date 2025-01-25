@@ -26,7 +26,7 @@ const Home = () => {
   } = useSectionContext(); // Get the refs from context
 
   return (
-    <div className="bg-dark-bg text-white pt-[60px]">
+    <div className="bg-dark-bg text-white h-[calc(100% - 60px)]">
       <div ref={landingViewRef} id="landing-view">
         <LandingView />
       </div>
