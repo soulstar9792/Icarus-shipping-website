@@ -39,14 +39,12 @@ const LandingView = () => {
       }}
     >
       <div className="overlay absolute inset-0 bg-black opacity-50"></div>
-      <div className="absolute top-[30%] left-[50%] translate-x-[-50%] z-10">
+      <div className="absolute top-[35%] left-[50%] translate-x-[-50%] z-10">
         <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold lg:text-5xl text-primary animate__animated animate__zoomIn animate__delay-1s" style={{
           textShadow: "4px 4px 3px darkblue"
         }}>
           Welcome to Sapphire Labels!
         </h1>
-      </div>
-      <div className="absolute bottom-[43%] left-[50%] translate-x-[-50%] z-10">
         <p className="text-xs md:text-sm lg:text-lg mt-4 text-secondary animate__animated animate__fadeInUp animate__delay-1.5s">
           Your gateway to swift and reliable shipping solutions.
         </p>
