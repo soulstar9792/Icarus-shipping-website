@@ -534,16 +534,16 @@ const BulkOrder = () => {
               order_item_id: txtFile ? row.order_item_id : null,
               provider: txtFile ? selectedProvider : null,
               package_length: csvFile
-                ? row.package_length
+                ? row.PackageLength
                 : String(row.package_length),
               package_width: csvFile
-                ? row.package_width
+                ? row.PackageWidth
                 : String(row.package_width),
               package_height: csvFile
-                ? row.package_height
+                ? row.PackageHeight
                 : String(row.package_height),
               package_weight: csvFile
-                ? row.package_weight
+                ? row.PackageWeight
                 : String(row.package_weight),
               package_weight_unit: "LB", // Assuming weight is in pounds
               package_description: row.PackageDescription,

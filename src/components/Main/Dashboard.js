@@ -52,61 +52,64 @@ const Dashboard = () => {
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
       {/* Row for Balance, Total Deposited, Total Orders, and Total Spent */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <Card>
-          <div className="flex items-center">
-            <FaDollarSign
-              className={`${$GS.iconSize} text-custom-border mr-2`}
-            />
-            <div>
-              <h3 className={`${$GS.textHeading_3}`}>Balance</h3>
-              <p className={`${$GS.textNormal_1}`}>
-                ${user?.balance?.toFixed(2) || user.balance}
-              </p>
-            </div>
+      <Card>
+        <div className="flex items-center min-w-0">
+          <div className="flex-shrink-0 mr-2">
+            <FaDollarSign className={`${$GS.iconSize} text-custom-border`} />
           </div>
-        </Card>
-
-        <Card >
-          <div className="flex items-center">
-            <FaArrowUp className={`${$GS.iconSize} text-custom-border mr-2`} />
-            <div>
-              <h3 className={`${$GS.textHeading_3} truncate`}>Total Deposited</h3>
-              <p className={`${$GS.textNormal_1}`}>
-                {user?.totalDeposit
-                  ? "$" + user?.totalDeposit?.toFixed(2)
-                  : "-----"}
-              </p>
-            </div>
+          <div className="flex-1 min-w-0">
+            <h3 className={`${$GS.textHeading_3} truncate`}>Balance</h3>
+            <p className={`${$GS.textNormal_1}`}>
+              ${user?.balance?.toFixed(2) || user.balance}
+            </p>
           </div>
-        </Card>
+        </div>
+      </Card>
 
-        <Card>
-          <div className="flex items-center">
-            <FaShoppingCart
-              className={`${$GS.iconSize} text-custom-border mr-2`}
-            />
-            <div>
-              <h3 className={`${$GS.textHeading_3}`}>Total Orders</h3>
-              <p className={`${$GS.textNormal_1}`}>{orders?.length}</p>
-            </div>
+      <Card>
+        <div className="flex items-center min-w-0">
+          <div className="flex-shrink-0 mr-2">
+            <FaArrowUp className={`${$GS.iconSize} text-custom-border`} />
           </div>
-        </Card>
-
-        <Card>
-          <div className="flex items-center">
-            <FaFileAlt className={`${$GS.iconSize} text-custom-border mr-2`} />
-            <div>
-              <h3 className={`${$GS.textHeading_3}`}>Total Spent</h3>
-              <p className={`${$GS.textNormal_1}`}>
-                {user?.totalSpent
-                  ? "$" + user?.totalSpent?.toFixed(2)
-                  : "-----"}
-              </p>
-            </div>
+          <div className="flex-1 min-w-0">
+            <h3 className={`${$GS.textHeading_3} truncate`}>Total Deposited</h3>
+            <p className={`${$GS.textNormal_1}`}>
+              {user?.totalDeposit
+                ? "$" + user?.totalDeposit?.toFixed(2)
+                : "-----"}
+            </p>
           </div>
-        </Card>
-      </div>
+        </div>
+      </Card>
 
+      <Card>
+        <div className="flex items-center min-w-0">
+          <div className="flex-shrink-0 mr-2">
+            <FaShoppingCart className={`${$GS.iconSize} text-custom-border`} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className={`${$GS.textHeading_3} truncate`}>Total Orders</h3>
+            <p className={`${$GS.textNormal_1}`}>{orders?.length}</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card>
+        <div className="flex items-center min-w-0">
+          <div className="flex-shrink-0 mr-2">
+            <FaFileAlt className={`${$GS.iconSize} text-custom-border`} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className={`${$GS.textHeading_3} truncate`}>Total Spent</h3>
+            <p className={`${$GS.textNormal_1}`}>
+              {user?.totalSpent
+                ? "$" + user?.totalSpent?.toFixed(2)
+                : "-----"}
+            </p>
+          </div>
+        </div>
+      </Card>
+    </div>
       {/* Recent Orders and Recent Deposits in cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Recent Orders Card */}
