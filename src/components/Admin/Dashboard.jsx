@@ -130,6 +130,7 @@ const Dashboard = () => {
               <table className="w-full table-fixed">
                 <thead>
                   <tr className="border-b border-gray-700">
+                    <th className="text-left p-3 text-gray-400 w-40">No</th>
                     <th className="text-left p-3 text-gray-400 w-40">Invoice ID</th>
                     <th className="text-left p-3 text-gray-400 w-24">Amount</th>
                     <th className="text-left p-3 text-gray-400 w-44">Date Created</th>
@@ -139,11 +140,12 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {invoices.map((invoice) => (
+                  {invoices.map((invoice, ind) => (
                     <tr 
                       key={invoice.invoice_id} 
                       className="border-b border-custom-border hover:bg-gray-800"
                     >
+                      <td className="p-3 text-gray-300 truncate">{ind}</td>
                       <td className="p-3 text-gray-300 truncate">{invoice.invoice_id}</td>
                       <td className="p-3 text-gray-300">${invoice.amount_due_in_usd}</td>
                       <td className="p-3 text-gray-300">{invoice.date_created}</td>
