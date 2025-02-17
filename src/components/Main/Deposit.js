@@ -1,11 +1,11 @@
 import React from "react";
+import BtcPayForm from "../Utils/BtcPayForm";
 
 const Deposit = () => {
   return (
     <div className="deposit-container">
-      <h1 className="text-2xl font-bold">Deposit</h1>
       <p>
-        This is the Deposit component. Add your deposit-related content here.
+        <BtcPayForm />
       </p>
     </div>
   );

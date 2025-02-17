@@ -1,0 +1,13 @@
+.input-container {
+    position: relative; /* Needed for the pseudo-element to be positioned correctly */
+  }
+ 
+  .input-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1rem; /* Adjust this value as needed */
+    pointer-events: none; /* Important:  Make sure the pseudo-element doesn't interfere with clicks on the input */
+  }

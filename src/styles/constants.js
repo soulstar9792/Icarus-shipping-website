@@ -12,6 +12,7 @@ module.exports = {
     textFormHeading_2: 'text-md md:text-lg text-text-normal z-10',
 
     inputForm_1: 'border border-custom-border p-[5px] w-full bg-transparent text-custom-text text-s1 rounded-sm shadow-sm focus:outline-none focus:ring focus:ring-blue-400',
+    inputForm_2: 'border border-custom-border p-[5px] bg-transparent text-custom-text text-s2 rounded-sm shadow-sm focus:outline-none',
     
     cardContainer: 'flex flex-col items-center transition-all duration-300',
     iconSize: 'text-4xl md:text-5xl z-10 mb-2 md:mb-4 transition-all duration-300',
