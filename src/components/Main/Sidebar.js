@@ -104,7 +104,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                 className={`${$GS.Box_1} ${isActive ? $GS.ActiveBox : ""}`}
                 key={index}
               >
-                {index !== 7 && (
+                {index !== 8 && (
                   <Link className={`${$GS.SidebarItem}`} to={item.path}>
                     <span
                       className={`${
@@ -119,10 +119,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             );
           })}
           {user.user_role === "admin" && (
-            <li className={`${$GS.Box_1} `} key={8}>
-              <Link className={`${$GS.SidebarItem}`} to={menuItems[7].path}>
+            <li className={`${$GS.Box_1} `} key={9}>
+              <Link className={`${$GS.SidebarItem}`} to={menuItems[8].path}>
                 <span className={`${$GS.hoverText} flex items-center`}>
-                  {menuItems[7].icon} {menuItems[7].label}
+                  {menuItems[8].icon} {menuItems[8].label}
                 </span>
               </Link>
             </li>
