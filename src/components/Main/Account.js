@@ -1,14 +1,27 @@
-// src/components/Main/Account.js
-import React, { useState } from "react";
-import Card from "../Utils/Card"; // Ensure you have a Card component
-import $GS from "../../styles/constants"; // Import your styles
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import Card from "../Utils/Card";
+import $GS from "../../styles/constants";
 
 const Account = () => {
+  const currentUser = useSelector((state) => state.auth.user); // Get user from Redux store
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
+
+  // Populate the form with user data when available
+  useEffect(() => {
+    if (currentUser) {
+      setFormData({
+        name: currentUser.name || "",
+        email: currentUser.email || "",
+        password: "", // Leave password empty for security reasons
+      });
+    }
+  }, [currentUser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,6 +67,7 @@ const Account = () => {
               onChange={handleChange}
               className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
               required
+              disabled // Prevent email changes
             />
           </div>
           <div className="mb-4">
@@ -61,7 +75,7 @@ const Account = () => {
               className={`${$GS.textNormal_1} mb-2 block`}
               htmlFor="password"
             >
-              Password
+              Password (Leave empty to keep unchanged)
             </label>
             <input
               type="password"
@@ -70,7 +84,6 @@ const Account = () => {
               value={formData.password}
               onChange={handleChange}
               className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
-              required
             />
           </div>
           <button
