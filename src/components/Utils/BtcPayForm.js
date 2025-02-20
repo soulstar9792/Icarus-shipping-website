@@ -13,10 +13,14 @@ const BtcPayForm = () => {
   const currentUser = useSelector((state) => state.auth.user); // Get logged-in user
   
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "https://btcpay.sapphirelabels.com/modal/btcpay.js";
-    script.async = true;
-    document.head.appendChild(script);
+    // Check if the script is already in the document
+    if (!document.getElementById('btcpay-script')) {
+      const script = document.createElement('script');
+      script.src = "https://btcpay.sapphirelabels.com/modal/btcpay.js";
+      script.id = 'btcpay-script'; // Give the script an ID for further reference
+      script.async = true;
+      document.head.appendChild(script);
+    }
   }, []);
 
   const handleFormSubmit = async (event) => {
@@ -66,8 +70,8 @@ const BtcPayForm = () => {
       {loading && <Loading />}
       <Card className="w-full max-w-sm shadow-lg rounded-lg overflow-hidden">
         <div className="px-6 py-4">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-custom-text text-center">
-            Pay with BTC
+          <h2 className={`${$GS.textHeading_2}`}>
+            Top up with BTC
           </h2>
           <form className="btcpay-form btcpay-form--block" onSubmit={handleFormSubmit}>
             <div className="flex items-center mb-4 input-container">
