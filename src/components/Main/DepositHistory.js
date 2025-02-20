@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
-const DepositHistory = ({ userId }) => {
+const DepositHistory = () => {
   const [deposits, setDeposits] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading, ] = useState(true);
   const [error, setError] = useState("");
+  const currentUser = useSelector((state) => state.auth.user);
+  const userId = currentUser?._id;
 
   useEffect(() => {
     const fetchDepositHistory = async () => {
+      if (!userId) return; // Do not fetch if no user ID.
       try {
-        const response = await axios.get(`/api/payment/payment-history/${userId}`);
+        const response = await axios.get(`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/payment/payment-history/${userId}`, {
+            headers: { token: localStorage.getItem("token") },
+          });
         setDeposits(response.data.payments);
       } catch (err) {
         setError("Failed to load deposit history");
@@ -20,7 +26,7 @@ const DepositHistory = ({ userId }) => {
     };
 
     fetchDepositHistory();
-  }, [userId]);
+  }, [userId]); // This useEffect will run when userId changes.
 
   if (loading) return <p>Loading deposit history...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
