@@ -28,40 +28,53 @@ const BtcPayForm = () => {
     setLoading(true);
 
     const requestData = {
-      storeId: "78hA938PtM5PXfz9HRviwptXd5ek8Hg53i9LM7FdzgET",
-      price,
-      currency,
-      jsonResponse: true,
-      notifyEmail: "Sapphirewholesaling@gmail.com",
-      metadata: {
-        userId: currentUser?.id || "guest",
-        email: currentUser?.email || "unknown",
-      },
+        storeId: "4ZkM9Dg4mabKWoTQuEVouhSUV6PmXCNAygzkh6uApzy8",
+        price,
+        currency,
+        jsonResponse: true,
+        notifyEmail: "Sapphirewholesaling@gmail.com",
+        metadata: {
+            userId: currentUser?.id || "guest",
+            email: currentUser?.email || "unknown",
+        },
     };
 
+    const apiKey = "QWdVvnBEEOWnvP7pvoPhCZUVkWP7Ed0okkWPQQD1rGL"; // Replace with your actual API key
+    const base64ApiKey = btoa(`${apiKey}:`); // Base64 encode the API key (with blank password)
+
     try {
-      const response = await fetch('https://btcpay.sapphirelabels.com/api/v1/invoices', {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestData),
-      });
+        const response = await fetch('https://btcpay.sapphirelabels.com/api/v1/invoices', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Basic ${base64ApiKey}`, // Include the Authorization header
+            },
+            body: JSON.stringify(requestData),
+        });
 
-      const data = await response.json();
-      console.log("Invoice Response:", data);
+        if (!response.ok) {
+            console.error("Server error:", response.status, response.statusText);
+            const errorText = await response.text();
+            console.error("Response Data:", errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      if (!data || !data.invoiceId) {
-        throw new Error("Invalid invoice response format");
-      }
+        const data = await response.json();
+        console.log("Invoice Response:", data);
 
-      if (window.btcpay) {
-        window.btcpay.appendInvoiceFrame(data.invoiceId);
-      } else {
-        console.error("BTCPay script not loaded yet");
-      }
+        if (!data || !data.invoiceId) {
+            throw new Error("Invalid invoice response format");
+        }
+
+        if (window.btcpay) {
+            window.btcpay.appendInvoiceFrame(data.invoiceId);
+        } else {
+            console.error("BTCPay script not loaded yet");
+        }
     } catch (error) {
-      console.error("Error creating invoice:", error);
+        console.error("Error creating invoice:", error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
