@@ -55,3 +55,13 @@ html {
   text-shadow: 0 0 5px #ffffff4d, 0 0 10px #fff3, 0 0 15px #ffffff1a;
 }
 
+.deposit-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center align children */
+}
+
+/* Align the button and history with some margin */
+.deposit-container button {
+  margin-bottom: 1.5rem; /* Add spacing between button and history */
+}

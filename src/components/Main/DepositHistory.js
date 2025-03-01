@@ -18,12 +18,12 @@ const DepositHistory = () => {
       if (!userId) return; // Do not fetch if no user ID.
       try {
         const response = await axios.get(
-          `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/payment/payment-history/${userId}`,
+          `${process.env.REACT_APP_API_URL}/api/payment/top-up-history/${userId}`,
           {
             headers: { token: localStorage.getItem("token") },
           }
         );
-        setDeposits(response.data.payments);
+        setDeposits(response.data);
       } catch (err) {
         setError("Failed to load deposit history");
         console.error("Error fetching deposit history:", err);
@@ -39,11 +39,10 @@ const DepositHistory = () => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="deposit-history-container px-4 md:px-10 py-10 md:py-20 bg-custom-background">
+    <div className="w-full deposit-history-container px-4 md:px-10 bg-custom-background">
       <Card>
-        <h2 className={`${$GS.textHeading_2} mb-4`}>Deposit History</h2>
         {deposits.length === 0 ? (
-          <p>No deposits found.</p>
+          <p className={`${$GS.textFormHeading_1} mb-4`}>No deposits found.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-200">
@@ -51,7 +50,7 @@ const DepositHistory = () => {
                 <tr>
                   <th className="border border-custom-border p-2">Date</th>
                   <th className="border border-custom-border p-2">Amount</th>
-                  <th className="border border-custom-border p-2">Method</th>
+                  <th className="border border-custom-border p-2">Checkout</th>
                   <th className="border border-custom-border p-2">Status</th>
                 </tr>
               </thead>
@@ -59,19 +58,21 @@ const DepositHistory = () => {
                 {deposits.map((deposit) => (
                   <tr key={deposit._id} className="text-center">
                     <td className="border border-custom-border p-2">
-                      {new Date(deposit.date).toLocaleString()}
+                      {new Date(deposit.createdTime * 1000).toLocaleString()}
                     </td>
                     <td className="border border-custom-border p-2">
-                      {deposit.amount} BTC
+                      {deposit.amount} {deposit.currency}
                     </td>
                     <td className="border border-custom-border p-2">
-                      {deposit.paymentMethod}
+                      <a href={deposit.checkoutLink} target="_blank" className="text-blue-600 hover:text-blue-800">Link</a>
                     </td>
                     <td
                       className={`border border-custom-border p-2 font-semibold ${
                         deposit.status === "Completed"
                           ? "text-green-600"
-                          : "text-yellow-600"
+                          : deposit.status ==="New" 
+                            ? "text-blue-600"
+                            : "text-yellow-600"
                       }`}
                     >
                       {deposit.status}
