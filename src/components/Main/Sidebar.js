@@ -37,7 +37,7 @@ const menuItems = [
     icon: <FaClipboardList className="mr-2" />,
     label: "Orders",
   },
-  {
+  { 
     path: "/main/batch-orders",
     icon: <FaBoxes className="mr-2" />,
     label: "Batch Orders",
