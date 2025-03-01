@@ -14,7 +14,7 @@ const Dashboard = () => {
 
   const getUser = () => {
     return axios.get(
-      "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users",
+      `${process.env.REACT_APP_API_URL}/api/auth/users`,
       {
         headers: { token: localStorage.getItem("token") },
       }
@@ -32,7 +32,7 @@ const Dashboard = () => {
 
   const getApiBalance = async () => {
     try {
-      const response = await axios.get("https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/api/balance", {headers: {"Content-Type": "application/json"}}); 
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/api/balance`, {headers: {"Content-Type": "application/json"}}); 
       setApiBalance(response.data?.balance)
     } catch (error) {
       console.log("An Error Occured",error); 
@@ -44,9 +44,9 @@ const Dashboard = () => {
   const getApiDeposit = async () => {
     try {
       setLoader(true); 
-      const response = await axios.get("https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/api/deposit", {headers: {"Content-Type": "application/json"}}); 
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/api/deposit`, {headers: {"Content-Type": "application/json"}}); 
 
-     const invoicesArray = Object.values(response.data.deposits); 
+     const invoicesArray = Object.values(response.data); 
      setInvoices(invoicesArray)
     } catch (error) {
       console.log("An Error Occured",error); 

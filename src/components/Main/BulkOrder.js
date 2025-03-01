@@ -79,7 +79,7 @@ const BulkOrder = () => {
       let existingSku = null;
       try {
         const response = await axios.get(
-          `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`,
+          `${process.env.REACT_APP_API_URL}/api/auth/get-sku/${user._id}`,
           { headers: { "Content-Type": "application/json" } }
         );
 
@@ -103,7 +103,7 @@ const BulkOrder = () => {
       try {
         if (existingSku) {
           const response = await axios.post(
-            `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/update-sku/${user._id}/${existingSku._id}`,
+            `${process.env.REACT_APP_API_URL}/api/auth/update-sku/${user._id}/${existingSku._id}`,
             { skuData: parsedData },
             { headers: { "Content-Type": "application/json" } }
           );
@@ -115,7 +115,7 @@ const BulkOrder = () => {
           }
         } else {
           const response = await axios.post(
-            `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/add-sku/${user._id}`,
+            `${process.env.REACT_APP_API_URL}/api/auth/add-sku/${user._id}`,
             { parsedData: [parsedData] },
             { headers: { "Content-Type": "application/json" } }
           );
@@ -202,10 +202,10 @@ const BulkOrder = () => {
         try {
           const [addressResponse, skuResponse] = await Promise.all([
             axios.get(
-              `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`
+              `${process.env.REACT_APP_API_URL}/api/auth/get-address/${user._id}`
             ),
             axios.get(
-              `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-sku/${user._id}`
+              `${process.env.REACT_APP_API_URL}/api/auth/get-sku/${user._id}`
             ),
           ]);
           setSenderAddress(addressResponse.data?.savedAddress[0]);
@@ -555,7 +555,7 @@ const BulkOrder = () => {
         });
         try {
           const response = await axios.post(
-            "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
+            `${process.env.REACT_APP_API_URL}/api/orders/bulk/` +
               user._id,
             shipments,
             {
@@ -591,7 +591,7 @@ const BulkOrder = () => {
   const handleDownload = async () => {
     try {
       const response = await axios.get(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`,
+        `${process.env.REACT_APP_API_URL}/api/orders/download/${fileName}`,
         {
           responseType: "blob",
         }
@@ -664,7 +664,7 @@ const BulkOrder = () => {
         });
 
         const response = await axios.post(
-          "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/price/bulk",
+          `${process.env.REACT_APP_API_URL}/api/orders/price/bulk`,
           { userId: user._id, shipments: shipments },
           {
             headers: { "Content-Type": "application/json" },
@@ -1294,7 +1294,7 @@ const BulkOrder = () => {
             <Card>
               <p className={`${$GS.textNormal_1} text-center`}>
                 <a
-                  href={`https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/file/template`}
+                  href={`${process.env.REACT_APP_API_URL}/api/orders/file/template`}
                   target="_blank"
                   rel="noopener noreferrer"
                   download

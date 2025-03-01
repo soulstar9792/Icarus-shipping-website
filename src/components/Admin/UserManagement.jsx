@@ -14,7 +14,7 @@ const UserManagement = () => {
 
   const getUser = () => {
     return axios.get(
-      "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users",
+      `${process.env.REACT_APP_API_URL}/api/auth/users`,
       {
         headers: { token: localStorage.getItem("token") },
       }
@@ -36,7 +36,7 @@ const UserManagement = () => {
   const handleRoleChange = (id, newRole) => {
     axios
       .post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/role/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/auth/users/role/${id}`,
         { user_role: newRole },
         {
           headers: { token: localStorage.getItem("token") },
@@ -74,7 +74,7 @@ const UserManagement = () => {
     if (selectedUser) {
       axios
         .post(
-          `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/balance/${selectedUser}`,
+          `${process.env.REACT_APP_API_URL}/api/auth/users/balance/${selectedUser}`,
           { balance: newBalance },
           {
             headers: { token: localStorage.getItem("token") },
@@ -102,7 +102,7 @@ const UserManagement = () => {
   const toggleAccess = (id, activation) => {
     axios
       .post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/activation/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/auth/users/activation/${id}`,
         { activation: activation === "Allow" ? "block" : "allow" },
         {
           headers: { token: localStorage.getItem("token") },
@@ -128,7 +128,7 @@ const UserManagement = () => {
   const deleteUser = (id) => {
     axios
       .delete(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/auth/users/${id}`,
         {
           headers: { token: localStorage.getItem("token") },
         }

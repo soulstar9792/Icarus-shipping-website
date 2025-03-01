@@ -15,7 +15,7 @@ const BatchOrders = () => {
 
   const getBatchOrders = () => {
     return axios.get(
-      "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/bulk/" +
+      `${process.env.REACT_APP_API_URL}/api/orders/bulk/` +
         user._id,
       {
         headers: { token: localStorage.getItem("token") },
@@ -50,7 +50,7 @@ const BatchOrders = () => {
     // console.log(fileName)
     try {
       const response = await axios.get(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/download/${fileName}`,
+        `${process.env.REACT_APP_API_URL}/api/orders/download/${fileName}`,
         {
           responseType: "blob", // Important for downloading files
         }

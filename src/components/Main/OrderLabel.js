@@ -193,7 +193,7 @@ const OrderLabel = () => {
     console.log(shipmentData);
     try {
       const response = await axios.post(
-        "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders",
+        `${process.env.REACT_APP_API_URL}/api/orders`,
         shipmentData,
         {
           headers: { "Content-Type": "application/json" },
@@ -227,7 +227,7 @@ const OrderLabel = () => {
   const getServiceCost = async (userId, courier, service) => {
     console.log("the service ", service);
     const res = await axios.post(
-      "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/price/single",
+      `${process.env.REACT_APP_API_URL}/api/orders/price/single`,
       { userId, courier, service },
       { headers: { "Content-Type": "application/json" } }
     );
@@ -244,7 +244,7 @@ const OrderLabel = () => {
   const getSavedAddress = async () => {
     try {
       const response = await axios.get(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/get-address/${user._id}`,
+        `${process.env.REACT_APP_API_URL}/api/auth/get-address/${user._id}`,
         {},
         { headers: { "Content-Type": "application/json" } }
       );

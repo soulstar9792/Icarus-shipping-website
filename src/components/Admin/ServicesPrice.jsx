@@ -7,7 +7,7 @@ function App() {
 
   const getUser = () => {
     return axios.get(
-      "https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/auth/users",
+      `${process.env.REACT_APP_API_URL}/api/auth/users`,
       {
         headers: { token: localStorage.getItem("token") },
       }
@@ -51,7 +51,7 @@ function App() {
 
       // Make the API call
       const response = await axios.post(
-        `https://lcarus-shipping-backend-ce6c088c70be.herokuapp.com/api/orders/service-price/${userId}`,
+        `${process.env.REACT_APP_API_URL}/api/orders/service-price/${userId}`,
         {
           service,
           costType,
