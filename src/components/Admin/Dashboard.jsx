@@ -41,23 +41,23 @@ const Dashboard = () => {
 
    
 
-  const getApiDeposit = async () => {
-    try {
-      setLoader(true); 
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/api/deposit`, {headers: {"Content-Type": "application/json"}}); 
+  // const getApiDeposit = async () => {
+  //   try {
+  //     setLoader(true); 
+  //     const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/api/deposit`, {headers: {"Content-Type": "application/json"}}); 
 
-     const invoicesArray = Object.values(response.data); 
-     setInvoices(invoicesArray)
-    } catch (error) {
-      console.log("An Error Occured",error); 
-    }finally{
-      setLoader(false)
-    }
-  }
+  //    const invoicesArray = Object.values(response.data); 
+  //    setInvoices(invoicesArray)
+  //   } catch (error) {
+  //     console.log("An Error Occured",error); 
+  //   }finally{
+  //     setLoader(false)
+  //   }
+  // }
 
   useEffect(()=>{
     getApiBalance(); 
-    getApiDeposit();
+    // getApiDeposit();
   },[]);
  
 
