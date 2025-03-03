@@ -139,7 +139,7 @@ const OrderLabel = () => {
       }, 2000)
       return;
     }
-    if (!selectedProvider) {
+    if (selectedCourier === "USPS" && !selectedProvider) {
       setNotification({
         visible: true,
         message: "Please select a Provider",
