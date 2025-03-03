@@ -76,37 +76,41 @@ const BatchOrders = () => {
       <Card>
         <h2 className={`${$GS.textHeading_2} mb-4`}>Batch Orders List</h2>
         <div className="overflow-x-auto">
-          <table className="min-w-full border-separate border-spacing-0 border-custom-border">
+          <table className="min-w-full border-separate border-spacing-0 border-custom-border text-center">
             <thead className="bg-custom-background text-custom-text sticky top-0 z-30 border border-custom-border">
               <tr>
                 <th className="border border-custom-border p-2">No</th>
+                <th className="border border-custom-border p-2">Created Date</th>
                 <th className="border border-custom-border p-2">Courier</th>
-                <th className="border border-custom-border p-2">download</th>
-                <th className="border border-custom-border p-2">Create Date</th>
+                <th className="border border-custom-border p-2">Label Count</th>
                 <th className="border border-custom-border p-2">Price</th>
+                <th className="border border-custom-border p-2">Download</th>
               </tr>
             </thead>
             <tbody className="bg-custom-background text-custom-text">
-              {currentOrders.map((order) => (
-                <tr key={order.no}>
+              {currentOrders.map((order, i) => (
+                <tr key={order._id}>
                   <td className="border border-custom-border p-2">
-                    {order._id}
+                    {i+1}
+                  </td>
+                  <td className="border border-custom-border p-2">
+                    {order.createdAt}
                   </td>
                   <td className="border border-custom-border p-2">
                     {order.courier}
                   </td>
                   <td className="border border-custom-border p-2">
+                    {order.bulkOrderData.orders.length}
+                  </td>
+                  <td className="border border-custom-border p-2">
                     <button
                       className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border1 border-blue-600 mx-1 bg-blue-700 font-bold`}
-                      onClick={() => handleDownload(order.__filename)}
+                      onClick={() => handleDownload(order.fileName)}
                     >
                       Download
                     </button>
                   </td>
-                  <td className="border border-custom-border p-2">
-                    {order.createdAt}
-                  </td>
-                  <td className="border border-custom-border p-2">${"10"}</td>
+                  <td className="border border-custom-border p-2">${order.bulkOrderData.cost}</td>
                 </tr>
               ))}
               {/* Add more rows here as necessary */}

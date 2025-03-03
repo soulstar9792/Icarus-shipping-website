@@ -228,9 +228,10 @@ const BulkOrder = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    console.log("file", file);
     if (file) {
       try {
-        const fileType = file.name.split(".")[1];
+        const fileType = file.name.split(".").pop();
         if (fileType === "csv") {
           setCsvFile(file);
           setTxtFile(null);
@@ -248,6 +249,7 @@ const BulkOrder = () => {
         }
         if (fileType === "csv") {
           if (file) {
+            console.log("csv file", file);
             Papa.parse(file, {
               header: true,
               skipEmptyLines: true,
@@ -255,7 +257,7 @@ const BulkOrder = () => {
                 const { data } = results;
                 const invalidRows = [];
                 const validData = [];
-
+                console.log("results", results);
                 data.forEach((row, index) => {
                   const validation = validateRow(row);
                   const rowWithErrors = { ...row, errors: validation.errors };
@@ -1353,23 +1355,28 @@ export default BulkOrder;
 
 const Modal = ({ isVisible, message, onClose, onDownload }) => {
   if (!isVisible) return null;
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg p-4 shadow-lg">
-        <h2 className="text-lg font-bold mb-4">{message}</h2>
-        <button
-          onClick={onDownload}
-          className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-        >
-          Download File
-        </button>
-        <button
-          onClick={onClose}
-          className="bg-gray-300 text-black px-4 py-2 rounded"
-        >
-          Close
-        </button>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-20 transition-opacity duration-300">
+          <Card>
+              <h2 className={`${$GS.textFormHeading_2} text-hover-text mb-4`}>
+                  {message}
+              </h2>
+              <div className="flex justify-end">
+                  <button
+                      onClick={onDownload}
+                      className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition-colors duration-200 mr-2"
+                  >
+                      Download File
+                  </button>
+                  <button
+                      onClick={onClose}
+                      className="bg-gray-300 hover:bg-gray-200 text-black px-4 py-2 rounded-md transition-colors duration-200"
+                  >
+                      Close
+                  </button>
+          </div>
+              </Card>
       </div>
-    </div>
   );
 };
