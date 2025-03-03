@@ -408,6 +408,7 @@ const OrderLabel = () => {
                       weight: e.target.value,
                     })
                   }
+                  min="0" // Minimum value set to 0
                   required
                 />
               </div>
@@ -434,6 +435,7 @@ const OrderLabel = () => {
                       length: e.target.value,
                     })
                   }
+                  min="0" // Minimum value set to 0
                   required
                 />
               </div>
@@ -453,6 +455,7 @@ const OrderLabel = () => {
                       width: e.target.value,
                     })
                   }
+                  min="0" // Minimum value set to 0
                   required
                 />
               </div>
@@ -472,6 +475,7 @@ const OrderLabel = () => {
                       height: e.target.value,
                     })
                   }
+                  min="0" // Minimum value set to 0
                   required
                 />
               </div>
