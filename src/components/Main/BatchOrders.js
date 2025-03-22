@@ -25,7 +25,7 @@ const BatchOrders = () => {
   useEffect(() => {
     getBatchOrders().then((res) => {
       setLoading(true);
-      setBatchOrdersData(res.data);
+      setBatchOrdersData(res.data.reverse());
       setLoading(false);
       // console.log(res.data);
     });
@@ -47,27 +47,32 @@ const BatchOrders = () => {
     setCurrentPage(pageNumber);
   };
   const handleDownload = async (fileName) => {
-    // console.log(fileName)
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/orders/download/${fileName}`,
         {
-          responseType: "blob", // Important for downloading files
+          responseType: "blob",
         }
       );
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "label.pdf"); // Set the file name for download
+
+      const contentDisposition = response.headers["content-disposition"];
+      const fileNameFromResponse = contentDisposition
+        ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+        : fileName;
+      link.setAttribute("download", fileNameFromResponse);
+
       document.body.appendChild(link);
       link.click();
       link.remove();
 
-      // Close modal after download
-      setModalVisible(false);
+      window.URL.revokeObjectURL(url);
+
     } catch (error) {
-      console.error("Error downloading PDF:", error.message);
+      console.error("Error downloading file:", error.message);
     }
   };
   return (
@@ -102,15 +107,27 @@ const BatchOrders = () => {
                   <td className="border border-custom-border p-2">
                     {order.bulkOrderData.orders.length}
                   </td>
-                  <td className="border border-custom-border p-2">
-                    <button
-                      className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border1 border-blue-600 mx-1 bg-blue-700 font-bold`}
-                      onClick={() => handleDownload(order.fileName)}
-                    >
-                      Download
-                    </button>
-                  </td>
                   <td className="border border-custom-border p-2">${order.bulkOrderData.cost}</td>
+                  <td className="border border-custom-border p-2">
+                    {order.pdfName && <button
+                      className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border1 border-blue-600 mx-1 bg-blue-700 font-bold`}
+                      onClick={() => handleDownload(order.pdfName)}
+                    >
+                      PDF
+                    </button>}
+                    {order.resultCSVName && <button
+                      className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border1 border-blue-600 mx-1 bg-blue-700 font-bold`}
+                      onClick={() => handleDownload(order.resultCSVName)}
+                    >
+                      Result CSV
+                    </button>}
+                    {order.autoConfirmCSVName && <button
+                      className={`px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 border1 border-blue-600 mx-1 bg-blue-700 font-bold`}
+                      onClick={() => handleDownload(order.autoConfirmCSVName)}
+                    >
+                      Auto Confirm CSV
+                    </button>}
+                  </td>
                 </tr>
               ))}
               {/* Add more rows here as necessary */}
