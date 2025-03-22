@@ -24,7 +24,7 @@ const BulkOrder = () => {
     type: "",
   });
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
-  const [fileName, setFileName] = useState(null);
+  const [fileData, setFileData] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
   const [senderAddress, setSenderAddress] = useState(null);
   const [availableServices, setAvailableServices] = useState([]);
@@ -48,10 +48,10 @@ const BulkOrder = () => {
   const handleSave = async (index) => {
     const newData = [...uploadedData];
     const dimensionFields = [
-      "package_weight",
-      "package_length",
-      "package_width",
-      "package_height",
+      "PackageWeight",
+      "PackageLength",
+      "PackageWidth",
+      "PackageHeight",
     ];
 
     dimensionFields.forEach((field) => {
@@ -94,10 +94,10 @@ const BulkOrder = () => {
       const parsedData = {
         sku: editedData.sku_number,
         maxQty: editedData.quantity || 1,
-        weight: parseFloat(editedData.package_weight) || null,
-        length: parseFloat(editedData.package_length) || null,
-        width: parseFloat(editedData.package_width) || null,
-        height: parseFloat(editedData.package_height) || null,
+        weight: parseFloat(editedData.PackageWeight) || null,
+        length: parseFloat(editedData.PackageLength) || null,
+        width: parseFloat(editedData.PackageWidth) || null,
+        height: parseFloat(editedData.PackageHeight) || null,
       };
 
       try {
@@ -351,7 +351,7 @@ const BulkOrder = () => {
     return data.map((row) => ({
       courier: "selectedCourier",
       service_name: row.ServiceName
-        ? row.Service_name
+        ? row.ServiceName
         : selectedService || "N/A",
       manifested: false,
 
@@ -478,10 +478,10 @@ const BulkOrder = () => {
     if (txtFile) {  
       const missingFields = uploadedData.filter(
         (row) =>
-          (!row.package_length || row.package_length === 'undefined') ||
-          (!row.package_height || row.package_height === 'undefined') ||
-          (!row.package_width || row.package_width === 'undefined') ||
-          (!row.package_weight || row.package_weight === 'undefined') ||
+          (!row.PackageLength || row.PackageLength === 'undefined') ||
+          (!row.PackageHeight || row.PackageHeight === 'undefined') ||
+          (!row.PackageWidth || row.PackageWidth === 'undefined') ||
+          (!row.PackageWeight || row.PackageWeight === 'undefined') ||
           (!row.sku_number)
       );
 
@@ -537,21 +537,21 @@ const BulkOrder = () => {
               provider: txtFile ? selectedProvider : null,
               package_length: csvFile
                 ? row.PackageLength
-                : String(row.package_length),
+                : String(row.PackageLength),
               package_width: csvFile
                 ? row.PackageWidth
-                : String(row.package_width),
+                : String(row.PackageWidth),
               package_height: csvFile
                 ? row.PackageHeight
-                : String(row.package_height),
+                : String(row.PackageHeight),
               package_weight: csvFile
                 ? row.PackageWeight
-                : String(row.package_weight),
+                : String(row.PackageWeight),
               package_weight_unit: "LB", // Assuming weight is in pounds
               package_description: row.PackageDescription,
               package_reference1: row.PackageReference1 || "", // Handling missing fields
               package_reference2: row.PackageReference2 || "", // Same as above
-              order_item_quanity: String(row.quantity) || "1",
+              order_item_quantity: String(row.quantity) || "1",
             },
           };
         });
@@ -576,21 +576,32 @@ const BulkOrder = () => {
             return;
           }
           const result = await response.data;
-          if (result.fileName) {
+          if (result.fileData) {
             // Assume the response contains a download Id
-            setFileName(result.fileName);
+            setFileData(result.fileData);
             setModalVisible(true); // Show modal
           }
-          // console.log(result);
+          console.log("Bulk Order creation result", result); 
           setLoading(false);
         } catch (error) {
           console.error("Error:", error);
+          
+          setLoading(false);
+          error.response && error.response.data.data && setNotification({
+            visible: true,
+            message: error.response.data.data.message,
+            type: "error",
+          });
+          setTimeout(() => {
+            setNotification({ ...notification, visible: false });
+          }, 2000);
+          return;
         }
       }
     }
   };
 
-  const handleDownload = async () => {
+  const handleDownload = async (fileName) => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/orders/download/${fileName}`,
@@ -615,7 +626,6 @@ const BulkOrder = () => {
 
       window.URL.revokeObjectURL(url);
 
-      setModalVisible(false);
     } catch (error) {
       console.error("Error downloading file:", error.message);
     }
@@ -683,7 +693,7 @@ const BulkOrder = () => {
     if (csvFile || txtFile) {
       getBulkCost();
     }
-  }, [csvFile, txtFile, courierType, uploadedData, selectedService]);
+  }, [csvFile, txtFile, selectedService, uploadedData]);
 
   const HandleCourierChange = (e) => {
     const selected = e.target.value;
@@ -740,10 +750,10 @@ const BulkOrder = () => {
 
       return {
         ...row,
-        package_length: skuDetails?.length ?? row.package_length ?? null,
-        package_width: skuDetails?.width ?? row.package_width ?? null,
-        package_height: skuDetails?.height ?? row.package_height ?? null,
-        package_weight: skuDetails?.weight ?? row.package_weight ?? null,
+        PackageLength: skuDetails?.length ?? row.PackageLength ?? null,
+        PackageWidth: skuDetails?.width ?? row.PackageWidth ?? null,
+        PackageHeight: skuDetails?.height ?? row.PackageHeight ?? null,
+        PackageWeight: skuDetails?.weight ?? row.PackageWeight ?? null,
         quantity: skuDetails?.maxQty ?? 1,
       };
     });
@@ -816,7 +826,7 @@ const BulkOrder = () => {
               <select
                 id="labelType"
                 value={courierType}
-                onChange={HandleCourierChange}
+                onChange={()=>HandleCourierChange()}
                 className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
               >
                 <option value="">Select Courier Type...</option>
@@ -1341,7 +1351,7 @@ const BulkOrder = () => {
         onClose={() => setNotification({ ...notification, visible: false })}
       />
       <Modal
-        file={csvFile}
+        fileData={fileData}
         isVisible={modalVisible}
         message="Your orders have been submitted successfully!"
         onClose={() => setModalVisible(false)}
@@ -1353,7 +1363,7 @@ const BulkOrder = () => {
 
 export default BulkOrder;
 
-const Modal = ({ isVisible, message, onClose, onDownload }) => {
+const Modal = ({ fileData, isVisible, message, onClose, onDownload }) => {
   if (!isVisible) return null;
 
   return (
@@ -1363,12 +1373,30 @@ const Modal = ({ isVisible, message, onClose, onDownload }) => {
                   {message}
               </h2>
               <div className="flex justify-end">
+                {fileData.pdfName && (
                   <button
-                      onClick={onDownload}
+                      onClick={() => onDownload(fileData.pdfName)}
                       className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition-colors duration-200 mr-2"
                   >
-                      Download File
-                  </button>
+                      Download PDF
+                  </button>)
+                  }
+                {fileData.resultCSVName && (
+                  <button
+                      onClick={() => onDownload(fileData.resultCSVName)}
+                      className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition-colors duration-200 mr-2"
+                  >
+                      Download Result CSV
+                  </button>)
+                  }
+                {fileData.autoConfirmCSVName && (
+                  <button
+                      onClick={() => onDownload(fileData.autoConfirmCSVName)}
+                      className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition-colors duration-200 mr-2"
+                  >
+                      Download AutoConfirm CSV
+                  </button>)
+                }
                   <button
                       onClick={onClose}
                       className="bg-gray-300 hover:bg-gray-200 text-black px-4 py-2 rounded-md transition-colors duration-200"
