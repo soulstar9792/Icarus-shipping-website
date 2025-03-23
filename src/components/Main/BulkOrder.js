@@ -156,7 +156,7 @@ const BulkOrder = () => {
         <input
           type="text"
           value={
-            editedData[field] !== "undefined" && editedData[field] !== null
+            editedData[field] !== undefined && editedData[field] !== null
               ? editedData[field]
               : ""
           }
@@ -197,33 +197,32 @@ const BulkOrder = () => {
   };
 
   useEffect(() => {
+    let isMounted = true;
     const fetchInitialData = async () => {
-      if (user) {
+      if (user && isMounted) {
         try {
           const [addressResponse, skuResponse] = await Promise.all([
-            axios.get(
-              `${process.env.REACT_APP_API_URL}/api/auth/get-address/${user._id}`
-            ),
-            axios.get(
-              `${process.env.REACT_APP_API_URL}/api/auth/get-sku/${user._id}`
-            ),
+            axios.get(`${process.env.REACT_APP_API_URL}/api/auth/get-address/${user._id}`),
+            axios.get(`${process.env.REACT_APP_API_URL}/api/auth/get-sku/${user._id}`),
           ]);
-          setSenderAddress(addressResponse.data?.savedAddress[0]);
-          setSkuData(skuResponse.data.SkuData);
+          if(isMounted) {
+            setSenderAddress(addressResponse.data?.savedAddress[0]);
+            setSkuData(skuResponse.data.SkuData);
+          }
         } catch (error) {
-          console.error("Error fetching initial data:", error);
-          setNotification({
-            visible: true,
-            message: "Error loading initial data",
-            type: "error",
-          });
-          setTimeout(() => {
-            setNotification({ ...notification, visible: false });
-          }, 2000);
+          if(isMounted) {
+            console.error("Error fetching initial data:", error);
+            setNotification({
+              visible: true,
+              message: error.response?.data?.message || "Error loading initial data",
+              type: "error",
+            });
+          }
         }
       }
     };
     fetchInitialData();
+    return () => { isMounted = false };
   }, [user]);
 
   const handleFileChange = (event) => {
@@ -280,7 +279,7 @@ const BulkOrder = () => {
                   });
                   setTimeout(() => {
                     setNotification({ ...notification, visible: false });
-                  }, 2000);
+                  }, 4000);
                 } else {
                   setNotification({
                     visible: true,
@@ -289,7 +288,7 @@ const BulkOrder = () => {
                   });
                   setTimeout(() => {
                     setNotification({ ...notification, visible: false });
-                  }, 2000);
+                  }, 4000);
                 }
 
                 setUploadedData(validData);
@@ -358,8 +357,8 @@ const BulkOrder = () => {
       FromSenderName: senderAddress?.name || "",
       FromPhone: senderAddress?.phone || "",
       FromCompany: senderAddress?.company || "",
-      FromStreet1: senderAddress?.state || " ",
-      FromStreet2: senderAddress?.address2 || "",
+      FromStreet1: senderAddress?.street || " ",
+      FromStreet2: senderAddress?.street2 || "",
       FromCity: senderAddress?.city || " ",
       FromStateProvince: senderAddress?.state || " ",
       FromZipPostal: senderAddress?.zip || " ",
@@ -463,7 +462,7 @@ const BulkOrder = () => {
       if (invalidRows.length) {
         setNotification({
           visible: true,
-          message: `Please fill the mising fields`,
+          message: `Please fill the missing fields`,
           type: "warning",
         });
         setTimeout(() => {
@@ -511,7 +510,7 @@ const BulkOrder = () => {
             sender: {
               ...(txtFile ? { order_id: row.sku_number } : {}),
               sender_name: row.FromSenderName,
-              sender_phone: row.FromPhone,
+              sender_phone: String(row.FromPhone),
               sender_company: row.FromCompany,
               sender_address1: row.FromStreet1,
               sender_address2: row.FromStreet2,
@@ -572,7 +571,7 @@ const BulkOrder = () => {
             });
             setTimeout(() => {
               setNotification({ ...notification, visible: false });
-            }, 2000);
+            }, 8000);
             return;
           }
           const result = await response.data;
@@ -594,7 +593,7 @@ const BulkOrder = () => {
           });
           setTimeout(() => {
             setNotification({ ...notification, visible: false });
-          }, 2000);
+          }, 6000);
           return;
         }
       }
@@ -642,7 +641,7 @@ const BulkOrder = () => {
             manifested: false,
             sender: {
               sender_name: row.FromSenderName,
-              sender_phone: row.FromPhone,
+              sender_phone: String(row.FromPhone),
               sender_company: row.FromCompany,
               sender_address1: row.FromStreet1,
               sender_address2: row.FromStreet2,
@@ -709,6 +708,7 @@ const BulkOrder = () => {
       setAvailableServices([]);
     }
   };
+
 
   const splitDataByMaxQty = (data) => {
     if (!data || !data.length) return [];
@@ -826,7 +826,7 @@ const BulkOrder = () => {
               <select
                 id="labelType"
                 value={courierType}
-                onChange={()=>HandleCourierChange()}
+                onChange={HandleCourierChange}
                 className="border border-custom-border p-2 w-full bg-transparent text-custom-text"
               >
                 <option value="">Select Courier Type...</option>
