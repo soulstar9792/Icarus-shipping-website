@@ -69,6 +69,7 @@ const DropDownSection = ({
                 "USPSvShippo",
                 "USPSvStore",
                 "USPSvUnbranded",
+                "USPSvEasyPost",
             ].map((provider, index) => (
                 <option key={index} value={provider}>
                 {provider}

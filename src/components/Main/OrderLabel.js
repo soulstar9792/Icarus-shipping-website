@@ -381,7 +381,7 @@ const OrderLabel = () => {
                   <option value="" className="text-gray-500">
                     Select a Provider...
                   </option>
-                  {["USPSveVS", "USPSvShippo", "USPSvStore", "USPSvUnbranded"].map((provider, index) => (
+                  {["USPSveVS", "USPSvShippo", "USPSvStore", "USPSvUnbranded", "USPSvEasyPost"].map((provider, index) => (
                     <option key={index} value={provider}>
                       {provider}
                     </option>
@@ -501,7 +501,7 @@ const OrderLabel = () => {
             <div className="flex justify-between mt-4">
               <div className="w-1/2 pr-2">
                 <label htmlFor="reference1" className={`${$GS.textBase}`}>
-                  Reference 1 (optional)
+                  Quantity (default 1)
                 </label>
                 <input
                   id="reference1"
@@ -519,7 +519,7 @@ const OrderLabel = () => {
               </div>
               <div className="w-1/2 pl-2">
                 <label htmlFor="reference2" className={`${$GS.textBase}`}>
-                  Reference 2 (optional)
+                  SKU Number (optional)
                 </label>
                 <input
                   id="reference2"
