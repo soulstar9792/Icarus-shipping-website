@@ -174,8 +174,8 @@ export const useBulkOrder = (user) => {
     
     try {
       const shipments = state.uploadedData.map(row => ({
-        courier: row.courier,
-        service_name: row.service_name,
+        courier: state.courierType,
+        service_name: state.selectedService,
         manifested: false,
         sender: {
           order_id: row.orderId,
@@ -227,7 +227,7 @@ export const useBulkOrder = (user) => {
         loading: false,
         notification: {
           visible: true,
-          message: error.response?.data?.message || "Submission failed",
+          message: error.response?.data?.data?.message || "Submission failed",
           type: "error"
         }
       }));
