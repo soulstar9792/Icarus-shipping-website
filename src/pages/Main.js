@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import PrivateRoute from "../components/PrivateRoute";
 import Dashboard from "../components/Main/Dashboard";
 import OrderLabel from "../components/Main/OrderLabel";
-import BulkOrder from "../components/Main/BulkOrder";
+import BulkOrder from "../components/Main/BulkOrder/index";
 import Orders from "../components/Main/Orders";
 import BatchOrders from "../components/Main/BatchOrders";
 import Deposit from "../components/Main/Deposit";
