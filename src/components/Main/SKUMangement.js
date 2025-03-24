@@ -211,7 +211,7 @@ function SKUManagement() {
     const { name, value } = e.target;
     setEditForm((prev) => ({
       ...prev,
-      [name]: name === "sku" ? value : value === "" ? "" : Number(value) || 0,
+      [name]: name === "sku" ? value : value === "" ? "" : value,
     }));
     // Clear error for this field when user starts typing
     setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -221,7 +221,7 @@ function SKUManagement() {
     const { name, value } = e.target;
     setNewSku((prev) => ({
       ...prev,
-      [name]: name === "sku" ? value : value === "" ? "" : Number(value) || 0,
+      [name]: name === "sku" ? value : value === "" ? "" : value,
     }));
     // Clear error for this field when user starts typing
     setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -323,7 +323,7 @@ function SKUManagement() {
                       </td>
                       <td className="border-b  border-custom-border px-2 py-2 text-sm md:text-base text-white">
                         <input
-                          type="number"
+                          type="text"
                           name="description"
                           value={editForm?.description || ""}
                           onChange={handleChange}
@@ -520,21 +520,21 @@ function SKUManagement() {
                         min="0"
                       />
                     </div>
+                  </div>
                     <div>
+                    <div className="grid grid-cols">
                       <label className="block text-sm font-medium mb-1">
                         Description
                       </label>
                       <input
-                        type="number"
+                        type="text"
                         name="description"
                         value={newSku.description}
                         onChange={handleNewSkuChange}
                         className="w-full bg-gray-700 border border-custom-border rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
-                        min="0"
                       />
                     </div>
                   </div>
-
                   <div className="flex justify-end gap-4 mt-6">
                     <button
                       type="button"
