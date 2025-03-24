@@ -107,11 +107,11 @@ export const useBulkOrder = (user) => {
           const processedData = file.name.endsWith(".csv") 
             ? processCSV(results.data)
             : processTXT(results.data);
+          setUploadedData(processedData);
 
           setState(prev => ({
             ...prev,
-            [file.name.endsWith(".csv") ? "csvFile" : "txtFile"]: file,
-            uploadedData: processedData
+            [file.name.endsWith(".csv") ? "csvFile" : "txtFile"]: file
           }));
         },
         error: (error) => {
@@ -141,6 +141,8 @@ export const useBulkOrder = (user) => {
   const processCSV = (data) => {
     const invalidRows = [];
     const validData = data.map((row, index) => {
+      row.quantity = row.PackageReference1 || "1";
+      row.skuNumber = row.PackageReference2 || null;
       const validation = validateRow(row, true);
       if (!validation.isValid) invalidRows.push({ rowIndex: index + 1, errors: validation.errors });
       return { ...row, errors: validation.errors };
@@ -172,11 +174,11 @@ export const useBulkOrder = (user) => {
     
     try {
       const shipments = state.uploadedData.map(row => ({
-        courier: state.courierType,
-        service_name: state.selectedService,
+        courier: row.courier,
+        service_name: row.service_name,
         manifested: false,
         sender: {
-          order_id: state.txtFile ? row.sku_number : null,
+          order_id: row.orderId,
           sender_name: row.FromSenderName,
           sender_phone: row.FromPhone,
           sender_address1: row.FromStreet1,
@@ -195,13 +197,15 @@ export const useBulkOrder = (user) => {
           receiver_country: row.ToCountry,
         },
         package: {
-          sku_number: state.txtFile ? row.sku_number : null,
-          package_length: row.PackageLength,
-          package_width: row.PackageWidth,
-          package_height: row.PackageHeight,
-          package_weight: row.PackageWeight,
+          order_item_id: String(row.orderItemId),
+          quantity: String(row.quantity),
+          sku_number: state.txtFile ? row.skuNumber : null,
+
+          package_length: String(row.PackageLength),
+          package_width: String(row.PackageWidth),
+          package_height: String(row.PackageHeight),
+          package_weight: String(row.PackageWeight),
           package_weight_unit: "LB",
-          order_item_quantity: String(row.quantity) || "1"
         }
       }));
 
@@ -236,16 +240,71 @@ export const useBulkOrder = (user) => {
     
     const courierType = LabelServicesType.find(
       (courier) => courier.courier === selected
-    );
+      );
+    const servicesList = Object.keys(courierType.services);
     
+    // update uploaded data's courier to the selected courier.
+    let updatedData = state.uploadedData.map((row) => ({...row, courier: selected}));
     setState(prev => ({
       ...prev,
       courierType: selected,
-      availableServices: courierType?.services || [],
+      availableServices: servicesList,
       selectedService: null,
-      selectedProvider: null
+      selectedProvider: null,
+      uploadedData: updatedData
     }));
   };
+
+  // Update uploadedData's Weight, Length, Width, Height, Description to SkuData if the SKU is already registered. If not, add the SKU to the registered SKUs.
+  const setUploadedData = (data) => {
+    
+        // update uploaded data's weight, length, width, height if the sku is already registered.
+        let updatedData = data.map((row) => {
+          
+          row.courier = state.courierType || null;
+          row.service_name = state.selectedService || null;
+          row.provider = state.selectedProvider || null;
+
+          const sku = state.SkuData.find((sku) => sku.sku === row.skuNumber);
+          if (sku) {
+            return {
+              ...row,
+              PackageWeight: sku.weight,
+              PackageLength: sku.length,
+              PackageWidth: sku.width,
+              PackageHeight: sku.height,
+              PackageDescription: sku.description,
+            };
+          }
+          return row;
+        });
+        setState(prev => ({
+          ...prev,
+          uploadedData: updatedData
+        }))
+  };      
+
+  // setSelectedService
+  const setSelectedService = (ServiceName) => {
+    // update uploaded data's weight, length, width, height if the sku is already registered.
+    let updatedData = state.uploadedData.map((row) => ({ ...row, ServiceName}));
+    setState(prev => ({
+      ...prev,
+      uploadedData: updatedData,
+      selectedService: ServiceName
+    }))
+  }
+
+  // setSelectedService
+  const setSelectedProvider = (provider) => {
+    // update uploaded data's weight, length, width, height if the sku is already registered.
+    let updatedData = state.uploadedData.map((row) => ({ ...row, provider}));
+    setState(prev => ({
+      ...prev,
+      uploadedData: updatedData,
+      selectedProvider: provider
+    }))
+  }
 
   // Original useEffect for initial data
   useEffect(() => {
@@ -255,7 +314,7 @@ export const useBulkOrder = (user) => {
           axios.get(`${process.env.REACT_APP_API_URL}/api/auth/get-address/${user._id}`),
           axios.get(`${process.env.REACT_APP_API_URL}/api/auth/get-sku/${user._id}`)
         ]);
-        
+
         setState(prev => ({
           ...prev,
           senderAddress: addressRes.data?.savedAddress?.[0],
@@ -289,9 +348,9 @@ export const useBulkOrder = (user) => {
     handleFileChange,
     handleSubmit,
     HandleCourierChange,
-    setSelectedService: (service) => setState(prev => ({ ...prev, selectedService: service })),
-    setSelectedProvider: (provider) => setState(prev => ({ ...prev, selectedProvider: provider })),
-    setUploadedData: (data) => setState(prev => ({ ...prev, uploadedData: data })),
+    setSelectedService,
+    setSelectedProvider,
+    setUploadedData,
     setNotification: (notification) => setState(prev => ({ ...prev, notification })),
     setModalVisible: (visible) => setState(prev => ({ ...prev, modalVisible: visible }))
   };

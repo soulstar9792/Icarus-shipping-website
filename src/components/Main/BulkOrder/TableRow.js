@@ -1,4 +1,3 @@
-// src/components/Main/BulkOrder/TableRow.js
 import React, { useState } from 'react';
 import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
 import axios from 'axios';
@@ -6,7 +5,7 @@ import { useSelector } from 'react-redux';
 import $GS from '../../../styles/constants';
 import './BulkOrder.css';
 
-const TableRow = ({ row, index, setUploadedData, uploadedData }) => {
+const TableRow = ({ row, index, setUploadedData, uploadedData, txtFile, selectedService, selectedProvider, courierType }) => {
   const user = useSelector((state) => state.auth.user);
   const [editingRow, setEditingRow] = useState(null);
   const [editedData, setEditedData] = useState({});
@@ -42,9 +41,9 @@ const TableRow = ({ row, index, setUploadedData, uploadedData }) => {
     newData[index] = { ...editedData };
 
     // Original SKU update logic
-    if (editedData.sku_number) {
+    if (editedData.skuNumber) {
       const rowsWithSameSku = uploadedData.filter(
-        (row, idx) => idx !== index && row.sku_number === editedData.sku_number
+        (row, idx) => idx !== index && row.skuNumber === editedData.skuNumber
       );
 
       rowsWithSameSku.forEach((row) => {
@@ -64,11 +63,11 @@ const TableRow = ({ row, index, setUploadedData, uploadedData }) => {
         );
         const SKUPresent = response.data.SkuData;
         const existingSku = SKUPresent.find(
-          (sku) => sku.sku === editedData.sku_number
+          (sku) => sku.sku === editedData.skuNumber
         );
 
         const parsedData = {
-          sku: editedData.sku_number,
+          sku: editedData.skuNumber,
           maxQty: editedData.quantity || 1,
           weight: parseFloat(editedData.PackageWeight) || null,
           length: parseFloat(editedData.PackageLength) || null,
@@ -113,71 +112,111 @@ const TableRow = ({ row, index, setUploadedData, uploadedData }) => {
         />
       );
     }
-    return value;
+    return value || <p className="text-red-500">Missing</p>;
   };
 
   return (
-    <tr className={`${$GS.bgCustomBackground} ${$GS.textCustomText}`}>
-      <td className={`${$GS.borderCustom} p-2`}>
+    <tr className="bg-custom-background text-custom-text">
+      <td className="border border-custom-border p-2 break-words">
         {renderTableCell(index, "ServiceName", row.ServiceName)}
       </td>
+      {courierType === "USPS" && (
+        <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "provider", row.provider)}
+        </td>
+      )}
 
-      {/* SKU Number */}
-      <td className={`${$GS.borderCustom} p-2`}>
-        {renderTableCell(index, "sku_number", row.sku_number)}
-      </td>
-
-      {/* Sender Name */}
-      <td className={`${$GS.borderCustom} p-2`}>
+      {/* Sender fields */}
+      <td className="border border-custom-border p-2 break-words">
         {renderTableCell(index, "FromSenderName", row.FromSenderName)}
       </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "FromPhone", row.FromPhone || "N/A")}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "FromCompany", row.FromCompany || "N/A")}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "FromStreet1", row.FromStreet1)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "FromStreet2", row.FromStreet2 || "N/A")}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "FromCity", row.FromCity)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "FromStateProvince", row.FromStateProvince)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "FromZipPostal", row.FromZipPostal)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "FromCountry", row.FromCountry)}
+      </td>
+      
+      {/* Receiver fields */}
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToRecipientName", row.ToRecipientName)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToPhone", row.ToPhone || "N/A")}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToCompany", row.ToCompany || "N/A")}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToStreet1", row.ToStreet1)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToStreet2", row.ToStreet2 || "N/A")}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToCity", row.ToCity)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToStateProvince", row.ToStateProvince)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToZipPostal", row.ToZipPostal)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "ToCountry", row.ToCountry)}
+      </td>      
 
-      {/* Package Weight */}
-      <td className={`${$GS.borderCustom} p-2`}>
-        {editingRow === index ? (
-          renderTableCell(index, "PackageWeight", row.PackageWeight)
-        ) : (
-          `${row.PackageWeight} lbs`
-        )}
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "PackageWeight", row.PackageWeight)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "PackageLength", row.PackageLength)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "PackageWidth", row.PackageWidth)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "PackageHeight", row.PackageHeight)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "PackageDescription", row.PackageDescription || "N/A")}
       </td>
 
-      {/* Package Dimensions */}
-      <td className={`${$GS.borderCustom} p-2`}>
-        {editingRow === index ? (
-          <>
-            {renderTableCell(index, "PackageLength", row.PackageLength)} x
-            {renderTableCell(index, "PackageWidth", row.PackageWidth)} x
-            {renderTableCell(index, "PackageHeight", row.PackageHeight)}
-          </>
-        ) : (
-          `${row.PackageLength}" x ${row.PackageWidth}" x ${row.PackageHeight}"`
-        )}
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "quantity", row.quantity)}
+      </td>
+      <td className="border border-custom-border p-2 break-words">
+        {renderTableCell(index, "skuNumber", row.skuNumber || "N/A")}
       </td>
 
       {/* Actions */}
-        <td className={`${$GS.borderCustom} p-4`}>
+      <td className={`border border-custom-border p-2 break-words`}>
         {editingRow === index ? (
           <div className="flex space-x-2 justify-center">
-            <button
-              onClick={() => handleSave(index)}
-              className={`${$GS.buttonPrimary} p-2`}
-            >
-              <FaCheck />
-            </button>
-            <button
-              onClick={handleCancel}
-              className={`${$GS.buttonDanger} p-2`}
-            >
-              <FaTimes />
-            </button>
+            <button onClick={() => handleSave(index)} className="text-green-500 p-2"><FaCheck /></button>
+            <button onClick={handleCancel} className="text-red-500 p-2"><FaTimes /></button>
           </div>
         ) : (
-          <button
-            onClick={() => handleEdit(index)}
-            className={`${$GS.buttonSecondary} rounded-xl px-4 py-2`}
-          >
-            <FaEdit />
-            <span className={`${$GS.textButton} ml-2`}>Edit</span>
+          <button onClick={() => handleEdit(index)} className="text-blue-500 bg-custom-background border border-gray-800 rounded-xl flex items-center gap-2 px-4 py-2 mx-auto">
+            <FaEdit /><span className="font-semibold">Edit</span>
           </button>
         )}
       </td>

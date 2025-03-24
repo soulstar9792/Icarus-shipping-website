@@ -6,7 +6,7 @@ export const validateRow = (row, isCSV) => {
     'ToRecipientName', 'ToStreet1', 'ToCity',
     'PackageWeight', 'ServiceName'
   ] : [
-    'sku_number', 'PackageWeight', 'PackageLength',
+    'skuNumber', 'PackageWeight', 'PackageLength',
     'PackageWidth', 'PackageHeight'
   ];
 
@@ -29,19 +29,34 @@ export const validateRow = (row, isCSV) => {
 
 export const extractTxtLabelData = (data, senderAddress) => {
   return data.map(row => ({
-    courier: "selectedCourier",
-    service_name: row.ServiceName || "N/A",
+    courier: "selectedCourier", // will be filled later
+    service_name: "N/A", // will be filled later
+    provider: "N/A", // will be filled later
+
+    orderId: row["order-id"] || "",
+    orderItemId: row["order-item-id"] || "",
+    skuNumber: row["sku"] || "",
+    quantity: row["quantity-purchased"] || "",
+
     FromSenderName: senderAddress?.name || "",
-    FromStreet1: senderAddress?.street || "",
-    FromCity: senderAddress?.city || "",
+    FromPhone: senderAddress?.phone || "",
+    FromCompany: senderAddress?.company || "",
+    FromStreet1: senderAddress?.street || " ",
+    FromStreet2: senderAddress?.street2 || "",
+    FromCity: senderAddress?.city || " ",
+    FromStateProvince: senderAddress?.state || " ",
+    FromZipPostal: senderAddress?.zip || " ",
+    FromCountry: senderAddress?.country || "US",
+
     ToRecipientName: row["recipient-name"] || "",
+    ToPhone: row["buyer-phone-number"].split("ext")[0] || "",
+    ToCompany: row["buyer-company"] || "",
     ToStreet1: row["ship-address-1"] || "",
+    ToStreet2: row["ship-address-2"] || "",
     ToCity: row["ship-city"] || "",
-    sku_number: row["sku"] || "",
-    PackageWeight: row.PackageWeight,
-    PackageLength: row.PackageLength,
-    PackageWidth: row.PackageWidth,
-    PackageHeight: row.PackageHeight
+    ToStateProvince: row["ship-state"] || "",
+    ToZipPostal: row["ship-postal-code"] || "",
+    ToCountry: row["ship-country"] || "US"
   }));
 };
 
@@ -53,8 +68,7 @@ export const splitDataByMaxQty = (data) => {
     
     return Array.from({ length: batches }, (_, i) => ({
       ...row,
-      quantity: Math.min(totalQty - i * maxQty, maxQty),
-      PackageDescription: `${row.PackageDescription || "Package"} (Batch ${i+1}/${batches})`
+      quantity: Math.min(totalQty - i * maxQty, maxQty)
     }));
   });
 };
