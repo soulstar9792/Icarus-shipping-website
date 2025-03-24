@@ -25,6 +25,7 @@ function SKUManagement() {
     length: "",
     width: "",
     height: "",
+    description: "",
   });
 
   const user = useSelector((state) => state.auth.user);
@@ -188,6 +189,7 @@ function SKUManagement() {
         length: "",
         width: "",
         height: "",
+        description: "",
       });
       setErrors({});
       setNotification({
@@ -209,7 +211,7 @@ function SKUManagement() {
     const { name, value } = e.target;
     setEditForm((prev) => ({
       ...prev,
-      [name]: name === "sku" ? value : value === "" ? "" : Number(value) || 0,
+      [name]: name === "sku" ? value : value === "" ? "" : value,
     }));
     // Clear error for this field when user starts typing
     setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -219,7 +221,7 @@ function SKUManagement() {
     const { name, value } = e.target;
     setNewSku((prev) => ({
       ...prev,
-      [name]: name === "sku" ? value : value === "" ? "" : Number(value) || 0,
+      [name]: name === "sku" ? value : value === "" ? "" : value,
     }));
     // Clear error for this field when user starts typing
     setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -251,6 +253,9 @@ function SKUManagement() {
                 </th>
                 <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base text-right">
                   Height
+                </th>
+                <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base text-right">
+                  Description
                 </th>
                 <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base text-right">
                   Actions
@@ -316,6 +321,15 @@ function SKUManagement() {
                           className="bg-gray-700 px-2 py-1 rounded w-full text-white"
                         />
                       </td>
+                      <td className="border-b  border-custom-border px-2 py-2 text-sm md:text-base text-white">
+                        <input
+                          type="text"
+                          name="description"
+                          value={editForm?.description || ""}
+                          onChange={handleChange}
+                          className="bg-gray-700 px-2 py-1 rounded w-full text-white"
+                        />
+                      </td>
                       <td>
                         <button
                           onClick={handleSave}
@@ -344,6 +358,9 @@ function SKUManagement() {
                       </td>
                       <td className="border-b text-right  border-custom-border px-3 py-4 text-sm md:text-base text-white ">
                         {item.height}
+                      </td>
+                      <td className="border-b text-right  border-custom-border px-3 py-4 text-sm md:text-base text-white ">
+                        {item.description}
                       </td>
                       <td>
                         <div className="flex justify-end gap-2">
@@ -504,7 +521,20 @@ function SKUManagement() {
                       />
                     </div>
                   </div>
-
+                    <div>
+                    <div className="grid grid-cols">
+                      <label className="block text-sm font-medium mb-1">
+                        Description
+                      </label>
+                      <input
+                        type="text"
+                        name="description"
+                        value={newSku.description}
+                        onChange={handleNewSkuChange}
+                        className="w-full bg-gray-700 border border-custom-border rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
                   <div className="flex justify-end gap-4 mt-6">
                     <button
                       type="button"
