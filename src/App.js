@@ -20,6 +20,7 @@ import AdminRoute from "./components/AdminRoute";
 import Admin from "./pages/Admin";
 import store from "./store/store";
 import { Provider } from "react-redux";
+import DevModeBanner from "./components/DevModBanner";
 
 function App() {
   const location = useLocation();
@@ -36,6 +37,7 @@ function App() {
   return (
     <Provider store={store}>
       <div className="App">
+      <DevModeBanner />
         {isPublicRoute() && <Navbar />}
         <Routes>
           <Route path="/" element={<Home />} />
