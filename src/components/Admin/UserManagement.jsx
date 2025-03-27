@@ -11,6 +11,8 @@ const UserManagement = () => {
   const [showModal, setShowModal] = useState(false); // State to manage modal visibility
   const [selectedUser, setSelectedUser] = useState(null); // State to hold currently selected user for update
   const [newBalance, setNewBalance] = useState(""); // State for balance input
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const getUser = () => {
     return axios.get(
@@ -55,15 +57,19 @@ const UserManagement = () => {
   };
 
   const handleBalanceChange = (id, balance) => {
-    // Update the state immediately for better user experience
+    // Convert balance to number before updating state
+    const numericBalance = parseFloat(balance) || 0;
+    
     setUsers(
-      users.map((user) => (user._id === id ? { ...user, balance } : user))
+      users.map((user) => 
+        user._id === id ? { ...user, balance: numericBalance } : user
+      )
     );
-    return balance;
+    return numericBalance;
   };
   const handleSubmitUpdate = (id, balance) => {
     setUsers(
-      users.map((user) => (user._id === id ? { ...user, balance } : user))
+      users.map((user) => (user._id === id ? { ...user, balance, isEditing: false } : { ...user, isEditing: false }))
     );
     setNewBalance(balance); // Store the balance temporarily
     setShowModal(true); // Show modal
@@ -125,21 +131,38 @@ const UserManagement = () => {
       });
   };
 
-  const deleteUser = (id) => {
-    axios
-      .delete(
-        `${process.env.REACT_APP_API_URL}/api/auth/users/${id}`,
-        {
-          headers: { token: localStorage.getItem("token") },
-        }
-      )
-      .then((res) => {
-        setUsers(users.filter((user) => user._id !== id));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleDeleteClick = (userId) => {
+    setUserToDelete(userId);
+    setShowDeleteModal(true);
   };
+
+  const confirmDelete = () => {
+    if (userToDelete) {
+      axios
+        .delete(
+          `${process.env.REACT_APP_API_URL}/api/auth/users/${userToDelete}`,
+          {
+            headers: { token: localStorage.getItem("token") },
+          }
+        )
+        .then((res) => {
+          setUsers(users.filter((user) => user._id !== userToDelete));
+          setShowDeleteModal(false);
+          setUserToDelete(null);
+        })
+        .catch((err) => {
+          console.log(err);
+          setShowDeleteModal(false);
+        });
+    }
+  };
+
+  // Add these calculations for the summary
+  const summaryData = users.reduce((acc, user) => ({
+    totalDeposit: acc.totalDeposit + (user.totalDeposit || 0),
+    totalSpent: acc.totalSpent + (user.totalSpent || 0),
+    totalBalance: acc.totalBalance + (user.balance || 0)
+  }), { totalDeposit: 0, totalSpent: 0, totalBalance: 0 });
 
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
@@ -156,7 +179,7 @@ const UserManagement = () => {
               <thead>
                 <tr className="bg-custom-background text-white text-left">
                   <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
-                    ID
+                    No.
                   </th>
                   <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
                     Name
@@ -171,9 +194,14 @@ const UserManagement = () => {
                     Services
                   </th>
                   <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
+                    Deposited
+                  </th>
+                  <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
+                    Spent
+                  </th>
+                  <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
                     Balance
                   </th>
-                  <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base"></th>
                   <th className="px-2 py-2 border-b border-custom-border text-sm md:text-base">
                     Access
                   </th>
@@ -183,13 +211,13 @@ const UserManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => {
+                {users.map((user, index) => {
                   return (
                     <tr key={user._id} className="hover:bg-gray-900">
                       <td
                         className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}
                       >
-                        {user._id}
+                        {index + 1}
                       </td>
                       <td
                         className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}
@@ -223,26 +251,35 @@ const UserManagement = () => {
                       <td
                         className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}
                       >
-                        <input
-                          type="text"
-                          value={user.balance}
-                          onChange={(e) =>
-                            handleBalanceChange(user._id, e.target.value)
-                          }
-                          className={`${$GS.inputStyle} bg-gray-900 border border-custom-border px-2 py-1 rounded-md w-[100px]`}
-                        />
+                        ${user.totalDeposit?.toFixed(2)}
                       </td>
                       <td
                         className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}
                       >
-                        <button
-                          className={`${$GS.buttonStyle} rounded-md py-1 px-2 bg-blue-500 hover:bg-blue-700 ml-1`}
-                          onClick={() =>
-                            handleSubmitUpdate(user._id, user.balance)
-                          }
-                        >
-                          Update
-                        </button>
+                        ${user.totalSpent?.toFixed(2)}
+                      </td>
+                      <td
+                        className={`border-b border-custom-border px-2 py-2 text-sm md:text-base ${$GS.textNormal_1}`}
+                      >
+                        {user.isEditing ? (
+                          <div className="flex items-center">
+                            $<input
+                              type="number"
+                              value={user.balance?.toFixed(2)}
+                              onChange={(e) =>
+                                handleBalanceChange(user._id, e.target.value)
+                              }
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleSubmitUpdate(user._id, user.balance);
+                                }
+                              }}
+                              className={`${$GS.inputStyle} bg-gray-900 border border-custom-border px-2 py-1 rounded-md w-[100px]`}
+                            />
+                          </div>
+                        ) : (
+                          `$${user.balance?.toFixed(2)}`
+                        )}
                       </td>
                       <td className={`border-b border-custom-border px-2 py-2`}>
                         <button
@@ -260,8 +297,22 @@ const UserManagement = () => {
                       </td>
                       <td className={`border-b border-custom-border px-2 py-2`}>
                         <button
+                          className={`${$GS.buttonStyle} rounded-md py-1 px-2 ${user.isEditing ? 'bg-green-500 hover:bg-green-700' : 'bg-blue-500 hover:bg-blue-700'} ml-1`}
+                          onClick={() => {
+                            if (user.isEditing) {
+                              handleSubmitUpdate(user._id, user.balance);
+                            } else {
+                              setUsers(users.map(u => 
+                                u._id === user._id ? { ...u, isEditing: true } : u
+                              ));
+                            }
+                          }}
+                        >
+                          {user.isEditing ? 'Save' : 'Edit'}
+                        </button>
+                        <button
                           className={`${$GS.buttonStyle} rounded-md py-1 px-2 bg-red-500 hover:bg-red-700 ml-1`}
-                          onClick={() => deleteUser(user._id)}
+                          onClick={() => handleDeleteClick(user._id)}
                         >
                           Delete
                         </button>
@@ -269,11 +320,32 @@ const UserManagement = () => {
                     </tr>
                   );
                 })}
+                {/* Summary Row */}
+                <tr className="bg-gray-900 font-semibold">
+                  <td colSpan={5} className={`border-t-2 border-custom-border px-2 py-3 text-sm md:text-base ${$GS.textNormal_1} text-right`}>
+                    Total Amount:
+                  </td>
+                  <td className={`border-t-2 border-custom-border px-2 py-3 text-sm md:text-base ${$GS.textNormal_1} text-blue-400`}>
+                    ${summaryData.totalDeposit.toFixed(2)}
+                  </td>
+                  <td className={`border-t-2 border-custom-border px-2 py-3 text-sm md:text-base ${$GS.textNormal_1} text-blue-400`}>
+                    ${summaryData.totalSpent.toFixed(2)}
+                  </td>
+                  <td className={`border-t-2 border-custom-border px-2 py-3 text-sm md:text-base ${$GS.textNormal_1} text-blue-400`}>
+                    ${summaryData.totalBalance.toFixed(2)}
+                  </td>
+                  <td colSpan={3} className="border-t-2 border-custom-border"></td>
+                </tr>
               </tbody>
             </table>
           </div>
         </Card>
       )}
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDelete}
+      />
       <ConfirmModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -309,6 +381,33 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, balance }) => {
             onClick={onConfirm}
           >
             Accept
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DeleteConfirmModal = ({ isOpen, onClose, onConfirm }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-75">
+      <div className="bg-white rounded-lg p-6">
+        <h3 className="text-lg font-semibold mb-4">Confirm Delete User</h3>
+        <p>Are you sure you want to delete this user? This action cannot be undone.</p>
+        <div className="mt-6 flex justify-between">
+          <button
+            className="bg-gray-500 text-white px-4 py-2 rounded-md"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded-md"
+            onClick={onConfirm}
+          >
+            Delete
           </button>
         </div>
       </div>
