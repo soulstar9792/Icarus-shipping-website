@@ -29,8 +29,8 @@ export const validateRow = (row, isCSV) => {
 
 export const extractTxtLabelData = (data, senderAddress) => {
   return data.map(row => ({
-    courier: "selectedCourier", // will be filled later
-    service_name: "N/A", // will be filled later
+    courier: null, // will be filled later
+    ServiceName: null, // will be filled later
     provider: "N/A", // will be filled later
 
     orderId: row["order-id"] || "",

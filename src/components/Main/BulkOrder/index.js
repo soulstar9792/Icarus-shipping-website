@@ -10,6 +10,7 @@ import Modal from './Modal';
 import DownloadSection from './DownloadSection'; // Import the new DownloadSection
 import DropDownSection from './DropDownSection';
 import { useBulkOrder } from './hooks/useBulkOrder';
+import Loading from '../../Loading';
 import './BulkOrder.css';
 
 const BulkOrder = () => {
@@ -26,6 +27,8 @@ const BulkOrder = () => {
     availableServices,
     selectedService,
     selectedProvider,
+    orderId,
+    loading,
     handleFileChange,
     handleSubmit,
     HandleCourierChange,
@@ -33,11 +36,15 @@ const BulkOrder = () => {
     setSelectedProvider,
     setUploadedData,
     setNotification,
-    setModalVisible
+    setModalVisible,
+    setOrderId,
+    setFileData
   } = useBulkOrder(user);
 
   return (
     <div className={`px-4 max-w-[86vw] hide-scroll-bar h-[90vh] ${$GS.bgCustomBackground} md:px-10 py-10 md:py-10`}>
+      
+      {loading && <Loading />}
       <FileUpload 
         csvFile={csvFile}
         txtFile={txtFile}
@@ -82,7 +89,12 @@ const BulkOrder = () => {
       <Modal 
         fileData={fileData} 
         isVisible={modalVisible} 
-        onClose={() => setModalVisible(false)}
+        onClose={() => {
+          setModalVisible(false);
+          setFileData(null);
+          setOrderId(null); // Add this line to reset orderId
+        }}
+        orderId={orderId}
       />
     </div>
   );

@@ -24,9 +24,10 @@ export const useBulkOrder = (user) => {
     selectedService: null,
     selectedProvider: null,
     courierType: "",
-    SkuData: []
+    SkuData: [],
+    orderId: null
   });
-  // Original price calculation logic
+
   const getBulkCost = async () => {
     try {
       if (!state.uploadedData.length) return;
@@ -82,7 +83,6 @@ export const useBulkOrder = (user) => {
     }
   };
 
-  // Original file handling logic
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -137,12 +137,14 @@ export const useBulkOrder = (user) => {
     }
   };
 
-  // Original CSV processing
   const processCSV = (data) => {
     const invalidRows = [];
     const validData = data.map((row, index) => {
-      row.quantity = row.PackageReference1 || "1";
+      row.quantity = Number(row.PackageReference1) || "1";
       row.skuNumber = row.PackageReference2 || null;
+      row.courier = row.ServiceName.split(" ")[0]; // Extract courier from ServiceName
+      console.log("ServiceName", row.ServiceName);
+      console.log("Row.courier", row.courier);
       const validation = validateRow(row, true);
       if (!validation.isValid) invalidRows.push({ rowIndex: index + 1, errors: validation.errors });
       return { ...row, errors: validation.errors };
@@ -158,83 +160,127 @@ export const useBulkOrder = (user) => {
         }
       }));
     }
+    console.log("processCSV", validData);
     return validData;
   };
 
-  // Original TXT processing
   const processTXT = (data) => {
     const labelData = extractTxtLabelData(data, state.senderAddress);
     return splitDataByMaxQty(labelData);
   };
 
-  // Original submission handler
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setState(prev => ({ ...prev, loading: true }));
-    
-    try {
-      const shipments = state.uploadedData.map(row => ({
-        courier: state.courierType,
-        service_name: state.selectedService,
-        manifested: false,
-        sender: {
-          order_id: row.orderId,
-          sender_name: row.FromSenderName,
-          sender_phone: row.FromPhone,
-          sender_address1: row.FromStreet1,
-          sender_city: row.FromCity,
-          sender_state_province: row.FromStateProvince,
-          sender_zip_postal: row.FromZipPostal,
-          sender_country: row.FromCountry,
-        },
-        receiver: {
-          receiver_name: row.ToRecipientName,
-          receiver_phone: row.ToPhone,
-          receiver_address1: row.ToStreet1,
-          receiver_city: row.ToCity,
-          receiver_state_province: row.ToStateProvince,
-          receiver_zip_postal: row.ToZipPostal,
-          receiver_country: row.ToCountry,
-        },
-        package: {
-          order_item_id: String(row.orderItemId),
-          quantity: String(row.quantity),
-          sku_number: state.txtFile ? row.skuNumber : null,
-
-          package_length: String(row.PackageLength),
-          package_width: String(row.PackageWidth),
-          package_height: String(row.PackageHeight),
-          package_weight: String(row.PackageWeight),
-          package_weight_unit: "LB",
-        }
-      }));
-
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/orders/bulk/${user._id}`,
-        shipments
-      );
-
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        fileData: response.data.fileData,
-        modalVisible: true
-      }));
-
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        loading: false,
-        notification: {
-          visible: true,
-          message: error.response?.data?.data?.message || "Submission failed",
-          type: "error"
-        }
-      }));
-    }
+  const updateState = async (newState) => {
+    return new Promise((resolve) => {
+      setState((prev) => {
+        // update state
+        return { ...prev, ...newState };
+      });
+      resolve();
+    });
   };
 
-  // Original courier change handler
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("uploadedData", state.uploadedData);
+    const orderData = state.uploadedData.map(row => {
+        const courierType = row.courier || state.courierType; // Use row data if available
+        const serviceName = row.ServiceName || state.selectedService; // Use row data if available
+
+        if (!courierType || !serviceName) {
+            setState(prev => ({
+                ...prev,
+                notification: {
+                    visible: true,
+                    message: "Courier type and service name must be provided.",
+                    type: "error"
+                }
+            }));
+            return null; // Skip this shipment if invalid
+        }
+
+        return {
+            courier: courierType,
+            service_name: serviceName,
+            manifested: false,
+            sender: {
+                order_id: row.orderId,
+                sender_name: row.FromSenderName,
+                sender_phone: row.FromPhone,
+                sender_address1: row.FromStreet1,
+                sender_city: row.FromCity,
+                sender_state_province: row.FromStateProvince,
+                sender_zip_postal: row.FromZipPostal,
+                sender_country: row.FromCountry,
+            },
+            receiver: {
+                receiver_name: row.ToRecipientName,
+                receiver_phone: row.ToPhone,
+                receiver_address1: row.ToStreet1,
+                receiver_city: row.ToCity,
+                receiver_state_province: row.ToStateProvince,
+                receiver_zip_postal: row.ToZipPostal,
+                receiver_country: row.ToCountry,
+            },
+            package: {
+                order_item_id: String(row.orderItemId),
+                quantity: String(row.quantity),
+                sku_number: state.txtFile ? row.skuNumber : null,
+                package_length: String(row.PackageLength),
+                package_width: String(row.PackageWidth),
+                package_height: String(row.PackageHeight),
+                package_weight: String(row.PackageWeight),
+                package_weight_unit: "LB",
+            }
+        };
+    }).filter(Boolean); // Remove any null shipments
+
+    if (orderData.length === 0) {
+        return; // No valid shipments to process
+    }
+
+    await updateState({ loading: true });
+
+
+    try {
+        const initResponse = await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/orders/bulk/init`,
+            { userId: user._id }
+        );
+        
+
+        const orderId = initResponse.data.orderId;
+        await updateState({ orderId, loading: false, modalVisible:true });
+
+
+        axios.post(
+            `${process.env.REACT_APP_API_URL}/api/orders/bulk/${user._id}`,
+            {
+              orderId,
+              orderData
+            }
+        ).then(response=> {
+          setState(prev => ({
+              ...prev,
+              fileData: response.data.fileData,
+          }));
+
+        });
+
+
+    } catch (error) {
+        setState(prev => ({
+            ...prev,
+            loading: false,
+            notification: {
+                visible: true,
+                message: error.response?.data?.data?.message || "Submission failed",
+                type: "error"
+            }
+        }));
+    }
+
+  };
+
   const HandleCourierChange = (e) => {
     const selected = e.target.value;
     
@@ -243,7 +289,6 @@ export const useBulkOrder = (user) => {
       );
     const servicesList = Object.keys(courierType.services);
     
-    // update uploaded data's courier to the selected courier.
     let updatedData = state.uploadedData.map((row) => ({...row, courier: selected}));
     setState(prev => ({
       ...prev,
@@ -255,38 +300,32 @@ export const useBulkOrder = (user) => {
     }));
   };
 
-  // Update uploadedData's Weight, Length, Width, Height, Description to SkuData if the SKU is already registered. If not, add the SKU to the registered SKUs.
   const setUploadedData = (data) => {
-    
-        // update uploaded data's weight, length, width, height if the sku is already registered.
-        let updatedData = data.map((row) => {
-          
-          row.courier = state.courierType || null;
-          row.service_name = state.selectedService || null;
-          row.provider = state.selectedProvider || null;
+    let updatedData = data.map((row) => {
+      row.courier = row.courier || state.courierType || null;
+      row.ServiceName = row.ServiceName || state.selectedService || null;
+      row.provider = row.provider || state.selectedProvider || null;
 
-          const sku = state.SkuData.find((sku) => sku.sku === row.skuNumber);
-          if (sku) {
-            return {
-              ...row,
-              PackageWeight: sku.weight,
-              PackageLength: sku.length,
-              PackageWidth: sku.width,
-              PackageHeight: sku.height,
-              PackageDescription: sku.description,
-            };
-          }
-          return row;
-        });
-        setState(prev => ({
-          ...prev,
-          uploadedData: updatedData
-        }))
+      const sku = state.SkuData.find((sku) => sku.sku === row.skuNumber);
+      if (sku) {
+        return {
+          ...row,
+          PackageWeight: sku.weight,
+          PackageLength: sku.length,
+          PackageWidth: sku.width,
+          PackageHeight: sku.height,
+          PackageDescription: sku.description,
+        };
+      }
+      return row;
+    });
+    setState(prev => ({
+      ...prev,
+      uploadedData: updatedData
+    }))
   };      
 
-  // setSelectedService
   const setSelectedService = (ServiceName) => {
-    // update uploaded data's weight, length, width, height if the sku is already registered.
     let updatedData = state.uploadedData.map((row) => ({ ...row, ServiceName}));
     setState(prev => ({
       ...prev,
@@ -295,9 +334,7 @@ export const useBulkOrder = (user) => {
     }))
   }
 
-  // setSelectedService
   const setSelectedProvider = (provider) => {
-    // update uploaded data's weight, length, width, height if the sku is already registered.
     let updatedData = state.uploadedData.map((row) => ({ ...row, provider}));
     setState(prev => ({
       ...prev,
@@ -306,7 +343,6 @@ export const useBulkOrder = (user) => {
     }))
   }
 
-  // Original useEffect for initial data
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -336,7 +372,6 @@ export const useBulkOrder = (user) => {
     if (user) fetchInitialData();
   }, [user]);
 
-  // Original price calculation trigger
   useEffect(() => {
     if (state.csvFile || state.txtFile) {
       getBulkCost();
@@ -352,6 +387,8 @@ export const useBulkOrder = (user) => {
     setSelectedProvider,
     setUploadedData,
     setNotification: (notification) => setState(prev => ({ ...prev, notification })),
-    setModalVisible: (visible) => setState(prev => ({ ...prev, modalVisible: visible }))
+    setModalVisible: (visible) => setState(prev => ({ ...prev, modalVisible: visible })),
+    setOrderId: (orderId) => setState(prev => ({ ...prev, orderId })),
+    setFileData: (fileData) => setState(prev => ({ ...prev, fileData }))
   };
 };
