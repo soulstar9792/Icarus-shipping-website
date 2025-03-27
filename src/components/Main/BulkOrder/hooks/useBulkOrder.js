@@ -25,7 +25,10 @@ export const useBulkOrder = (user) => {
     selectedProvider: null,
     courierType: "",
     SkuData: [],
-    orderId: null
+    orderId: null,
+    error: null,
+    processedCount: 0,
+    totalCount: 0
   });
 
   const getBulkCost = async () => {
@@ -397,6 +400,9 @@ const handleSubmit = async (e) => {
     setNotification: (notification) => setState(prev => ({ ...prev, notification })),
     setModalVisible: (visible) => setState(prev => ({ ...prev, modalVisible: visible })),
     setOrderId: (orderId) => setState(prev => ({ ...prev, orderId })),
-    setFileData: (fileData) => setState(prev => ({ ...prev, fileData }))
+    setFileData: (fileData) => setState(prev => ({ ...prev, fileData })),
+    setError: (error) => setState(prev => ({ ...prev, error })),
+    setProcessedCount: (count) => setState(prev => ({ ...prev, processedCount: count })),
+    setTotalCount: (count) => setState(prev => ({ ...prev, totalCount: count }))
   };
 };

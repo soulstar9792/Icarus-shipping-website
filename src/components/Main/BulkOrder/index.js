@@ -29,6 +29,9 @@ const BulkOrder = () => {
     selectedProvider,
     orderId,
     loading,
+    error,
+    processedCount,
+    totalCount,
     handleFileChange,
     handleSubmit,
     HandleCourierChange,
@@ -38,7 +41,10 @@ const BulkOrder = () => {
     setNotification,
     setModalVisible,
     setOrderId,
-    setFileData
+    setFileData,
+    setError,
+    setProcessedCount,
+    setTotalCount
   } = useBulkOrder(user);
 
   return (
@@ -92,9 +98,17 @@ const BulkOrder = () => {
         onClose={() => {
           setModalVisible(false);
           setFileData(null);
-          setOrderId(null); // Add this line to reset orderId
+          setOrderId(null);
+          setError(null);
+          setProcessedCount(0);
+          setTotalCount(0);
         }}
         orderId={orderId}
+        error={error}
+        processedCount={processedCount}
+        totalCount={totalCount}
+        setProcessedCount={setProcessedCount}
+        setTotalCount={setTotalCount}
       />
     </div>
   );
