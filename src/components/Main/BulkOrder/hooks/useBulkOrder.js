@@ -301,6 +301,14 @@ const handleSubmit = async (e) => {
   };
 
   const setUploadedData = (data) => {
+    // Sort data by skuNumber, putting non-null skuNumbers first
+    data.sort((a, b) => {
+      if (a.skuNumber && !b.skuNumber) return -1;
+      if (!a.skuNumber && b.skuNumber) return 1;
+      if (!a.skuNumber && !b.skuNumber) return 0;
+      return a.skuNumber.localeCompare(b.skuNumber);
+    });
+
     let updatedData = data.map((row) => {
       row.courier = row.courier || state.courierType || null;
       row.ServiceName = row.ServiceName || state.selectedService || null;
