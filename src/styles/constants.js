@@ -1,15 +1,15 @@
 module.exports = {
     card: 'rounded-small p-6 md:p-8 border-thin border-custom-border transition-shadow duration-300 bg-card-background group hover:border-hover-border hover:shadow-bright',
-    textHeading_1: 'text-3xl md:text-5xl font-bold text-center mb-8 text-text-emphasizing cursor-pointer transition-all duration-300 hover:text-shadow group-hover:text-hover-text',
-    textHeading_2: 'text-2xl md:text-3xl font-bold text-center mb-8 text-text-emphasizing cursor-pointer transition-all duration-300 hover:text-shadow group-hover:text-hover-text',
-    textHeading_3: 'text-lg  md:text-2xl font-semibold text-text-normal mb-2 z-10 transition-all duration-300 hover:text-hover-text hover:text-shadow group-hover:text-hover-text',
+    textHeading_1: 'text-3xl md:text-5xl font-bold text-center mb-8 text-text-normal cursor-pointer transition-all duration-300 hover:text-shadow group-hover:text-hover-text',
+    textHeading_2: 'text-2xl md:text-3xl font-bold text-center mb-8 text-text-normal cursor-pointer transition-all duration-300 hover:text-shadow group-hover:text-hover-text',
+    textHeading_3: 'text-lg  md:text-2xl font-semibold text-text-normal mb-2 z-10 transition-all duration-300 hover:text-shadow group-hover:text-hover-text',
 
     textBase: 'text-sm text-text-normal mb-2 z-10',
     textNormal_1: 'text-s1 md:text-sm text-text-normal mb-2 md:mb-4 z-10 group-hover:text-hover-text',
     textNormal_2: 'text-base md:text-md text-text-normal z-10 group-hover:text-hover-text',
     textNormal_3: 'text-md md:text-lg text-text-normal z-10 group-hover:text-hover-text',
 
-    textFormHeading_1: 'text-lg  md:text-2xl text-center font-semibold text-text-normal mb-2 z-10 transition-all duration-300 hover:text-hover-text hover:text-shadow group-hover:text-hover-text',
+    textFormHeading_1: 'text-lg  md:text-2xl text-center font-semibold text-text-normal mb-2 z-10 transition-all duration-300 hover:text-shadow group-hover:text-hover-text',
     textFormHeading_2: 'text-md md:text-lg text-text-normal z-10',
 
     inputForm_1: 'border border-custom-border p-[5px] w-full bg-transparent text-custom-text text-s1 rounded-sm shadow-sm focus:outline-none focus:ring focus:ring-blue-400',

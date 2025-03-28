@@ -5,12 +5,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'custom-border': '#31363d',
+        'custom-border': '#303d4f',
         'custom-hover': '#777777',
         'custom-text': '#aaaaaa',
         'custom-background': '#0d1117',
         'card-background': '#0d1117',
-        'text-normal': '#8b949e',
+        'text-normal': '#919fae',
         'text-emphasizing': '#efefef',
         'link-color': '#76bbf9',
         'hover-border': '#4b5b71', // New hover border color
