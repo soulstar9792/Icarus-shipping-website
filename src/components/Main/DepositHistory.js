@@ -68,11 +68,13 @@ const DepositHistory = () => {
                     </td>
                     <td
                       className={`border border-custom-border p-2 font-semibold ${
-                        deposit.status === "Completed"
-                          ? "text-green-600"
-                          : deposit.status ==="New" 
+                        deposit?.status === "Settled"
                             ? "text-blue-600"
-                            : "text-yellow-600"
+                            : deposit?.status === "Expired"
+                              ? "text-yellow-600"
+                              : deposit?.status
+                                ? "text-green-600"
+                                : ""
                       }`}
                     >
                       {deposit.status}
