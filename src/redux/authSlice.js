@@ -36,6 +36,9 @@ const authSlice = createSlice({
       state.error = null; // Clear any login error
       localStorage.removeItem('token'); // Clear token from local storage
     },
+    updateUser: (state, action) => {  // Add this new reducer
+      state.user = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -68,5 +71,5 @@ const authSlice = createSlice({
 });
 
 // Export the reducer and actions
-export const { logout } = authSlice.actions; // Export logout action
+export const { logout, updateUser } = authSlice.actions; // Export logout and updateUser actions
 export default authSlice.reducer;  // Export the reducer for the store

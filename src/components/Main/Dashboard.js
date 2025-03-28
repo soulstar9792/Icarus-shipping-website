@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { FaDollarSign, FaArrowUp, FaFileAlt, FaShoppingCart } from "react-icons/fa";
 import Card from "../Utils/Card";
 import $GS from "../../styles/constants";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { updateUser } from '../../redux/authSlice';  // Import the new action
 
 const Dashboard = () => {
   const [recentOrders, setRecentOrders] = useState([]);
@@ -11,12 +12,13 @@ const Dashboard = () => {
   const [totalOrders, setTotalOrders] = useState(0);
 
   const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user) {
       const fetchDashboardData = async () => {
         try {
-          const [ordersRes, depositsRes, totalOrdersRes] = await Promise.all([
+          const [ordersRes, depositsRes, totalOrdersRes, userRes] = await Promise.all([
             axios.get(`${process.env.REACT_APP_API_URL}/api/orders/recent/${user._id}`,
               {
                 headers: { token: localStorage.getItem("token") },
@@ -29,10 +31,17 @@ const Dashboard = () => {
               {
                 headers: { token: localStorage.getItem("token") },
               }),
+            axios.get(`${process.env.REACT_APP_API_URL}/api/auth/verify`,
+              {
+                headers: { token: localStorage.getItem("token") },
+              }),
           ]);
           setRecentOrders(ordersRes.data.recentOrders);
           setRecentDeposits(depositsRes.data);
           setTotalOrders(totalOrdersRes.data.totalOrders);
+          
+          // Update user data in Redux store
+          dispatch(updateUser(userRes.data.user));
         } catch (error) {
           console.error("Error fetching dashboard data:", error);
         }
@@ -40,7 +49,7 @@ const Dashboard = () => {
       
       fetchDashboardData();
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   return (
     <div className="px-4 md:px-10 py-10 md:py-20 bg-custom-background">
